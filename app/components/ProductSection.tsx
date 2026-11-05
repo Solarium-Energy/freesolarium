@@ -6,8 +6,8 @@ import { INCLUDED } from "../lib/content";
 import Reveal from "./Reveal";
 
 /* ─── Layout constants ─── */
-const CARD_W   = 315;  // px — card width on desktop (compact)
-const CARD_GAP = 20;   // px — gap between cards
+const CARD_W   = 330;  // px — card width on desktop
+const CARD_GAP = 22;   // px — gap between cards
 const N        = INCLUDED.length; // 10
 
 export default function ProductSection() {
@@ -64,7 +64,7 @@ export default function ProductSection() {
     };
   }, []);
 
-  const extraScroll = 2800;
+  const extraScroll = 3000;
 
   /* ── shared card renderer ── */
   function Card({
@@ -80,35 +80,35 @@ export default function ProductSection() {
       <div
         className="group relative flex shrink-0 flex-col overflow-hidden rounded-2xl transition-all duration-300"
         style={{
-          width: mobile ? "295px" : `${CARD_W}px`,
+          width: mobile ? "305px" : `${CARD_W}px`,
           background: "linear-gradient(160deg, #0c2d4a 0%, #051d33 100%)",
           boxShadow: mobile
             ? "0 8px 28px -8px rgba(2,27,51,0.55)"
             : "0 24px 60px -20px rgba(2,27,51,0.75), inset 0 1px 0 rgba(255,255,255,0.06)",
         }}
       >
-        {/* ── Image ── */}
+        {/* ── Image (increased height for prominent showcase) ── */}
         <div
           className="relative w-full overflow-hidden bg-[#031525]"
-          style={{ height: mobile ? "140px" : "155px" }}
+          style={{ height: mobile ? "180px" : "215px" }}
         >
           <Image
             src={item.image}
             alt={item.imageAlt}
             fill
-            sizes={mobile ? "295px" : "315px"}
+            sizes={mobile ? "305px" : "330px"}
             className="object-cover transition-transform duration-700 group-hover:scale-[1.06]"
           />
-          {/* Dark gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#051d33] via-[#051d33]/40 to-transparent" />
+          {/* Dark gradient overlay — subtle at base */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#051d33] via-transparent to-black/15" />
 
           {/* Number badge — top-left */}
           <span
             className="absolute left-3.5 top-3.5 flex h-7 w-7 items-center justify-center rounded-full text-[10.5px] font-extrabold text-white"
             style={{
-              background: "rgba(255,255,255,0.14)",
+              background: "rgba(255,255,255,0.18)",
               backdropFilter: "blur(10px)",
-              border: "1px solid rgba(255,255,255,0.22)",
+              border: "1px solid rgba(255,255,255,0.25)",
             }}
           >
             {String(index + 1).padStart(2, "0")}
@@ -116,11 +116,11 @@ export default function ProductSection() {
 
           {/* Category Tag badge — top-right */}
           <span
-            className="absolute right-3.5 top-3.5 rounded-full px-2 py-0.5 text-[9.5px] font-semibold text-white/90"
+            className="absolute right-3.5 top-3.5 rounded-full px-2.5 py-1 text-[9.5px] font-semibold text-white/90"
             style={{
-              background: "rgba(5,29,51,0.8)",
+              background: "rgba(5,29,51,0.85)",
               backdropFilter: "blur(8px)",
-              border: "1px solid rgba(255,255,255,0.15)",
+              border: "1px solid rgba(255,255,255,0.2)",
             }}
           >
             {item.tag}
