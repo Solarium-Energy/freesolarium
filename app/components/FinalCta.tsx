@@ -1,9 +1,14 @@
+"use client";
+
 import Image from "next/image";
+import Link from "next/link";
 import { ArrowRight, Phone, ShieldCheck } from "lucide-react";
 import { HERO_PRICE, PRICING, inr, site } from "../lib/content";
+import { useLanguage } from "../lib/language";
 import Reveal from "./Reveal";
 
 export default function FinalCta() {
+  const { isGu } = useLanguage();
   const subsidy = PRICING.centralSubsidy + PRICING.stateSubsidy;
 
   return (
@@ -44,25 +49,49 @@ export default function FinalCta() {
                       <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-orange opacity-75" />
                       <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-orange" />
                     </span>
-                    PM Surya Ghar · Gujarat homes
+                    {isGu ? "PM સૂર્ય ઘર · ગુજરાતના ઘરો" : "PM Surya Ghar · Gujarat homes"}
                   </div>
 
-                  <h2 className="mt-5 text-[clamp(1.9rem,4.6vw,3.1rem)] font-extrabold leading-[1.02] tracking-[-0.04em] text-white text-balance">
-                    Your roof is ready.<br className="hidden sm:block" /> Are you?
+                  <h2 className="mt-5 text-[clamp(1.9rem,4.6vw,3.1rem)] font-extrabold leading-[1.06] tracking-[-0.04em] text-white text-balance">
+                    {isGu ? (
+                      <>
+                        તમારી છત તૈયાર છે.<br className="hidden sm:block" /> શું તમે તૈયાર છો?
+                      </>
+                    ) : (
+                      <>
+                        Your roof is ready.<br className="hidden sm:block" /> Are you?
+                      </>
+                    )}
                   </h2>
 
                   <p className="mt-3 text-[13px] font-medium leading-relaxed text-white/70">
-                    2.18 kW · {inr(PRICING.systemValue)} system value ·{" "}
-                    {inr(subsidy)} eligible subsidy* · 5-year insurance
+                    {isGu ? (
+                      <>
+                        2.18 kW · સિસ્ટમનું મૂલ્ય {inr(PRICING.systemValue)} · પાત્ર સબસિડી*{" "}
+                        {inr(subsidy)} · 5 વર્ષનો વીમો
+                      </>
+                    ) : (
+                      <>
+                        2.18 kW · {inr(PRICING.systemValue)} system value ·{" "}
+                        {inr(subsidy)} eligible subsidy* · 5-year insurance
+                      </>
+                    )}
                   </p>
 
                   {/* Trust chips */}
                   <div className="mt-5 flex flex-wrap gap-2.5">
-                    {[
-                      "Pay & get 100% subsidy in return",
-                      "5-year insurance free",
-                      "Installed by our own team",
-                    ].map((point) => (
+                    {(isGu
+                      ? [
+                          "ચુકવણી કરો અને બદલામાં 100% સબસિડી મેળવો",
+                          "5 વર્ષનો વીમો મફત",
+                          "અમારી પોતાની ટીમ દ્વારા ઇન્સ્ટોલેશન",
+                        ]
+                      : [
+                          "Pay & get 100% subsidy in return",
+                          "5-year insurance free",
+                          "Installed by our own team",
+                        ]
+                    ).map((point) => (
                       <span
                         key={point}
                         className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-semibold text-white/80 backdrop-blur-sm"
@@ -81,24 +110,26 @@ export default function FinalCta() {
                   {/* Price display */}
                   <div className="text-center">
                     <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-white/50">
-                      Effective cost
+                      {isGu ? "અસરકારક ખર્ચ" : "Effective cost"}
                     </p>
-                    <p className="mt-1 font-display text-[48px] font-extrabold leading-none tracking-[-0.05em] text-white">
+                    <p className="mt-1 font-display text-[40px] font-extrabold leading-none tracking-[-0.05em] text-white sm:text-[48px]">
                       {inr(HERO_PRICE)}
                       <span className="align-top text-[20px] font-bold text-orange">*</span>
                     </p>
-                    <p className="mt-1 text-[11px] text-white/45">For eligible Gujarat homes</p>
+                    <p className="mt-1 text-[11px] text-white/45">
+                      {isGu ? "ગુજરાતના પાત્ર ઘરો માટે" : "For eligible Gujarat homes"}
+                    </p>
                   </div>
 
                   <div className="my-1 h-px bg-white/10" />
 
-                  <a
+                  <Link
                     href="/book"
                     className="group flex min-h-[50px] w-full items-center justify-center gap-2 rounded-xl bg-orange px-6 text-[14px] font-bold text-white shadow-[0_14px_32px_-10px_rgba(223,122,28,0.6)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#cc6d14]"
                   >
-                    Book my ₹0 solar system
+                    {isGu ? "₹0* માં બુક કરો" : "Book at 0*"}
                     <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                  </a>
+                  </Link>
 
                   <a
                     href={site.phoneHref}
@@ -109,7 +140,9 @@ export default function FinalCta() {
                   </a>
 
                   <p className="text-center text-[10px] text-white/35">
-                    *After {inr(subsidy)} total subsidy. Pay & get 100% subsidy in return.
+                    {isGu
+                      ? `*કુલ ${inr(subsidy)} સબસિડી મળ્યા પછી. ચુકવણી કરો અને બદલામાં 100% સબસિડી મેળવો.`
+                      : `*After ${inr(subsidy)} total subsidy. Pay & get 100% subsidy in return.`}
                   </p>
                 </div>
               </Reveal>

@@ -10,6 +10,7 @@ import Institutions from "./components/Institutions";
 import MobileCta from "./components/MobileCta";
 import ProductSection from "./components/ProductSection";
 import SixPillars from "./components/SixPillars";
+import Testimonials from "./components/Testimonials";
 import TrustStrip from "./components/TrustStrip";
 import { FAQS } from "./lib/content";
 
@@ -42,6 +43,7 @@ export default function Page() {
         <Institutions />
         <SixPillars />
         <HowItWorks />
+        <Testimonials />
         <Faq />
         <FinalCta />
       </main>

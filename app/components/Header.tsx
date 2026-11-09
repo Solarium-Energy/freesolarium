@@ -2,14 +2,58 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { ArrowUpRight, Menu, Phone, X } from "lucide-react";
 import { site } from "../lib/content";
+import { useLanguage } from "../lib/language";
 
 const NAV = [
-  { label: "What you get", href: "#product" },
-  { label: "How it works", href: "#how" },
-  { label: "FAQ", href: "#faq" },
+  { label: "What you get", guLabel: "તમને શું મળશે", href: "/#product" },
+  { label: "How it works", guLabel: "તે કેવી રીતે કામ કરે છે", href: "/#how" },
+  { label: "Reviews", guLabel: "ગ્રાહકોના અભિપ્રાય", href: "/#testimonials" },
+  { label: "FAQ", guLabel: "વારંવાર પૂછાતા પ્રશ્નો (FAQ)", href: "/#faq" },
 ];
+
+function LanguageSwitch() {
+  const { lang, setLang } = useLanguage();
+  const isGu = lang === "gu";
+  return (
+    <div
+      role="group"
+      aria-label="Language selector"
+      className="relative inline-grid grid-cols-2 items-center rounded-full border border-slate-200/90 bg-slate-100/95 p-[3px] text-[11.5px] font-extrabold shadow-inner select-none"
+    >
+      {/* Smooth gliding pill indicator */}
+      <span
+        aria-hidden="true"
+        className={`pointer-events-none absolute top-[3px] bottom-[3px] left-[3px] w-[calc(50%-3px)] rounded-full shadow-[0_2px_8px_rgba(3,73,130,0.28)] transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform ${
+          isGu ? "translate-x-full bg-orange" : "translate-x-0 bg-navy"
+        }`}
+      />
+      <button
+        type="button"
+        onClick={() => setLang("en")}
+        aria-pressed={!isGu}
+        className={`relative z-10 flex h-7 w-8 items-center justify-center rounded-full transition-colors duration-300 ${
+          !isGu ? "text-white" : "text-navy/65 hover:text-navy"
+        }`}
+      >
+        EN
+      </button>
+      <button
+        type="button"
+        onClick={() => setLang("gu")}
+        aria-pressed={isGu}
+        title="ગુજરાતી"
+        className={`relative z-10 flex h-7 w-8 items-center justify-center rounded-full text-[12.5px] leading-none transition-colors duration-300 ${
+          isGu ? "text-white" : "text-navy/65 hover:text-navy"
+        }`}
+      >
+        ગુ
+      </button>
+    </div>
+  );
+}
 
 function BrandLogo() {
   return (
@@ -29,6 +73,7 @@ export default function Header() {
   const [open, setOpen]       = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden]   = useState(false);
+  const { isGu } = useLanguage();
 
   const lastY = useRef(0);
 
@@ -70,26 +115,26 @@ export default function Header() {
       `}
     >
       <div className="mx-auto flex h-[56px] max-w-[1200px] items-center justify-between gap-4 px-5 lg:px-6">
-        <a
-          href="#top"
+        <Link
+          href="/"
           className="flex items-center gap-2.5"
           onClick={() => setOpen(false)}
         >
           <BrandLogo />
           <span className="ml-1 hidden rounded-full border border-line bg-paper px-2.5 py-0.5 text-[10px] font-semibold tracking-wide text-muted sm:inline-block">
-            BSE Listed
+            {isGu ? "BSE પર લિસ્ટેડ" : "BSE Listed"}
           </span>
-        </a>
+        </Link>
 
         <nav className="hidden items-center gap-7 lg:flex" aria-label="Primary">
           {NAV.map((item) => (
-            <a
+            <Link
               key={item.href}
               href={item.href}
               className="text-[13px] font-medium text-navy/70 transition-colors hover:text-accent"
             >
-              {item.label}
-            </a>
+              {isGu ? item.guLabel : item.label}
+            </Link>
           ))}
           <a
             href={site.phoneHref}
@@ -98,22 +143,17 @@ export default function Header() {
             <Phone className="h-3.5 w-3.5 text-orange-deep" />
             {site.phoneDisplay}
           </a>
-          <a
+          <Link
             href="/book"
             className="group inline-flex items-center gap-1.5 rounded-full bg-navy px-4 py-1.5 text-[12.5px] font-bold text-white transition-colors hover:bg-navy-soft"
           >
-            Book at ₹0
+            {isGu ? "₹0* માં બુક કરો" : "Book at 0*"}
             <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-          </a>
+          </Link>
         </nav>
 
         <div className="flex items-center gap-2 lg:hidden">
-          <a
-            href="/book"
-            className="inline-flex items-center gap-1 rounded-full bg-navy px-3.5 py-1.5 text-[11.5px] font-bold text-white"
-          >
-            Book at ₹0
-          </a>
+          <LanguageSwitch />
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
@@ -127,6 +167,11 @@ export default function Header() {
         </div>
       </div>
 
+      {/* Desktop extreme-right language toggle — keeps Book at 0* in its exact original container position */}
+      <div className="hidden lg:block lg:absolute lg:right-4 lg:top-1/2 lg:-translate-y-1/2 xl:right-6">
+        <LanguageSwitch />
+      </div>
+
       {open && (
         <div
           id="mobile-nav"
@@ -134,14 +179,14 @@ export default function Header() {
         >
           <nav className="flex flex-col" aria-label="Mobile">
             {NAV.map((item) => (
-              <a
+              <Link
                 key={item.href}
                 href={item.href}
                 onClick={() => setOpen(false)}
                 className="border-b border-white/10 py-3.5 text-[15px] font-medium text-paper/80"
               >
-                {item.label}
-              </a>
+                {isGu ? item.guLabel : item.label}
+              </Link>
             ))}
             <a
               href={site.phoneHref}
@@ -151,14 +196,14 @@ export default function Header() {
               {site.phoneDisplay}
             </a>
           </nav>
-          <a
+          <Link
             href="/book"
             onClick={() => setOpen(false)}
             className="mt-2 flex w-full items-center justify-center gap-2 rounded-xl bg-orange px-5 py-3.5 text-sm font-bold text-ink"
           >
-            Book my ₹0 system
+            {isGu ? "₹0* માં બુક કરો" : "Book at 0*"}
             <ArrowUpRight className="h-4 w-4" />
-          </a>
+          </Link>
         </div>
       )}
     </header>

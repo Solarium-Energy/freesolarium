@@ -1,44 +1,60 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useLanguage } from "../lib/language";
 import Reveal from "./Reveal";
 
 const PILLARS = [
   {
     n: "01",
     title: "STT - Solarium\nTrusted Technology",
-    body: "Maximum power generation with expert engineering.",
+    guTitle: "STT - સોલેરિયમ (Solarium)\nભરોસાપાત્ર ટેકનોલોજી",
+    body: "Maximum power generation with inhouse Solarium panel.",
+    guBody: "ઇન-હાઉસ 'સોલેરિયમ' પેનલ્સ દ્વારા મહત્તમ વીજ ઉત્પાદન.",
   },
   {
     n: "02",
     title: "Super Solid\nStructure",
+    guTitle: "સુપર સોલિડ (અત્યંત મજબૂત)\nસ્ટ્રક્ચર (માળખું)",
     body: "Steady and stable even in strong wind.",
+    guBody: "તેજ પવનોમાં પણ અડગ અને સ્થિર.",
   },
   {
     n: "03",
     title: "Stress-Free\nProcess",
+    guTitle: "તણાવમુક્ત\nપ્રક્રિયા",
     body: "Subsidy, DISCOM, bank, system engineering and installation — everything we will handle.",
+    guBody:
+      "સબસિડી, ડિસ્કોમ (DISCOM), બેંક, સિસ્ટમ એન્જિનિયરિંગ અને ઇન્સ્ટોલેશન — આ બધું જ અમે સંભાળી લઈશું.",
   },
   {
     n: "04",
     title: "Service Promise\nBest-in-Class",
-    body: "On-call helpline, free visit if required, service warranty of 5 years.",
+    guTitle: "સેવાનું વચન\nશ્રેષ્ઠ કક્ષાની સેવા",
+    body: "Single contact for all support you need. On-call helpline, free visit if required, service warranty of 5 years.",
+    guBody:
+      "તમને જોઈતી તમામ સહાય માટે એક જ સંપર્ક બિંદુ. ઓન-કોલ હેલ્પલાઇન, જરૂર પડે તો નિઃશુલ્ક મુલાકાત અને 5 વર્ષની સર્વિસ વોરંટી.",
   },
   {
     n: "05",
     title: "Safety &\nSecurity",
+    guTitle: "સલામતી અને\nસુરક્ષા",
     body: "Extended warranty at every step, free insurance of 5 years.",
+    guBody: "દરેક તબક્કે વિસ્તૃત વોરંટી અને 5 વર્ષનો મફત વીમો.",
   },
   {
     n: "06",
     title: "Speed of\nExecution",
-    body: "Fastest in the current market.",
+    guTitle: "અમલીકરણની\nઝડપ",
+    body: "Fastest in the current market. 15 days installation promise.",
+    guBody: "વર્તમાન બજારમાં સૌથી ઝડપી. 15 દિવસમાં ઇન્સ્ટોલેશનનું વચન.",
   },
 ] as const;
 
 const EXTRA_SCROLL = 1700;
 
 export default function SixPillars() {
+  const { isGu } = useLanguage();
   const outerRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const countRef = useRef<HTMLSpanElement>(null);
@@ -114,45 +130,41 @@ export default function SixPillars() {
           <Reveal direction="left">
             <p className="flex items-center gap-2.5 text-[14px] font-bold uppercase tracking-[0.2em] text-orange">
               <span className="h-px w-8 bg-orange/50" aria-hidden="true" />
-              The 6S
+              {isGu ? "6S (સિક્સ-એસ)" : "The 6S"}
             </p>
-            <h2 className="mt-3 text-[clamp(2.2rem,6vw,3.6rem)] font-bold leading-[1.04] tracking-[-0.035em] text-navy text-balance">
-              Built on six non-negotiables.
+            <h2 className="mt-3 text-[clamp(1.85rem,6vw,3.6rem)] font-bold leading-[1.05] tracking-[-0.035em] text-navy text-balance">
+              {isGu ? "છ અનિવાર્ય આધારસ્તંભો પર નિર્મિત." : "Built on six non-negotiables."}
             </h2>
           </Reveal>
 
           <div className="mt-7 mb-4 flex items-center justify-between">
             <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-muted">
-              6 pillars
+              {isGu ? "6 આધારસ્તંભો" : "6 pillars"}
             </p>
-            <p className="text-[11px] font-semibold text-muted/60">Swipe →</p>
+            <p className="text-[11px] font-semibold text-muted/60">
+              {isGu ? "સ્વાઇપ કરો →" : "Swipe →"}
+            </p>
           </div>
         </div>
 
         <div
-          className="hide-scrollbar flex gap-4 overflow-x-auto"
-          style={{
-            paddingLeft: "1.25rem",
-            paddingRight: "1.25rem",
-            scrollSnapType: "x mandatory",
-          }}
+          className="hide-scrollbar flex items-stretch gap-4 overflow-x-auto px-5 pb-2"
         >
           {PILLARS.map((item) => (
             <div
               key={item.n}
-              style={{ scrollSnapAlign: "start" }}
-              className="flex min-h-[250px] w-[265px] shrink-0 flex-col justify-between rounded-2xl bg-navy p-5 text-white shadow-[0_16px_36px_-20px_rgba(3,73,130,0.45)]"
+              className="flex h-auto w-[80vw] max-w-[265px] shrink-0 flex-col justify-between rounded-2xl bg-navy p-5 text-white shadow-[0_16px_36px_-20px_rgba(3,73,130,0.45)]"
             >
               <div>
                 <span className="font-display text-[19px] font-bold leading-none tracking-[-0.03em] text-orange/85">
                   {item.n}
                 </span>
-                <h3 className="mt-4 whitespace-pre-line font-display text-[24px] font-bold leading-[1.15] tracking-[-0.025em] text-white">
-                  {item.title}
+                <h3 className="mt-4 whitespace-pre-line font-display text-[21px] font-bold leading-[1.2] tracking-[-0.025em] text-white sm:text-[24px]">
+                  {isGu ? item.guTitle : item.title}
                 </h3>
               </div>
               <p className="mt-5 border-t border-white/10 pt-3.5 text-[12px] leading-relaxed text-white/60">
-                {item.body}
+                {isGu ? item.guBody : item.body}
               </p>
             </div>
           ))}
@@ -173,10 +185,12 @@ export default function SixPillars() {
                 <div>
                   <p className="flex items-center gap-2.5 text-[14px] font-bold uppercase tracking-[0.2em] text-orange">
                     <span className="h-px w-8 bg-orange/50" aria-hidden="true" />
-                    The 6S
+                    {isGu ? "6S (સિક્સ-એસ)" : "The 6S"}
                   </p>
                   <h2 className="mt-3 text-[clamp(2.5rem,5vw,4.2rem)] font-bold leading-[1.02] tracking-[-0.04em] text-navy">
-                    Built on six non-negotiables.
+                    {isGu
+                      ? "છ અનિવાર્ય આધારસ્તંભો પર નિર્મિત."
+                      : "Built on six non-negotiables."}
                   </h2>
                 </div>
               </Reveal>
@@ -213,13 +227,13 @@ export default function SixPillars() {
 
                     <div className="my-3.5 h-px w-full bg-white/10" />
 
-                    <h3 className="whitespace-pre-line font-display text-[24px] font-bold leading-[1.15] tracking-[-0.025em] text-white">
-                      {item.title}
+                    <h3 className="whitespace-pre-line font-display text-[21px] font-bold leading-[1.2] tracking-[-0.025em] text-white xl:text-[23px]">
+                      {isGu ? item.guTitle : item.title}
                     </h3>
                   </div>
 
                   <p className="mt-4 text-[11.5px] font-normal leading-[1.6] text-white/60">
-                    {item.body}
+                    {isGu ? item.guBody : item.body}
                   </p>
                 </div>
               ))}

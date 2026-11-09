@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import { Inter, Sora } from "next/font/google";
+import { Inter, Sora, Noto_Sans_Gujarati } from "next/font/google";
 import "./globals.css";
+import { LanguageProvider } from "./lib/language";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -11,6 +12,12 @@ const inter = Inter({
 const sora = Sora({
   subsets: ["latin"],
   variable: "--font-sora",
+  display: "swap",
+});
+
+const notoGujarati = Noto_Sans_Gujarati({
+  subsets: ["gujarati"],
+  variable: "--font-gujarati",
   display: "swap",
 });
 
@@ -30,7 +37,9 @@ export const metadata: Metadata = {
     "solar subsidy Gujarat",
   ],
   icons: {
-    icon: "/favicon.ico",
+    icon: "/icon.png",
+    shortcut: "/favicon.ico",
+    apple: "/apple-icon.png",
   },
   openGraph: {
     title: "Solar for your home at ₹0 — Solarium 2.18 kW Home Solar",
@@ -56,13 +65,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en-IN" className={`${inter.variable} ${sora.variable}`}>
+    <html
+      lang="en-IN"
+      className={`${inter.variable} ${sora.variable} ${notoGujarati.variable}`}
+    >
       <head>
         <noscript>
           <style>{`.reveal{opacity:1 !important;transform:none !important}`}</style>
         </noscript>
       </head>
-      <body>{children}</body>
+      <body>
+        <LanguageProvider>{children}</LanguageProvider>
+      </body>
     </html>
   );
 }

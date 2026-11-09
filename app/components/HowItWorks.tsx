@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { JOURNEY } from "../lib/content";
+import { useLanguage } from "../lib/language";
 import Reveal from "./Reveal";
 
 // 6 clockwise positions around the circle starting at 12 o'clock (0° top center):
@@ -19,6 +20,7 @@ const RADIUS = 114; // px
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 
 export default function HowItWorks() {
+  const { isGu } = useLanguage();
   const sectionRef = useRef<HTMLElement>(null);
   const circleWrapRef = useRef<HTMLDivElement>(null);
   const [progressPct, setProgressPct] = useState(0);
@@ -81,13 +83,15 @@ export default function HowItWorks() {
           <div className="max-w-[420px]">
             <p className="flex items-center gap-2.5 text-[10.5px] font-bold uppercase tracking-[0.2em] text-orange">
               <span className="h-px w-8 bg-orange/70" aria-hidden="true" />
-              After you book
+              {isGu ? "બુકિંગ કર્યા પછી" : "After you book"}
             </p>
             <h2 className="mt-2.5 text-[clamp(1.75rem,3vw,2.45rem)] font-bold leading-[1.08] tracking-[-0.035em] text-white text-balance">
-              From booking to solar power
+              {isGu ? "બુકિંગથી લઈને સોલર પાવર સુધી" : "From booking to solar power"}
             </h2>
             <p className="mt-2.5 text-[13px] leading-relaxed text-white/85">
-              Six steps, one team. You always know what happens next and what it costs.
+              {isGu
+                ? "છ પગલાં, એક જ ટીમ. તમને હંમેશા ખબર હશે કે આગળ શું થશે અને તેનો ખર્ચ કેટલો થશે."
+                : "Six steps, one team. You always know what happens next and what it costs."}
             </p>
           </div>
         </Reveal>
@@ -133,10 +137,10 @@ export default function HowItWorks() {
             {/* Center hub label */}
             <div className="pointer-events-none absolute top-1/2 left-1/2 flex h-28 w-28 -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded-full border border-white/40 bg-white/95 text-center shadow-lg backdrop-blur-sm">
               <span className="font-display text-[19px] font-extrabold tracking-[-0.03em] text-navy">
-                6 Steps
+                {isGu ? "૬ પગલાં" : "6 Steps"}
               </span>
-              <span className="mt-0.5 text-[9.5px] font-semibold text-muted">
-                One in-house team
+              <span className="mt-0.5 px-1 text-[9.5px] font-semibold leading-tight text-muted">
+                {isGu ? "એક જ ઇન-હાઉસ (આંતરિક) ટીમ" : "One in-house team"}
               </span>
             </div>
 
@@ -184,7 +188,7 @@ export default function HowItWorks() {
                         : "border-white/50 bg-white/90 text-navy"
                     }`}
                   >
-                    {item.n}
+                    {isGu ? item.guN : item.n}
                   </div>
 
                   {/* Connector tick */}
@@ -237,7 +241,7 @@ export default function HowItWorks() {
                           isLit ? "text-orange" : "text-orange/45"
                         }`}
                       >
-                        {item.n}
+                        {isGu ? item.guN : item.n}
                       </span>
                       <span
                         className={`rounded px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-[0.08em] transition-colors duration-200 ${
@@ -246,15 +250,15 @@ export default function HowItWorks() {
                             : "bg-paper text-muted"
                         }`}
                       >
-                        {item.when}
+                        {isGu ? item.guWhen : item.when}
                       </span>
                     </div>
 
                     <h3 className="mt-1 font-display text-[12.5px] font-bold leading-snug text-navy">
-                      {item.title}
+                      {isGu ? item.guTitle : item.title}
                     </h3>
                     <p className="mt-0.5 text-[10px] leading-snug text-body/85">
-                      {item.body}
+                      {isGu ? item.guBody : item.body}
                     </p>
                   </div>
                 </div>
@@ -267,40 +271,36 @@ export default function HowItWorks() {
         <div className="mt-7 -mx-5 lg:hidden">
           <div className="mb-3.5 flex items-center justify-between px-5">
             <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-white/75">
-              6 steps
+              {isGu ? "૬ પગલાં" : "6 steps"}
             </p>
-            <p className="text-[11px] font-semibold text-white/65">Swipe →</p>
+            <p className="text-[11px] font-semibold text-white/65">
+              {isGu ? "સ્વાઇપ કરો →" : "Swipe →"}
+            </p>
           </div>
 
           <div
-            className="hide-scrollbar flex gap-4 overflow-x-auto pb-2"
-            style={{
-              paddingLeft: "1.25rem",
-              paddingRight: "1.25rem",
-              scrollSnapType: "x mandatory",
-            }}
+            className="hide-scrollbar flex items-stretch gap-4 overflow-x-auto px-5 pb-2"
           >
             {JOURNEY.map((item) => (
               <div
                 key={item.n}
-                style={{ scrollSnapAlign: "start" }}
-                className="flex w-[250px] shrink-0 flex-col justify-between rounded-2xl border border-white/25 bg-white p-4 shadow-[0_12px_28px_-14px_rgba(2,27,51,0.45)]"
+                className="flex h-auto w-[80vw] max-w-[250px] shrink-0 flex-col justify-between rounded-2xl border border-white/25 bg-white p-4 shadow-[0_12px_28px_-14px_rgba(2,27,51,0.45)]"
               >
                 <div>
                   <div className="flex items-center justify-between gap-2">
                     <span className="font-display text-[18px] font-bold leading-none tracking-[-0.03em] text-orange">
-                      {item.n}
+                      {isGu ? item.guN : item.n}
                     </span>
                     <span className="rounded bg-navy/10 px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.08em] text-navy">
-                      {item.when}
+                      {isGu ? item.guWhen : item.when}
                     </span>
                   </div>
                   <h3 className="mt-2.5 font-display text-[14.5px] font-bold leading-snug text-navy">
-                    {item.title}
+                    {isGu ? item.guTitle : item.title}
                   </h3>
                 </div>
                 <p className="mt-2 text-[11.5px] leading-relaxed text-body/85">
-                  {item.body}
+                  {isGu ? item.guBody : item.body}
                 </p>
               </div>
             ))}
