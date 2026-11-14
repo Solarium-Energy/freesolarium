@@ -52,7 +52,7 @@ export default function FinalCta() {
                     {isGu ? "PM સૂર્ય ઘર · ગુજરાતના ઘરો" : "PM Surya Ghar · Gujarat homes"}
                   </div>
 
-                  <h2 className="mt-5 text-[clamp(1.9rem,4.6vw,3.1rem)] font-extrabold leading-[1.06] tracking-[-0.04em] text-white text-balance">
+                  <h2 className="mt-3.5 section-heading text-white">
                     {isGu ? (
                       <>
                         તમારી છત તૈયાર છે.<br className="hidden sm:block" /> શું તમે તૈયાર છો?
@@ -64,7 +64,7 @@ export default function FinalCta() {
                     )}
                   </h2>
 
-                  <p className="mt-3 text-[13px] font-medium leading-relaxed text-white/70">
+                  <p className="mt-3.5 section-body text-white/80">
                     {isGu ? (
                       <>
                         2.18 kW · સિસ્ટમનું મૂલ્ય {inr(PRICING.systemValue)} · પાત્ર સબસિડી*{" "}
@@ -125,18 +125,18 @@ export default function FinalCta() {
 
                   <Link
                     href="/book"
-                    className="group flex min-h-[50px] w-full items-center justify-center gap-2 rounded-xl bg-orange px-6 text-[14px] font-bold text-white shadow-[0_14px_32px_-10px_rgba(223,122,28,0.6)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#cc6d14]"
+                    className="group flex min-h-[50px] w-full items-center justify-center gap-2 rounded-xl bg-orange px-6 text-[14px] font-bold text-white shadow-[0_14px_32px_-10px_rgba(223,122,28,0.6)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#9a3412] hover:shadow-[0_18px_36px_-6px_rgba(154,52,18,0.7)] active:scale-[0.99]"
                   >
-                    {isGu ? "₹0* માં બુક કરો" : "Book at 0*"}
+                    {isGu ? "₹0* માં બુક કરો" : "Book at ₹0*"}
                     <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                   </Link>
 
                   <a
                     href={site.phoneHref}
-                    className="flex min-h-[44px] w-full items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/8 text-[13px] font-semibold text-white/85 transition-all duration-200 hover:bg-white/15"
+                    className="group flex min-h-[46px] w-full items-center justify-center gap-2 rounded-xl border border-white/30 bg-white/10 text-[13.5px] font-bold text-white shadow-sm transition-all duration-200 hover:border-white hover:bg-white hover:text-navy active:scale-[0.99]"
                   >
-                    <Phone className="h-3.5 w-3.5" />
-                    {site.phoneDisplay}
+                    <Phone className="h-4 w-4 text-white transition-colors group-hover:text-navy" />
+                    <span>{site.phoneDisplay}</span>
                   </a>
 
                   <p className="text-center text-[10px] text-white/35">

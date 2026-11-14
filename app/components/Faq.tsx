@@ -12,13 +12,13 @@ export default function Faq() {
       <div className="mx-auto grid max-w-[1200px] gap-10 px-5 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16 lg:px-6">
         <Reveal direction="left">
           <div className="lg:sticky lg:top-24">
-            <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-orange">
+            <p className="section-label text-orange">
               {isGu ? "સ્પષ્ટ જવાબો" : "Straight answers"}
             </p>
-            <h2 className="mt-4 max-w-[12ch] text-[clamp(1.9rem,4.2vw,2.9rem)] font-bold leading-[1.08] tracking-[-0.035em] text-balance">
+            <h2 className="mt-3.5 section-heading text-navy max-w-[12ch]">
               {isGu ? "તમારા પ્રશ્નોના સચોટ જવાબો." : "Questions, answered."}
             </h2>
-            <p className="mt-4 max-w-[340px] text-[13.5px] leading-relaxed text-body">
+            <p className="mt-3.5 section-body max-w-[340px] text-body">
               {isGu
                 ? "સિસ્ટમ બુક કરાવતા પહેલા તમારે જે જાણવું જરૂરી છે તે બધું અહીં છે. જો હજુ પણ કંઈ અસ્પષ્ટ હોય, તો સીધા અમારા પ્રતિનિધિ સાથે વાત કરો — કોઈ કોલ સેન્ટર નહીં!"
                 : "Everything worth knowing before you reserve. If something is still unclear, talk to a real person — no call centre."}

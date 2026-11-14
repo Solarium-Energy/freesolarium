@@ -126,7 +126,7 @@ export default function Header() {
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-7 lg:flex" aria-label="Primary">
+        <nav className="hidden items-center gap-5 xl:gap-6 lg:flex" aria-label="Primary">
           {NAV.map((item) => (
             <Link
               key={item.href}
@@ -143,11 +143,14 @@ export default function Header() {
             <Phone className="h-3.5 w-3.5 text-orange-deep" />
             {site.phoneDisplay}
           </a>
+          <div className="flex items-center">
+            <LanguageSwitch />
+          </div>
           <Link
             href="/book"
-            className="group inline-flex items-center gap-1.5 rounded-full bg-navy px-4 py-1.5 text-[12.5px] font-bold text-white transition-colors hover:bg-navy-soft"
+            className="group inline-flex items-center gap-1.5 rounded-full bg-navy px-4 py-1.5 text-[12.5px] font-bold text-white shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#011b33] hover:shadow-md active:scale-95"
           >
-            {isGu ? "₹0* માં બુક કરો" : "Book at 0*"}
+            {isGu ? "₹0* માં બુક કરો" : "Book at ₹0*"}
             <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
           </Link>
         </nav>
@@ -165,11 +168,6 @@ export default function Header() {
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
         </div>
-      </div>
-
-      {/* Desktop extreme-right language toggle — keeps Book at 0* in its exact original container position */}
-      <div className="hidden lg:block lg:absolute lg:right-4 lg:top-1/2 lg:-translate-y-1/2 xl:right-6">
-        <LanguageSwitch />
       </div>
 
       {open && (
@@ -201,7 +199,7 @@ export default function Header() {
             onClick={() => setOpen(false)}
             className="mt-2 flex w-full items-center justify-center gap-2 rounded-xl bg-orange px-5 py-3.5 text-sm font-bold text-ink"
           >
-            {isGu ? "₹0* માં બુક કરો" : "Book at 0*"}
+            {isGu ? "₹0* માં બુક કરો" : "Book at ₹0*"}
             <ArrowUpRight className="h-4 w-4" />
           </Link>
         </div>

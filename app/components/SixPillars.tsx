@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { MoveHorizontal } from "lucide-react";
 import { useLanguage } from "../lib/language";
 import Reveal from "./Reveal";
 
@@ -128,11 +129,11 @@ export default function SixPillars() {
       <div className="py-14 lg:hidden">
         <div className="mx-auto max-w-[1200px] px-5">
           <Reveal direction="left">
-            <p className="flex items-center gap-2.5 text-[14px] font-bold uppercase tracking-[0.2em] text-orange">
+            <p className="section-label flex items-center gap-2.5 text-orange">
               <span className="h-px w-8 bg-orange/50" aria-hidden="true" />
               {isGu ? "6S (સિક્સ-એસ)" : "The 6S"}
             </p>
-            <h2 className="mt-3 text-[clamp(1.85rem,6vw,3.6rem)] font-bold leading-[1.05] tracking-[-0.035em] text-navy text-balance">
+            <h2 className="mt-3.5 section-heading text-navy">
               {isGu ? "છ અનિવાર્ય આધારસ્તંભો પર નિર્મિત." : "Built on six non-negotiables."}
             </h2>
           </Reveal>
@@ -141,19 +142,20 @@ export default function SixPillars() {
             <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-muted">
               {isGu ? "6 આધારસ્તંભો" : "6 pillars"}
             </p>
-            <p className="text-[11px] font-semibold text-muted/60">
-              {isGu ? "સ્વાઇપ કરો →" : "Swipe →"}
-            </p>
+            <div className="flex items-center gap-1.5 rounded-full border border-navy/15 bg-paper-deep px-2.5 py-1 text-[11px] font-semibold text-navy">
+              <MoveHorizontal className="h-3.5 w-3.5 animate-pulse text-orange" />
+              <span>{isGu ? "સ્વાઇપ કરો" : "Swipe"}</span>
+            </div>
           </div>
         </div>
 
         <div
-          className="hide-scrollbar flex items-stretch gap-4 overflow-x-auto px-5 pb-2"
+          className="hide-scrollbar flex snap-x snap-mandatory items-stretch gap-4 overflow-x-auto px-5 pb-2"
         >
           {PILLARS.map((item) => (
             <div
               key={item.n}
-              className="flex h-auto w-[80vw] max-w-[265px] shrink-0 flex-col justify-between rounded-2xl bg-navy p-5 text-white shadow-[0_16px_36px_-20px_rgba(3,73,130,0.45)]"
+              className="flex h-auto w-[calc(100vw-2.5rem)] max-w-[360px] shrink-0 snap-center flex-col justify-between rounded-2xl bg-navy p-5 text-white shadow-[0_16px_36px_-20px_rgba(3,73,130,0.45)]"
             >
               <div>
                 <span className="font-display text-[19px] font-bold leading-none tracking-[-0.03em] text-orange/85">
@@ -183,11 +185,11 @@ export default function SixPillars() {
             <div className="flex items-end justify-between gap-8">
               <Reveal direction="left">
                 <div>
-                  <p className="flex items-center gap-2.5 text-[14px] font-bold uppercase tracking-[0.2em] text-orange">
+                  <p className="section-label flex items-center gap-2.5 text-orange">
                     <span className="h-px w-8 bg-orange/50" aria-hidden="true" />
                     {isGu ? "6S (સિક્સ-એસ)" : "The 6S"}
                   </p>
-                  <h2 className="mt-3 text-[clamp(2.5rem,5vw,4.2rem)] font-bold leading-[1.02] tracking-[-0.04em] text-navy">
+                  <h2 className="mt-3.5 section-heading text-navy">
                     {isGu
                       ? "છ અનિવાર્ય આધારસ્તંભો પર નિર્મિત."
                       : "Built on six non-negotiables."}

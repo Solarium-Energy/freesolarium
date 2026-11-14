@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ArrowUpRight, ChevronLeft, ChevronRight, Star } from "lucide-react";
+import { ArrowUpRight, ChevronLeft, ChevronRight, MoveHorizontal, Star } from "lucide-react";
 import { CUSTOMER_SAVINGS, TESTIMONIALS } from "../lib/content";
 import { useLanguage } from "../lib/language";
 import Reveal from "./Reveal";
@@ -78,7 +78,7 @@ export default function Testimonials() {
         {/* Header */}
         <div className="flex flex-col items-center text-center">
           <Reveal direction="up" delay={0}>
-            <p className="flex items-center justify-center gap-2 text-[11px] font-bold uppercase tracking-[0.2em] text-orange">
+            <p className="section-label flex items-center justify-center gap-2 text-orange">
               <span className="h-px w-6 bg-orange/60" aria-hidden="true" />
               {isGu ? "ગ્રાહકોના અનુભવો" : "Customer stories"}
               <span className="h-px w-6 bg-orange/60" aria-hidden="true" />
@@ -101,22 +101,30 @@ export default function Testimonials() {
           </Reveal>
 
           <Reveal direction="up" delay={90}>
-            <h2 className="mt-4 font-display text-[clamp(1.8rem,4.2vw,2.7rem)] font-extrabold leading-tight tracking-[-0.03em] text-navy">
+            <h2 className="mt-3.5 section-heading text-navy">
               {isGu ? "વાસ્તવિક ગ્રાહકો. વાસ્તવિક બચત." : "Real Homeowners. Real Savings."}
             </h2>
           </Reveal>
 
           <Reveal direction="up" delay={140}>
-            <p className="mt-2.5 max-w-[580px] text-[14px] sm:text-[15px] leading-relaxed text-slate-600">
+            <p className="mt-3.5 section-body max-w-[580px] text-body">
               {isGu
                 ? "જે ઘરમાલિકોએ સબસિડી, નેટ મીટરિંગ અને ઇન્સ્ટોલેશન માટે સોલેરિયમ પર વિશ્વાસ મૂક્યો છે તેમના સીધા અભિપ્રાય વાંચો."
                 : "Hear directly from homeowners who trusted Solarium to handle their subsidies, net metering, and installation."}
             </p>
           </Reveal>
+
+          {/* Mobile swipe indicator */}
+          <div className="mt-4 flex items-center justify-center md:hidden">
+            <div className="flex items-center gap-1.5 rounded-full border border-navy/15 bg-paper-deep px-3 py-1 text-[11px] font-semibold text-navy shadow-xs">
+              <MoveHorizontal className="h-3.5 w-3.5 animate-pulse text-orange" />
+              <span>{isGu ? "રિવ્યૂ વાંચવા સ્વાઇપ કરો" : "Swipe to explore reviews"}</span>
+            </div>
+          </div>
         </div>
 
         {/* ── 3 Horizontal Testimonial Cards on Desktop, Swipe Carousel on Mobile ── */}
-        <div className="mt-10 sm:mt-12">
+        <div className="mt-8 sm:mt-12">
           {/* Scrollable Container (Swipe on mobile, 3-column horizontal grid on desktop) */}
           <div
             ref={scrollRef}
@@ -125,7 +133,7 @@ export default function Testimonials() {
             {TESTIMONIALS.map((testimonial) => (
               <div
                 key={testimonial.id}
-                className="flex h-auto w-[86vw] max-w-[370px] shrink-0 snap-center flex-col justify-between rounded-2xl border border-slate-200/80 bg-white p-5 sm:p-6 shadow-xs transition-all duration-200 hover:border-navy/20 md:w-auto md:max-w-none md:shrink"
+                className="flex h-auto w-[calc(100vw-2.5rem)] max-w-[360px] shrink-0 snap-center flex-col justify-between rounded-2xl border border-slate-200/80 bg-white p-5 sm:p-6 shadow-xs transition-all duration-200 hover:border-navy/20 md:w-auto md:max-w-none md:shrink"
               >
                 <div>
                   {/* Reviewer Profile Header (Google Maps style) */}

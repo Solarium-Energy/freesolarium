@@ -64,7 +64,7 @@ function ChoiceBtn({
       type="button"
       onClick={onClick}
       aria-pressed={active}
-      className={`flex flex-1 flex-col items-start rounded-xl border px-4 py-2.5 text-left transition-all duration-200 ${
+      className={`flex flex-1 flex-col items-start rounded-xl border px-3 py-1.5 sm:px-4 sm:py-2 text-left transition-all duration-200 ${
         active
           ? "border-navy bg-navy text-white shadow-[0_6px_16px_-8px_rgba(3,73,130,0.4)]"
           : missing
@@ -72,9 +72,9 @@ function ChoiceBtn({
           : "border-slate-200 bg-slate-50 text-navy hover:border-navy/30 hover:bg-slate-100"
       }`}
     >
-      <span className="text-[11.5px] font-bold leading-snug">{label}</span>
+      <span className="text-[11px] sm:text-[11.5px] font-bold leading-snug">{label}</span>
       {sub && (
-        <span className={`mt-0.5 text-[9.5px] font-medium ${active ? "text-white/70" : "text-slate-400"}`}>
+        <span className={`mt-0.5 text-[9px] sm:text-[9.5px] font-medium ${active ? "text-white/70" : "text-slate-400"}`}>
           {sub}
         </span>
       )}
@@ -138,8 +138,8 @@ function QuotationCard() {
     setShowQuotationModal(true);
   }
 
-  const baseInp = "h-[38px] w-full rounded-xl border bg-white px-2.5 sm:px-3.5 text-[10.5px] sm:text-[11px] font-medium text-navy outline-none transition placeholder:font-normal placeholder:text-slate-400 focus:border-navy/40 focus:ring-1 focus:ring-navy/10";
-  const baseSel = "h-[38px] w-full appearance-none rounded-xl border pl-2.5 sm:pl-3.5 pr-7 sm:pr-8 text-[10.5px] sm:text-[11px] font-semibold text-navy outline-none transition hover:border-navy/30 focus:border-navy/40 focus:bg-white focus:ring-1 focus:ring-navy/10";
+  const baseInp = "h-[34px] sm:h-[38px] w-full rounded-xl border bg-white px-2.5 text-[10px] sm:text-[11px] font-medium text-navy outline-none transition placeholder:font-normal placeholder:text-slate-400 placeholder:truncate focus:border-navy/40 focus:ring-1 focus:ring-navy/10";
+  const baseSel = "h-[34px] sm:h-[38px] w-full appearance-none rounded-xl border pl-2 pr-5 sm:pl-2.5 sm:pr-7 text-[10px] sm:text-[11px] font-semibold text-navy outline-none transition hover:border-navy/30 focus:border-navy/40 focus:bg-white focus:ring-1 focus:ring-navy/10 truncate";
 
   return (
     <div
@@ -148,43 +148,43 @@ function QuotationCard() {
       style={{ scrollMarginTop: "80px" }}
     >
       {/* Header */}
-      <div className="border-b border-slate-100 px-4 py-3.5 sm:px-6">
-        <p className="text-[9.5px] font-bold uppercase tracking-[0.18em] text-orange-deep">
+      <div className="border-b border-slate-100 px-3.5 py-2.5 sm:px-6 sm:py-3.5">
+        <p className="text-[9px] sm:text-[9.5px] font-bold uppercase tracking-[0.16em] text-orange-deep">
           {isGu ? "તમારો ક્વોટેશન (ભાવપત્રક) મેળવો" : "Get your quotation"}
         </p>
-        <p className="mt-0.5 font-display text-[15.5px] font-extrabold leading-tight tracking-[-0.02em] text-navy">
+        <p className="mt-0.5 font-display text-[14px] sm:text-[15.5px] font-extrabold leading-tight tracking-[-0.02em] text-navy">
           {isGu ? "કિંમતની વિગતવાર માહિતી ડાઉનલોડ કરો" : "Download detailed pricing"}
         </p>
       </div>
 
-      <div className="space-y-2.5 px-4 py-4 sm:px-6">
+      <div className="space-y-2 sm:space-y-2.5 px-3.5 py-3 sm:px-6 sm:py-4">
 
-        {/* Subsidy breakdown — 3-column */}
-        <div className="grid grid-cols-3 divide-x divide-navy/15 overflow-hidden rounded-xl border border-navy/30">
-          <div className="bg-slate-50 px-2 py-2 text-center sm:px-3.5">
-            <p className="text-[7.5px] font-bold uppercase tracking-[0.08em] text-slate-400 sm:text-[8px] sm:tracking-[0.1em]">
-              {isGu ? "સિસ્ટમનું મૂલ્ય" : "System value"}
-            </p>
-            <p className="mt-0.5 text-[10.5px] font-bold text-navy sm:text-[11px]">{inr(PRICING.systemValue)}</p>
+        {/* Compact Price & Subsidy Strip */}
+        <div className="flex items-center justify-between gap-1.5 rounded-xl border border-emerald-600/20 bg-emerald-50/60 px-3 py-1.5 sm:px-3.5 sm:py-2">
+          <div className="flex items-center gap-1 sm:gap-1.5 text-[10.5px] sm:text-[11.5px] font-bold text-navy">
+            <span>{inr(PRICING.systemValue)}</span>
+            <span className="font-normal text-slate-400">−</span>
+            <span className="text-emerald-700">
+              {inr(PRICING.centralSubsidy + PRICING.stateSubsidy)}{" "}
+              <span className="text-[9px] sm:text-[9.5px] font-semibold text-emerald-600">
+                {isGu ? "સબસિડી" : "subsidy"}
+              </span>
+            </span>
           </div>
-          <div className="bg-slate-50 px-2 py-2 text-center sm:px-3.5">
-            <p className="text-[7.5px] font-bold uppercase tracking-[0.08em] text-slate-400 sm:text-[8px] sm:tracking-[0.1em]">
-              {isGu ? "કુલ સબસિડી" : "Total subsidy"}
-            </p>
-            <p className="mt-0.5 text-[10.5px] font-bold text-emerald-600 sm:text-[11px]">−{inr(PRICING.centralSubsidy + PRICING.stateSubsidy)}</p>
-          </div>
-          <div className="bg-navy px-2 py-2 text-center sm:px-3.5">
-            <p className="text-[7.5px] font-bold uppercase tracking-[0.08em] text-white/60 sm:text-[8px] sm:tracking-[0.1em]">
-              {isGu ? "ચોખ્ખું રોકાણ" : "Net investment"}
-            </p>
-            <p className="mt-0.5 text-[11.5px] font-extrabold tracking-tight text-white sm:text-[12.5px]">{inr(HERO_PRICE)}*</p>
+          <div className="flex items-center gap-1 sm:gap-1.5">
+            <span className="text-[9.5px] sm:text-[10.5px] font-medium text-slate-500">
+              {isGu ? "તમારે ચૂકવવાના:" : "You pay:"}
+            </span>
+            <span className="rounded-md bg-emerald-600 px-2 py-0.5 text-[11.5px] sm:text-[12.5px] font-extrabold text-white shadow-xs">
+              ₹0*
+            </span>
           </div>
         </div>
 
-        <p className="text-center text-[9.5px] font-medium text-orange-deep">
+        <p className="text-center text-[9px] sm:text-[9.5px] text-slate-500">
           {isGu
-            ? "*રાજ્ય સબસિડી માત્ર પ્રથમ 3 લાખ પરિવારો માટે જ મર્યાદિત છે — તમારો હિસ્સો (allocation) મેળવવા માટે વહેલી તકે અરજી કરો."
-            : "*State subsidy is limited to the first 3 lakh households only — act early to secure your allocation."}
+            ? "100% સબસિડી સીધી બેંકમાં *પ્રથમ 3 લાખ પરિવારો માટે"
+            : "100% subsidy credited to bank *First 3 lakh households"}
         </p>
 
         {/* Category */}
@@ -210,11 +210,11 @@ function QuotationCard() {
           </div>
         </div>
 
-        {/* 3 Dropdowns: Floor, Structure Height, DISCOM Meter */}
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+        {/* 3 Dropdowns: Floor, Structure Height, DISCOM Meter in a single row */}
+        <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
           <div>
-            <label htmlFor="quote-floor" className="mb-1 block truncate text-[9px] font-bold uppercase tracking-[0.1em] text-slate-400">
-              {isGu ? "1 · ફ્લોર (કેબલ)" : "1 · Floor (cable)"}
+            <label htmlFor="quote-floor" className="mb-0.5 block truncate text-[8.5px] sm:text-[9px] font-bold uppercase tracking-[0.08em] text-slate-400">
+              {isGu ? "૧ · ફ્લોર" : "1 · Floor"}
             </label>
             <div className="relative">
               <select
@@ -231,7 +231,7 @@ function QuotationCard() {
                 }`}
               >
                 <option value="" disabled>
-                  {isGu ? "ફ્લોર પસંદ કરો" : "Select floor"}
+                  {isGu ? "ફ્લોર" : "Floor"}
                 </option>
                 {FLOOR_OPTIONS.map((opt) => (
                   <option key={opt.label} value={opt.label}>
@@ -239,13 +239,13 @@ function QuotationCard() {
                   </option>
                 ))}
               </select>
-              <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-3 w-3 -translate-y-1/2 text-slate-400" />
+              <ChevronDown className="pointer-events-none absolute right-1.5 sm:right-2 top-1/2 h-3 w-3 -translate-y-1/2 text-slate-400" />
             </div>
           </div>
 
           <div>
-            <label htmlFor="quote-height" className="mb-1 block truncate text-[9px] font-bold uppercase tracking-[0.1em] text-slate-400">
-              {isGu ? "2 · આગળના પાયાની ઊંચાઈ" : "2 · Front-leg height"}
+            <label htmlFor="quote-height" className="mb-0.5 block truncate text-[8.5px] sm:text-[9px] font-bold uppercase tracking-[0.08em] text-slate-400">
+              {isGu ? "૨ · ઊંચાઈ" : "2 · Height"}
             </label>
             <div className="relative">
               <select
@@ -262,7 +262,7 @@ function QuotationCard() {
                 }`}
               >
                 <option value="" disabled>
-                  {isGu ? "ઊંચાઈ પસંદ કરો" : "Select height"}
+                  {isGu ? "ઊંચાઈ" : "Height"}
                 </option>
                 {STRUCTURE_HEIGHT_OPTIONS.map((opt) => (
                   <option key={opt.label} value={opt.label}>
@@ -270,13 +270,13 @@ function QuotationCard() {
                   </option>
                 ))}
               </select>
-              <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-3 w-3 -translate-y-1/2 text-slate-400" />
+              <ChevronDown className="pointer-events-none absolute right-1.5 sm:right-2 top-1/2 h-3 w-3 -translate-y-1/2 text-slate-400" />
             </div>
           </div>
 
-          <div className="col-span-2 sm:col-span-1">
-            <label htmlFor="quote-discom" className="mb-1 block truncate text-[9px] font-bold uppercase tracking-[0.1em] text-slate-400">
-              {isGu ? "3 · DISCOM (વીજ કંપની) મીટર" : "3 · DISCOM meter"}
+          <div>
+            <label htmlFor="quote-discom" className="mb-0.5 block truncate text-[8.5px] sm:text-[9px] font-bold uppercase tracking-[0.08em] text-slate-400">
+              {isGu ? "૩ · DISCOM" : "3 · DISCOM"}
             </label>
             <div className="relative">
               <select
@@ -293,7 +293,7 @@ function QuotationCard() {
                 }`}
               >
                 <option value="" disabled>
-                  {isGu ? "DISCOM પસંદ કરો" : "Select DISCOM"}
+                  {isGu ? "DISCOM" : "DISCOM"}
                 </option>
                 {DISCOM_OPTIONS.map((opt) => (
                   <option key={opt.label} value={opt.label}>
@@ -301,7 +301,7 @@ function QuotationCard() {
                   </option>
                 ))}
               </select>
-              <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-3 w-3 -translate-y-1/2 text-slate-400" />
+              <ChevronDown className="pointer-events-none absolute right-1.5 sm:right-2 top-1/2 h-3 w-3 -translate-y-1/2 text-slate-400" />
             </div>
           </div>
         </div>
@@ -314,12 +314,12 @@ function QuotationCard() {
           <p className="mb-1 text-[9px] font-bold uppercase tracking-[0.12em] text-slate-400">
             {isGu ? "ગ્રાહકની વિગતો" : "Customer details"}
           </p>
-          <div className="space-y-2">
-            <div className="grid grid-cols-2 gap-2">
+          <div className="space-y-1.5 sm:space-y-2">
+            <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
               <input
                 className={`${baseInp} ${attempted && !validNameBill ? "border-orange/50 bg-orange/[0.03]" : "border-slate-200"}`}
                 type="text"
-                placeholder={isGu ? "નામ (વીજળીના બિલ મુજબ)" : "Name (as per electricity bill)"}
+                placeholder={isGu ? "નામ (બિલ મુજબ)" : "Name (on bill)"}
                 autoComplete="name"
                 value={customerNameBill}
                 onChange={(e) => setCustomerNameBill(e.target.value)}
@@ -327,7 +327,7 @@ function QuotationCard() {
               <input
                 className={`${baseInp} ${attempted && !validNameBank ? "border-orange/50 bg-orange/[0.03]" : "border-slate-200"}`}
                 type="text"
-                placeholder={isGu ? "નામ (બેંક ખાતા મુજબ)" : "Name (as per bank account)"}
+                placeholder={isGu ? "નામ (બેંક મુજબ)" : "Name (in bank)"}
                 value={customerNameBank}
                 onChange={(e) => setCustomerNameBank(e.target.value)}
               />
@@ -340,12 +340,12 @@ function QuotationCard() {
               value={address}
               onChange={(e) => setAddress(e.target.value)}
             />
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
               <input
                 className={`${baseInp} ${attempted && !validMobile ? "border-orange/50 bg-orange/[0.03]" : "border-slate-200"}`}
                 type="tel"
                 inputMode="numeric"
-                placeholder={isGu ? "મોબાઈલ નંબર (10 અંક)" : "Mobile (10 digits)"}
+                placeholder={isGu ? "મોબાઈલ (10 અંક)" : "Mobile (10 digits)"}
                 autoComplete="tel"
                 value={mobile}
                 onChange={(e) => setMobile(e.target.value.replace(/\D/g, "").slice(0, 10))}
@@ -353,7 +353,7 @@ function QuotationCard() {
               <input
                 className={`${baseInp} ${attempted && !validConsumerNo ? "border-orange/50 bg-orange/[0.03]" : "border-slate-200"}`}
                 type="text"
-                placeholder={isGu ? "ગ્રાહક નંબર (Consumer No.)" : "Consumer No."}
+                placeholder={isGu ? "ગ્રાહક નંબર" : "Consumer No."}
                 value={consumerNo}
                 onChange={(e) => setConsumerNo(e.target.value)}
               />
@@ -394,7 +394,7 @@ function QuotationCard() {
           <button
             type="button"
             onClick={handleActionClick}
-            className="group flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-navy px-4 text-[11px] font-bold text-white shadow-[0_8px_20px_-10px_rgba(3,73,130,0.45)] transition-all duration-200 hover:bg-navy-deep"
+            className="group flex h-8 sm:h-10 w-full items-center justify-center gap-1.5 sm:gap-2 rounded-lg sm:rounded-xl bg-navy px-3 sm:px-4 text-[10px] sm:text-[11px] font-bold text-white shadow-[0_8px_20px_-10px_rgba(3,73,130,0.45)] transition-all duration-200 hover:bg-navy-deep"
           >
             {needsCallback ? (
               <>
@@ -462,7 +462,7 @@ export default function Hero() {
         <div>
           {/* Level 1: System & Scheme (pure text, no pills) */}
           <Reveal direction="left" delay={0}>
-            <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[10.5px] font-bold uppercase tracking-[0.16em] sm:gap-x-2.5 sm:text-[11.5px] sm:tracking-[0.18em]">
+            <p className="flex flex-wrap items-center gap-x-2 gap-y-1 section-label sm:gap-x-2.5">
               <span className="text-white/90">2.18 kW</span>
               <span className="text-white/30" aria-hidden="true">·</span>
               <span className="text-orange">
@@ -475,7 +475,7 @@ export default function Hero() {
 
           {/* Level 2: Dominant headline */}
           <Reveal direction="left" delay={70}>
-            <h1 className="mt-3.5 max-w-xl text-[clamp(2.15rem,6vw,4.4rem)] font-extrabold leading-[1.06] tracking-tight text-white sm:mt-4">
+            <h1 className="mt-3.5 max-w-xl text-[clamp(2.15rem,5.5vw,3.75rem)] font-extrabold leading-[1.08] tracking-tight text-white sm:mt-4">
               {isGu ? (
                 <>
                   તમારા ઘર માટે{" "}
@@ -498,7 +498,7 @@ export default function Hero() {
           {/* Level 3: Elevated financial value proof card */}
           <Reveal direction="left" delay={130}>
             <div className="mt-4 inline-flex items-center rounded-xl border border-white/10 bg-white/[0.05] px-3.5 py-2.5 backdrop-blur-sm sm:px-4">
-              <p className="text-[13px] font-medium leading-relaxed text-white/70 sm:text-[15.5px]">
+              <p className="section-body text-white/80">
                 {isGu ? (
                   <>
                     દર મહિને <span className="font-bold text-white">લગભગ ₹2,000 ની બચત</span> કરો. એટલે કે 25 વર્ષમાં કુલ <span className="font-bold text-white">₹6 લાખની બચત</span>.
@@ -514,17 +514,17 @@ export default function Hero() {
 
           {/* Level 4: Action CTAs */}
           <Reveal direction="up" delay={180}>
-            <div className="mt-6 flex flex-wrap items-center gap-3">
+            <div className="mt-4 sm:mt-6 flex flex-wrap items-center gap-2.5 sm:gap-3">
               <Link
                 href="/book"
-                className="group inline-flex min-h-[48px] flex-1 items-center justify-center gap-2 rounded-xl border border-white/15 bg-orange px-5 text-[13px] font-bold text-white shadow-[0_10px_24px_-10px_rgba(223,122,28,0.45)] backdrop-blur-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#cc6d14] sm:flex-initial sm:px-6 sm:text-[13.5px]"
+                className="group inline-flex min-h-[38px] sm:min-h-[48px] flex-1 items-center justify-center gap-1.5 sm:gap-2 rounded-lg sm:rounded-xl border border-white/15 bg-orange px-3.5 sm:px-6 py-2 text-[11.5px] sm:text-[13.5px] font-bold text-white shadow-[0_8px_20px_-8px_rgba(223,122,28,0.45)] backdrop-blur-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#9a3412] hover:shadow-[0_14px_30px_-6px_rgba(154,52,18,0.65)] active:scale-95 sm:flex-initial"
               >
                 {isGu ? "મારી સિસ્ટમ બુક કરો" : "Book my system"}
-                <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
+                <ArrowRight className="h-3 w-3 sm:h-3.5 sm:w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
               </Link>
               <a
                 href="#how"
-                className="inline-flex min-h-[48px] flex-1 items-center justify-center gap-2 rounded-xl bg-white px-4 text-[13px] font-bold text-navy shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-slate-100 sm:flex-initial sm:px-5"
+                className="inline-flex min-h-[38px] sm:min-h-[48px] flex-1 items-center justify-center gap-1.5 sm:gap-2 rounded-lg sm:rounded-xl bg-white px-3 sm:px-5 py-2 text-[11.5px] sm:text-[13px] font-bold text-navy shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-slate-100 sm:flex-initial"
               >
                 {isGu ? "તે કેવી રીતે કામ કરે છે તે જાણો" : "See how it works"}
               </a>

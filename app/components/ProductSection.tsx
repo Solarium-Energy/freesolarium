@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState, useCallback } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, MoveHorizontal, ShieldCheck } from "lucide-react";
 import { INCLUDED } from "../lib/content";
 import { useLanguage } from "../lib/language";
 import Reveal from "./Reveal";
@@ -90,14 +90,14 @@ export default function ProductSection() {
 
     return (
       <div
-        className="group relative flex h-full w-[82vw] max-w-[300px] shrink-0 flex-col overflow-hidden rounded-2xl transition-all duration-300 sm:w-[325px] sm:max-w-none lg:w-[335px]"
+        className="group relative flex h-full w-[calc(100vw-2.5rem)] max-w-[360px] shrink-0 snap-center flex-col overflow-hidden rounded-2xl transition-all duration-300 sm:w-[325px] sm:max-w-none lg:w-[335px]"
         style={{
           background: "linear-gradient(160deg, #0c2d4a 0%, #051d33 100%)",
           boxShadow: "0 18px 45px -15px rgba(2,27,51,0.65), inset 0 1px 0 rgba(255,255,255,0.06)",
         }}
       >
         {/* ── Image ── */}
-        <div className="relative h-[185px] w-full overflow-hidden bg-[#031525] sm:h-[205px]">
+        <div className="relative h-[160px] w-full overflow-hidden bg-[#031525] sm:h-[205px]">
           <Image
             src={item.image}
             alt={displayAlt}
@@ -194,53 +194,33 @@ export default function ProductSection() {
       <div className="mx-auto max-w-[1200px] px-5 pb-10 pt-16 lg:px-6 lg:pt-24">
         <Reveal direction="left">
           <div className="max-w-[720px]">
-            <p className="flex items-center gap-2.5 text-[11px] font-bold uppercase tracking-[0.2em] text-orange">
+            <p className="section-label flex items-center gap-2.5 text-orange">
               <span className="h-px w-8 bg-orange/50" aria-hidden="true" />
               {isGu ? "તમને શું મળશે" : "What you get"}
             </p>
-            <h2 className="mt-4 text-[clamp(1.9rem,4.2vw,2.9rem)] font-bold leading-[1.05] tracking-[-0.035em] text-navy text-balance">
+            <h2 className="mt-3.5 section-heading text-navy">
               {isGu
                 ? "સંપૂર્ણ સિસ્ટમ. તમારે બહારથી કંઈપણ ખરીદવાની જરૂર નથી."
                 : "Complete system. Nothing to source yourself."}
             </h2>
-            <p className="mt-4 max-w-[560px] text-[15px] leading-relaxed text-body">
+            <p className="mt-3.5 section-body max-w-[560px] text-body">
               {isGu
                 ? "₹0 ખર્ચનો અર્થ એ નથી કે તમને કોઈ અધૂરી કે મર્યાદિત સુવિધાઓવાળી કિટ મળશે. આ એ જ સિસ્ટમ છે જે અમે પેઇડ ઓર્ડર (જેના માટે ચૂકવણી કરવામાં આવી છે) હેઠળ ઇન્સ્ટોલ કરીએ છીએ — જે એક જ કંપની દ્વારા ડિઝાઇન કરવામાં આવી છે, પૂરી પાડવામાં આવી છે અને કાર્યરત (commissioned) કરવામાં આવી છે."
                 : "Effective ₹0 does not mean a stripped-down kit. This is the same system we install on paid orders — designed, supplied and commissioned by one company."}
             </p>
-          </div>
-        </Reveal>
 
-        {/* Insurance banner */}
-        <Reveal direction="up" delay={120}>
-          <div className="relative mt-10 overflow-hidden rounded-2xl p-6 text-paper sm:p-9">
-            <div className="absolute inset-0 z-0">
-              <Image
-                src="/images/hero-manufacturing.webp"
-                alt={
-                  isGu
-                    ? "સોલેરિયમ (Solarium) સોલર મેન્યુફેક્ચરિંગ યુનિટ"
-                    : "Solarium solar manufacturing facility"
-                }
-                fill
-                sizes="(max-width: 1200px) 100vw, 1200px"
-                className="object-cover object-center"
-              />
-              <div className="absolute inset-0 bg-gradient-to-r from-[#022b4e]/90 via-[#034982]/75 to-[#034982]/35" />
-            </div>
-
-            <div className="relative z-10 max-w-[560px]">
-              <span className="inline-flex rounded-full bg-orange px-3 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-white">
-                {isGu ? "માત્ર સોલેરિયમ પર જ ઉપલબ્ધ" : "Only at Solarium"}
+            {/* Insurance highlight — lightweight icon + one line */}
+            <div className="mt-5 inline-flex flex-wrap items-center gap-2 rounded-full border border-orange/25 bg-orange/[0.06] px-3.5 py-1.5 text-[13px] text-navy">
+              <ShieldCheck className="h-4 w-4 shrink-0 text-orange" />
+              <span className="font-bold text-orange">
+                {isGu ? "૫ વર્ષનો વીમો મફત" : "5-year insurance included free"}
               </span>
-              <h3 className="mt-3 font-display text-[clamp(1.5rem,3vw,2rem)] font-bold leading-tight tracking-[-0.03em]">
-                {isGu ? "5 વર્ષનો વીમો. બિલકુલ મફત." : "5-year insurance. Free."}
-              </h3>
-              <p className="mt-2 text-[13.5px] leading-relaxed text-paper/80">
+              <span className="hidden text-slate-300 sm:inline" aria-hidden="true">·</span>
+              <span className="text-[12.5px] font-medium text-body">
                 {isGu
-                  ? "તમારી સિસ્ટમ પાંચ વર્ષ માટે વીમા સુરક્ષા હેઠળ છે, જેના માટે તમારે કોઈ વધારાનો ખર્ચ કરવાનો નથી. વીમા કવર, વીમા કંપની અને ક્લેમ કરવાની પ્રક્રિયા વિશેની વિગતો તમારા ઓર્ડર સાથે આપવામાં આવેલા પોલિસી દસ્તાવેજમાં દર્શાવવામાં આવી છે."
-                  : "Your system is insured for five years at no extra cost. Cover, the insurer and the claim process are set out in the policy document shared with your order."}
-              </p>
+                  ? "કોઈ વધારાના ખર્ચ વિના સંપૂર્ણ સુરક્ષા, માત્ર સોલેરિયમ સાથે."
+                  : "Complete protection at ₹0 extra cost, exclusively from Solarium."}
+              </span>
             </div>
           </div>
         </Reveal>
@@ -254,45 +234,22 @@ export default function ProductSection() {
             {isGu ? "તમામ ૧૦ પ્રમાણિત ઘટકો" : `All ${N} Certified Components`}
           </span>
 
-          <div className="flex items-center gap-3">
-            <span className="text-[11px] font-semibold text-white/40 sm:text-[11.5px]">
-              <span className="sm:hidden">{isGu ? "સ્વાઇપ કરો →" : "Swipe →"}</span>
-              <span className="hidden sm:inline">
-                {isGu
-                  ? "સ્ક્રોલ કરો અથવા તીર (arrows) નો ઉપયોગ કરો →"
-                  : "Scroll or use arrows →"}
-              </span>
-            </span>
-
-            {/* Desktop Left / Right Controls */}
-            <div className="hidden items-center gap-1.5 sm:flex">
-              <button
-                type="button"
-                onClick={() => scroll("left")}
-                disabled={!canScrollLeft}
-                aria-label="Previous component"
-                className="flex h-8 w-8 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white transition hover:bg-white/15 disabled:cursor-not-allowed disabled:opacity-25"
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </button>
-              <button
-                type="button"
-                onClick={() => scroll("right")}
-                disabled={!canScrollRight}
-                aria-label="Next component"
-                className="flex h-8 w-8 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white transition hover:bg-white/15 disabled:cursor-not-allowed disabled:opacity-25"
-              >
-                <ChevronRight className="h-4 w-4" />
-              </button>
-            </div>
+          <div className="flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-2.5 py-1 text-[11px] font-semibold text-white/90 shadow-xs sm:hidden">
+            <MoveHorizontal className="h-3.5 w-3.5 animate-pulse text-orange" />
+            <span>{isGu ? "સ્વાઇપ કરો" : "Swipe"}</span>
           </div>
+          <span className="hidden text-[11.5px] font-semibold text-white/45 sm:inline">
+            {isGu
+              ? "૧૦ ઘટકો જોવા માટે સ્વાઇપ અથવા એરોનો ઉપયોગ કરો"
+              : "Explore all 10 certified components"}
+          </span>
         </div>
 
         {/* Horizontal scroll track */}
         <div
           ref={trackRef}
           onScroll={updateScrollState}
-          className="hide-scrollbar flex items-stretch gap-4 overflow-x-auto pb-4 pt-1 sm:gap-5"
+          className="hide-scrollbar flex snap-x snap-mandatory items-stretch gap-4 overflow-x-auto pb-4 pt-1 sm:gap-5"
           style={{
             paddingLeft: "max(1.25rem, calc((100vw - 1200px) / 2 + 1.5rem))",
             paddingRight: "max(1.25rem, calc((100vw - 1200px) / 2 + 1.5rem))",
@@ -302,35 +259,63 @@ export default function ProductSection() {
           {INCLUDED.map((item, i) => (
             <div
               key={item.title}
-              className="flex h-auto shrink-0"
+              className="flex h-auto shrink-0 snap-center"
             >
               <Card item={item} index={i} />
             </div>
           ))}
         </div>
 
-        {/* Bottom progress bar + clickable dots */}
-        <div className="mx-auto mt-6 flex max-w-[1200px] items-center gap-3 px-5 sm:gap-6 lg:px-6">
-          {/* Dot indicators */}
-          <div className="flex shrink-0 items-center gap-1.5">
-            {INCLUDED.map((item, i) => (
+        {/* Bottom controls: 44x44px Arrows + Clickable Dots + Progress Bar */}
+        <div className="mx-auto mt-8 flex max-w-[1200px] flex-wrap items-center justify-between gap-4 px-5 lg:px-6">
+          <div className="flex items-center gap-4">
+            {/* 44x44px High-Contrast Arrows (both mobile & desktop) */}
+            <div className="flex items-center gap-2">
               <button
-                key={item.title}
                 type="button"
-                onClick={() => scrollToCard(i)}
-                aria-label={`Go to component ${i + 1}`}
-                className="block h-2 rounded-full transition-all duration-300"
-                style={{
-                  width: activeIndex === i ? "24px" : "7px",
-                  background: activeIndex === i ? "var(--color-orange)" : "white",
-                  opacity: activeIndex === i ? 1 : 0.35,
-                }}
-              />
-            ))}
+                onClick={() => scroll("left")}
+                disabled={!canScrollLeft}
+                aria-label="Previous component"
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-white/25 bg-white/10 text-white shadow-sm transition-all hover:border-orange hover:bg-orange hover:text-white disabled:cursor-not-allowed disabled:opacity-25 active:scale-95"
+              >
+                <ChevronLeft className="h-5 w-5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => scroll("right")}
+                disabled={!canScrollRight}
+                aria-label="Next component"
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-white/25 bg-white/10 text-white shadow-sm transition-all hover:border-orange hover:bg-orange hover:text-white disabled:cursor-not-allowed disabled:opacity-25 active:scale-95"
+              >
+                <ChevronRight className="h-5 w-5" />
+              </button>
+            </div>
+
+            {/* Clickable Dots with generous touch targets */}
+            <div className="flex items-center gap-1 pl-1" role="tablist" aria-label="Component slides">
+              {INCLUDED.map((item, i) => (
+                <button
+                  key={item.title}
+                  type="button"
+                  onClick={() => scrollToCard(i)}
+                  aria-label={`Go to component ${i + 1}: ${item.title}`}
+                  className="flex h-11 items-center justify-center px-1"
+                >
+                  <span
+                    className="block rounded-full transition-all duration-300"
+                    style={{
+                      height: "10px",
+                      width: activeIndex === i ? "28px" : "10px",
+                      background: activeIndex === i ? "var(--color-orange)" : "rgba(255, 255, 255, 0.45)",
+                    }}
+                  />
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Progress bar */}
-          <div className="h-[2px] flex-1 overflow-hidden rounded-full bg-white/10">
+          <div className="hidden h-1.5 w-44 overflow-hidden rounded-full bg-white/15 sm:block">
             <div
               className="h-full rounded-full transition-all duration-150"
               style={{

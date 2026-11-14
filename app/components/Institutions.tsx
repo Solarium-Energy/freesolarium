@@ -5,22 +5,22 @@ import { useLanguage } from "../lib/language";
 import Reveal from "./Reveal";
 
 const CLIENT_LOGOS = [
-  { src: "/clients/indian-airforce.png", alt: "Indian Air Force", scale: "scale-[1.06]" },
-  { src: "/clients/indian-army.svg",     alt: "Indian Army", scale: "scale-[0.75]" },
-  { src: "/clients/drdo.png",             alt: "DRDO", scale: "scale-[0.75]" },
-  { src: "/clients/indian-railways.png", alt: "Indian Railways", scale: "scale-[1.06]" },
-  { src: "/clients/ntpc.svg",            alt: "NTPC", scale: "scale-[0.80]" },
-  { src: "/clients/lic.png",             alt: "LIC", scale: "scale-[0.82]" },
-  { src: "/clients/geb.png",             alt: "Gujarat Electricity Board", scale: "scale-[0.76]" },
-  { src: "/clients/bank-of-india.png",   alt: "Bank of India", scale: "scale-[0.82]" },
-  { src: "/clients/itbp.png",            alt: "ITBP", scale: "scale-[1.06]" },
-  { src: "/clients/hindustan-petroleum.png", alt: "Hindustan Petroleum", scale: "scale-[0.76]" },
-  { src: "/clients/counter-insurgency-force.svg", alt: "Counter Insurgency Force", scale: "scale-[0.75]" },
-  { src: "/clients/agl.png",             alt: "AGL", scale: "scale-[0.82]" },
-  { src: "/clients/ahmedabad-university.png", alt: "Ahmedabad University", scale: "scale-[0.80]" },
-  { src: "/clients/gudc.png",            alt: "Gujarat Urban Development Company", scale: "scale-[0.80]" },
-  { src: "/clients/goa-shipyard.png",    alt: "Goa Shipyard", scale: "scale-[0.80]" },
-  { src: "/clients/bsf.png",             alt: "Border Security Force", scale: "scale-[0.76]" },
+  { src: "/clients/indian-airforce.png", alt: "Indian Air Force", name: "Indian Air Force", guName: "ઇન્ડિયન એરફોર્સ", scale: "scale-[1.04]" },
+  { src: "/clients/indian-army.svg",     alt: "Indian Army", name: "Indian Army", guName: "ઇન્ડિયન આર્મી", scale: "scale-[0.80]" },
+  { src: "/clients/drdo.png",             alt: "DRDO", name: "DRDO", guName: "DRDO", scale: "scale-[0.80]" },
+  { src: "/clients/indian-railways.png", alt: "Indian Railways", name: "Indian Railways", guName: "ઇન્ડિયન રેલવે", scale: "scale-[1.04]" },
+  { src: "/clients/ntpc.svg",            alt: "NTPC", name: "NTPC", guName: "NTPC", scale: "scale-[0.85]" },
+  { src: "/clients/lic.png",             alt: "LIC", name: "LIC", guName: "LIC", scale: "scale-[0.85]" },
+  { src: "/clients/geb.png",             alt: "GUVNL (Gujarat Electricity Board)", name: "GUVNL", guName: "GUVNL (GEB)", scale: "scale-[0.82]" },
+  { src: "/clients/bank-of-india.png",   alt: "Bank of India", name: "Bank of India", guName: "Bank of India", scale: "scale-[0.85]" },
+  { src: "/clients/itbp.png",            alt: "ITBP", name: "ITBP", guName: "ITBP", scale: "scale-[1.04]" },
+  { src: "/clients/hindustan-petroleum.png", alt: "Hindustan Petroleum (HPCL)", name: "HPCL", guName: "HPCL", scale: "scale-[0.82]" },
+  { src: "/clients/counter-insurgency-force.svg", alt: "Counter Insurgency Force", name: "CI Force", guName: "CI Force", scale: "scale-[0.80]" },
+  { src: "/clients/agl.png",             alt: "AGL", name: "AGL", guName: "AGL", scale: "scale-[0.85]" },
+  { src: "/clients/ahmedabad-university.png", alt: "Ahmedabad University", name: "Ahmedabad Univ.", guName: "અમદાવાદ યુનિ.", scale: "scale-[0.85]" },
+  { src: "/clients/gudc.png",            alt: "Gujarat Urban Development Company", name: "GUDC", guName: "GUDC", scale: "scale-[0.85]" },
+  { src: "/clients/goa-shipyard.png",    alt: "Goa Shipyard", name: "Goa Shipyard", guName: "Goa Shipyard", scale: "scale-[0.85]" },
+  { src: "/clients/bsf.png",             alt: "Border Security Force", name: "BSF", guName: "BSF", scale: "scale-[0.82]" },
 ];
 
 export default function Institutions() {
@@ -32,15 +32,15 @@ export default function Institutions() {
         {/* ── Left: copy ── */}
         <Reveal direction="left">
           <div>
-            <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-orange">
+            <p className="section-label text-orange">
               {isGu ? "સંસ્થાકીય ટ્રેક રેકોર્ડ" : "Institutional track record"}
             </p>
-            <h2 className="mt-4 max-w-[18ch] text-[clamp(1.75rem,3.6vw,2.5rem)] font-bold leading-[1.08] tracking-[-0.035em] text-balance">
+            <h2 className="mt-3.5 section-heading text-navy max-w-[18ch]">
               {isGu
                 ? "ભારતના સૌથી વધુ માંગવાળા સ્થળોએ અમે જે એન્જિનિયરિંગ પહોંચાડીએ છીએ"
                 : "The engineering we deliver to India's most demanding sites"}
             </h2>
-            <p className="mt-4 max-w-[34rem] text-[14px] leading-relaxed text-body">
+            <p className="mt-3.5 section-body max-w-[34rem] text-body">
               {isGu
                 ? "સોલેરિયમે સશસ્ત્ર દળો, સંશોધન સંસ્થાઓ, જાહેર ક્ષેત્રના ઉપક્રમો અને ભારતની કેટલીક મોટી બેંકો માટે સૌર પ્રોજેક્ટ્સ અમલમાં મૂક્યા છે."
                 : "Solarium has executed solar projects for the armed forces, research institutions, public sector undertakings and some of India's largest banks."}
@@ -59,8 +59,8 @@ export default function Institutions() {
           <div className="grid grid-cols-4 gap-2 sm:gap-3">
             {CLIENT_LOGOS.map((logo, i) => (
               <Reveal key={logo.alt} direction="scale" delay={(i % 4) * 55 + Math.floor(i / 4) * 45}>
-                <div className="group flex h-18 items-center justify-center rounded-xl border border-line bg-paper/60 p-2 transition-all duration-200 hover:border-line-strong hover:bg-white hover:shadow-sm sm:h-21 sm:p-3">
-                  <div className="relative flex h-full w-full items-center justify-center scale-105 sm:scale-100">
+                <div className="group flex h-[82px] flex-col items-center justify-between rounded-xl border border-line bg-paper/60 p-2 transition-all duration-200 hover:border-line-strong hover:bg-white hover:shadow-sm sm:h-[94px] sm:p-2.5">
+                  <div className="relative flex h-9 w-full flex-1 items-center justify-center sm:h-11">
                     <Image
                       src={logo.src}
                       alt={logo.alt}
@@ -71,6 +71,12 @@ export default function Institutions() {
                       }`}
                     />
                   </div>
+                  <p
+                    className="mt-1 w-full truncate text-center text-[9.5px] font-bold tracking-tight text-navy/80 transition-colors group-hover:text-navy sm:text-[11px]"
+                    title={isGu && logo.guName ? logo.guName : logo.name}
+                  >
+                    {isGu && logo.guName ? logo.guName : logo.name}
+                  </p>
                 </div>
               </Reveal>
             ))}

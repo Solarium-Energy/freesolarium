@@ -21,9 +21,9 @@ export default function MobileCta() {
         </div>
         <Link
           href="/book"
-          className="inline-flex min-h-[44px] items-center gap-1.5 rounded-xl bg-navy px-4 text-[12.5px] font-bold text-paper"
+          className="inline-flex min-h-[44px] items-center gap-1.5 rounded-xl bg-navy px-4 text-[12.5px] font-bold text-paper transition-all duration-200 hover:bg-[#011b33] active:scale-95"
         >
-          {isGu ? "₹0* માં બુક કરો" : "Book at 0*"}
+          {isGu ? "₹0* માં બુક કરો" : "Book at ₹0*"}
           <ArrowRight className="h-3.5 w-3.5" />
         </Link>
       </div>

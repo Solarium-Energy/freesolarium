@@ -1,25 +1,6 @@
 import type { Metadata } from "next";
-import { Inter, Sora, Noto_Sans_Gujarati } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from "./lib/language";
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  display: "swap",
-});
-
-const sora = Sora({
-  subsets: ["latin"],
-  variable: "--font-sora",
-  display: "swap",
-});
-
-const notoGujarati = Noto_Sans_Gujarati({
-  subsets: ["gujarati"],
-  variable: "--font-gujarati",
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL(
@@ -65,11 +46,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en-IN"
-      className={`${inter.variable} ${sora.variable} ${notoGujarati.variable}`}
-    >
+    <html lang="en-IN">
       <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Noto+Sans+Gujarati:wght@100..900&family=Sora:wght@100..800&display=swap"
+          rel="stylesheet"
+        />
         <noscript>
           <style>{`.reveal{opacity:1 !important;transform:none !important}`}</style>
         </noscript>
