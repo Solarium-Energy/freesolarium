@@ -4,7 +4,7 @@ import { LanguageProvider } from "./lib/language";
 
 export const metadata: Metadata = {
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL ?? "https://solariumenergy.in"
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://solariumenergy.org"
   ),
   title: "Solarium 2.18 kW Home Solar | ₹0 Under PM Surya Ghar",
   description:

@@ -23,25 +23,52 @@ npm start
 ```
 app/
   layout.tsx                  Fonts, metadata, global shell
-  page.tsx                    Page composition + FAQ structured data
-  globals.css                 Tailwind theme, textures, reveal/marquee animations
-  lib/content.ts              All copy, pricing, contact details, FAQs
+  page.tsx                    Offer page (/) + FAQ structured data
+  globals.css                 Tailwind and the design system's stylesheets
+  styles/
+    tokens_v2.css             Design tokens (copy of the design system, never edited)
+    tailwind_theme_v2.css     Tailwind mapping of the tokens (copy, never edited)
+    solarium.css              Design system stylesheet (copy, never edited)
+    site.css                  The site's own rules, tokens only
+  lib/
+    content.ts                All copy, pricing, contact details, FAQs
+    language.tsx              English and Gujarati switch
+    quotation.ts              Quotation prices, options and calculation
+    quotationPdf.ts           Quotation PDF
+    leadClient.ts             Sends the forms to the site's server routes
+    legal.ts                  Privacy policy and terms of service text
   components/
-    Header.tsx                Sticky nav + mobile menu
-    Hero.tsx                  Hero + price card
-    TrustStrip.tsx
-    ProductSection.tsx
-    Institutions.tsx
-    HowItWorks.tsx
-    Faq.tsx
-    FinalCta.tsx
+    ui/                       Design system parts (Button, Field, Sheet, FileUpload, ...)
+    quotation/                Quotation bar, sheet and their shared state
+    legal/                    Layout of the privacy policy and terms pages
+    Header.tsx                Header + phone menu
+    BookButton.tsx            "Book at ₹0*" button
+    Hero.tsx                  Hero with the sun, the price and the quotation bar
+    StatsBand.tsx
+    ComponentExplorer.tsx     What you get: the ten components
+    LogoWall.tsx              Institutional clients
+    SixRays.tsx               The 6S
+    RisingSteps.tsx           After you book
+    Reviews.tsx
+    FaqSection.tsx
+    ClosingCta.tsx
     Footer.tsx
-    MobileCta.tsx              Sticky mobile conversion bar
-    Reveal.tsx                 Lightweight scroll reveal
+    PhoneDock.tsx             Price and action bar on phones
+    TestModeBar.tsx           Shown in test mode (?test=1)
   book/page.tsx               Booking form (/book)
+  privacy/page.tsx            Privacy policy (/privacy)
+  terms/page.tsx              Terms of service (/terms)
+  api/quote/route.ts          Quotation endpoint (sends the quotation to the Solarium CRM)
   api/order/route.ts          Order endpoint (sends the booking form to the Solarium CRM)
+  api/order/upload-links/     One-time upload links for the booking form's documents
+  api/_lib/                   Request checks and the CRM call, shared by the endpoints
 public/
   images/                     Hero / product imagery
+  clients/                    Client marks for the logo wall
+scripts/
+  solarium_check.mjs          Design rule checker (npm run check:design)
+docs/
+  design_rules_v2.md          The design rules
 ```
 
 Institution names are rendered as text pills rather than client logos: the supplied logo files were too small to use legibly on a single page.

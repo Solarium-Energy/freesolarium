@@ -78,7 +78,7 @@ export const PRIVACY_POLICY: LegalDocument = {
             "your name, mobile number, email address, city and pincode",
             "your DISCOM, the type of project, whether you need a loan, and whether the name on the bill matches the name in the bank",
             "the length and width of the shadow-free area of your roof, and any remarks you write",
-            "the name and number of the partner who referred you, if any",
+            "the name of the partner who referred you and their referral number, if any",
             "your documents: the latest electricity bill, a passport size photograph, your Aadhaar card (front and back), your PAN card, a cancelled cheque or bank passbook, a photo of your house, a geo-tagged photo of the place for the system, and photos or videos of the site"
           ]
         },
@@ -255,7 +255,7 @@ export const PRIVACY_POLICY: LegalDocument = {
       "blocks": [
         {
           "type": "paragraph",
-          "text": "This website links to other websites and apps, such as Google reviews, WhatsApp, our social media pages and solariumenergy.in. They have their own privacy policies."
+          "text": "This website links to other websites and apps, such as Google reviews, WhatsApp and our social media pages. They have their own privacy policies."
         }
       ]
     },
