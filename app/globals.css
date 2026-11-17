@@ -3,6 +3,7 @@
 @import "./styles/tailwind_theme_v2.css";
 @import "./styles/solarium.css";
 @import "./styles/site.css";
+@import "./styles/motion.css";
 
 @theme {
   --font-display: "Newsreader", "Noto Serif Gujarati", Georgia, serif;

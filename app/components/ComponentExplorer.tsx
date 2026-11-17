@@ -2,7 +2,7 @@
 
 import { ArrowLeft, ArrowRight, Check } from "lucide-react";
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { type CSSProperties, useRef, useState } from "react";
 import { INCLUDED } from "../lib/content";
 import { useLanguage } from "../lib/language";
 import IconButton from "./ui/IconButton";
@@ -14,11 +14,15 @@ const two = (n: number) => String(n).padStart(2, "0");
 export default function ComponentExplorer() {
   const { isGu } = useLanguage();
   const [at, setAt] = useState(0);
+  // How far the arc of the disc has travelled, in tenths of a turn. It always takes the short way round.
+  const [turn, setTurn] = useState(0);
   const listRef = useRef<HTMLOListElement>(null);
   const current = INCLUDED[at];
 
   function show(index: number) {
     const next = (index + COUNT) % COUNT;
+    const way = ((next - at + COUNT + COUNT / 2) % COUNT) - COUNT / 2;
+    setTurn(turn + way);
     setAt(next);
     // Below 1120px the list is a row of pills that scrolls sideways: keep the chosen one in view.
     const list = listRef.current;
@@ -32,7 +36,7 @@ export default function ComponentExplorer() {
     <section className="section" id="product">
       <div className="wrap">
         <div className="sec-head">
-          <div>
+          <div data-mo-group="">
             <div className="eyebrow">{isGu ? "તમને શું મળશે" : "What you get"}</div>
             {isGu ? (
               <h2 className="h-sec">
@@ -48,7 +52,7 @@ export default function ComponentExplorer() {
               </h2>
             )}
           </div>
-          <div>
+          <div data-mo-group="" data-mo-delay="2">
             <p className="lead">
               {isGu
                 ? "₹0 ખર્ચનો અર્થ એ નથી કે તમને કોઈ અધૂરી કે મર્યાદિત સુવિધાઓવાળી કિટ મળશે. આ એ જ સિસ્ટમ છે જે અમે પેઇડ ઓર્ડર (જેના માટે ચૂકવણી કરવામાં આવી છે) હેઠળ ઇન્સ્ટોલ કરીએ છીએ, જે એક જ કંપની દ્વારા ડિઝાઇન કરવામાં આવી છે, પૂરી પાડવામાં આવી છે અને કાર્યરત (commissioned) કરવામાં આવી છે."
@@ -70,7 +74,7 @@ export default function ComponentExplorer() {
         </div>
 
         <div className="index-detail">
-          <div>
+          <div data-mo="left">
             <div className="lbl" id="explorer-label">
               {isGu ? "તમામ ૧૦ પ્રમાણિત ઘટકો" : "Explore all 10 certified components"}
             </div>
@@ -91,7 +95,7 @@ export default function ComponentExplorer() {
             </ol>
           </div>
 
-          <div className="disc">
+          <div className="disc" data-mo="pop" style={{ "--mo-turn": turn } as CSSProperties}>
             <div className="ring" />
             <div className="arc" />
             <Image
@@ -101,15 +105,23 @@ export default function ComponentExplorer() {
               height={887}
               sizes="(max-width: 767px) 260px, (max-width: 1119px) 320px, 468px"
               loading={at === 0 ? "eager" : "lazy"}
+              onLoad={(event) => {
+                // The new picture settles in. The old one stays until the new one has loaded.
+                if (!document.documentElement.classList.contains("mo")) return;
+                event.currentTarget.animate([{ opacity: 0.35, scale: "1.05" }, { opacity: 1, scale: "1" }], {
+                  duration: 650,
+                  easing: "cubic-bezier(0.16, 1, 0.3, 1)",
+                });
+              }}
             />
-            <div className="n" aria-hidden="true">
+            <div className="n" aria-hidden="true" key={at}>
               {two(at + 1)}
             </div>
           </div>
 
           {/* Every panel is in the page, the ones not chosen are hidden. */}
           {INCLUDED.map((item, index) => (
-            <div className="detail" id={`component-${index + 1}`} key={item.title} hidden={index !== at}>
+            <div className="detail" id={`component-${index + 1}`} key={item.title} hidden={index !== at} data-mo="right">
               <span className="tag">{isGu ? item.guTag : item.tag}</span>
               <h3>{isGu ? item.guTitle : item.title}</h3>
               <div className="it">{isGu ? item.guSubtitle : item.subtitle}</div>

@@ -11,10 +11,10 @@ export default function StatsBand({ children }: { children?: ReactNode }) {
     <section className="stats">
       <div className="wrap">
         {children}
-        <div className="g">
+        <div className="g" data-mo-group="">
           {TRUST_STATS.map((stat) => (
             <div className="bracket" key={stat.label}>
-              <b>{isGu ? stat.guValue : stat.value}</b>
+              <b data-mo-count="">{isGu ? stat.guValue : stat.value}</b>
               <span>{isGu ? stat.guLabel : stat.label}</span>
             </div>
           ))}

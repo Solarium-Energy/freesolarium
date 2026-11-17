@@ -28,7 +28,7 @@ export default function LogoWall() {
   return (
     <section className="section is-mist" id="clients">
       <div className="wrap inst-g">
-        <div>
+        <div data-mo-group="">
           <div className="eyebrow">{isGu ? "સંસ્થાકીય ટ્રેક રેકોર્ડ" : "Institutional track record"}</div>
           <h2 className="h-sub">
             {isGu
@@ -45,7 +45,7 @@ export default function LogoWall() {
           </div>
         </div>
         <div>
-          <div className="logo-wall">
+          <div className="logo-wall" data-mo-group="pop">
             {CLIENT_LOGOS.map((logo) => (
               <div key={logo.src}>
                 <Image src={logo.src} alt={logo.alt} width={logo.width} height={logo.height} sizes="92px" />
@@ -53,7 +53,7 @@ export default function LogoWall() {
               </div>
             ))}
           </div>
-          <small className="fine">
+          <small className="fine" data-mo="fade">
             {isGu
               ? "સંસ્થાના નામ અમલમાં મૂકાયેલા પ્રોજેક્ટ્સનો સંદર્ભ આપે છે. આ ઓફરનું કોઈ સમર્થન સૂચિત નથી."
               : "Institution names refer to projects executed. No endorsement of this offer is implied."}

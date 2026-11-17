@@ -1,6 +1,12 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import Motion from "./components/Motion";
 import { LanguageProvider } from "./lib/language";
+
+/* Sets html.mo before the first paint, unless the visitor has asked for reduced motion. The motion
+   stylesheet hides nothing without this class, so the page is complete without JavaScript. */
+const MOTION_BOOT =
+  'try{if(!window.matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("mo")}catch(e){}';
 
 export const metadata: Metadata = {
   metadataBase: new URL(
@@ -51,7 +57,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en-IN">
+    <html lang="en-IN" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
@@ -63,9 +69,12 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,400&family=Hanken+Grotesk:wght@400;500;600;700&family=Noto+Sans+Gujarati:wght@400;600&family=Noto+Serif+Gujarati:wght@300;400&display=swap"
           rel="stylesheet"
         />
+        {/* Motion is switched on before the first paint, and only when the visitor has not asked for less of it. */}
+        <script dangerouslySetInnerHTML={{ __html: MOTION_BOOT }} />
       </head>
       <body className="sol web">
         <LanguageProvider>{children}</LanguageProvider>
+        <Motion />
       </body>
     </html>
   );

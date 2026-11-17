@@ -34,7 +34,7 @@ export default function Hero() {
   };
 
   return (
-    <section className="hero on-dark" id="top">
+    <section className="hero on-dark" id="top" data-mo-scroll="exit" data-mo-pointer="">
       <div className="halo" aria-hidden="true" />
       <svg className="rays" viewBox="0 0 1440 900" aria-hidden="true">
         {RAYS.map((angle) => (

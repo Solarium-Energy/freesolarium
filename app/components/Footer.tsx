@@ -62,7 +62,7 @@ export default function Footer() {
   return (
     <footer className="site-footer">
       <div className="wrap">
-        <div className="g">
+        <div className="g" data-mo-group="fade">
           <div>
             <Link href="/#top" className="brand">
               <Image

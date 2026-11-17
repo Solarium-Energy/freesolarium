@@ -73,9 +73,9 @@ export default function SixRays() {
     <section className="section is-night on-dark" id="six-s">
       <div className="glass" aria-hidden="true" />
       <div className="wrap">
-        <div className="eyebrow">{isGu ? "6S (સિક્સ-એસ)" : "The 6S"}</div>
-        <h2 className="h-sec">{isGu ? "છ અનિવાર્ય આધારસ્તંભો પર નિર્મિત." : "Built on six non-negotiables."}</h2>
-        <div className="rays-six">
+        <div className="eyebrow" data-mo="">{isGu ? "6S (સિક્સ-એસ)" : "The 6S"}</div>
+        <h2 className="h-sec" data-mo="" data-mo-delay="1">{isGu ? "છ અનિવાર્ય આધારસ્તંભો પર નિર્મિત." : "Built on six non-negotiables."}</h2>
+        <div className="rays-six" data-mo-group="">
           {PILLARS.map((pillar, index) => (
             <div className="c" key={pillar.n}>
               <RayMark lit={index} />

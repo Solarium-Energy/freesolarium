@@ -256,17 +256,7 @@
 }
 
 /* ---------- Hero ---------- */
-/* The one motion of the page: the sun and its glow rise and fade in when the page opens. */
-@keyframes sol-sun-rise {
-  from {
-    opacity: 0;
-    transform: translateY(24px);
-  }
-}
-.hero .sun,
-.hero .glow {
-  animation: sol-sun-rise var(--dur-rise) var(--ease-out) both;
-}
+/* The hero's sunrise, and all other motion, is in motion.css. */
 .hero .flank div > span {
   display: block;
 }

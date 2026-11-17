@@ -32,10 +32,10 @@ export default function Reviews() {
   return (
     <section className="section is-mist" id="testimonials">
       <div className="wrap rev-g">
-        <div>
+        <div data-mo-group="">
           <div className="eyebrow">{isGu ? "ગ્રાહકોના અનુભવો" : "Customer stories"}</div>
           <div className="rating">
-            <div className="big">{CUSTOMER_SAVINGS.googleRating}</div>
+            <div className="big" data-mo-count="">{CUSTOMER_SAVINGS.googleRating}</div>
             <div className="st" aria-hidden="true">
               ★★★★★
             </div>
@@ -62,7 +62,7 @@ export default function Reviews() {
               : "Hear directly from homeowners who trusted Solarium to handle their subsidies, net metering, and installation."}
           </p>
         </div>
-        <div>
+        <div data-mo-group="" data-mo-delay="1">
           <p className="q-lead">&ldquo;{isGu ? first.guQuote : first.quote}&rdquo;</p>
           <Who review={first} lead />
           <div className="q-pair">

@@ -1,0 +1,683 @@
+/* Motion for the website.
+
+   The idea is the name of the look, First Light: the page opens like a sunrise, and everything
+   that comes into view rises into place the way the sun does. Three kinds of movement:
+
+   1. On load: the hero's sunrise. Pure CSS, it runs without JavaScript.
+   2. On scroll: parts rise in as they come into view, and a few pictures follow the scroll
+      (the hero's sun, the rising curve, the closing sun). app/components/Motion.tsx drives these
+      by setting data-in, --mo-p, --mo-x and --mo-y. Nothing here hides content unless that
+      controller can run: every hidden state sits under html.mo, a class a tiny script in the
+      page's head sets only when motion is allowed, and what follows the scroll sits under
+      html.mo-live, which the controller sets once it runs.
+   3. On touch: buttons, cards, the explorer, the sheet and the result screen answer a press.
+
+   Only opacity, translate, scale, rotate, transform, clip-path and stroke-dashoffset move, so
+   nothing shifts the layout. "Reduce motion" stops all of it: the stylesheet's own rule turns
+   every animation and transition off, and the head script never sets html.mo. */
+
+.sol {
+  --mo-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --mo-spring: cubic-bezier(0.34, 1.45, 0.64, 1);
+  --mo-rise: 28px;
+  --mo-step: 80ms;
+  --mo-i: 0;
+  --mo-p: 0;
+  --mo-x: 0;
+  --mo-y: 0;
+}
+
+/* ---------- The shared movements ---------- */
+@keyframes mo-rise {
+  from {
+    opacity: 0;
+    translate: 0 var(--mo-rise);
+  }
+}
+@keyframes mo-rise-sm {
+  from {
+    opacity: 0;
+    translate: 0 12px;
+  }
+}
+@keyframes mo-fade {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes mo-from-left {
+  from {
+    opacity: 0;
+    translate: -36px 0;
+  }
+}
+@keyframes mo-from-right {
+  from {
+    opacity: 0;
+    translate: 36px 0;
+  }
+}
+@keyframes mo-pop {
+  from {
+    opacity: 0;
+    scale: 0.86;
+  }
+}
+@keyframes mo-draw-x {
+  from {
+    scale: 0 1;
+  }
+}
+@keyframes mo-draw-y {
+  from {
+    scale: 1 0;
+  }
+}
+@keyframes mo-wipe {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+@keyframes mo-show {
+  to {
+    opacity: 1;
+  }
+}
+
+/* ---------- Rise into view ---------- */
+/* data-mo on a part, or data-mo-group on its parent to bring the children in one after another. */
+html.mo [data-mo]:not([data-in]),
+html.mo [data-mo-group] > :not([data-in]),
+html.mo [data-mo-at]:not([data-in]) {
+  opacity: 0;
+}
+html.mo [data-mo][data-in],
+html.mo [data-mo-group] > [data-in] {
+  animation: mo-rise var(--dur-rise) var(--mo-ease) backwards;
+  animation-delay: calc(var(--mo-i) * var(--mo-step));
+}
+html.mo [data-mo="fade"][data-in],
+html.mo [data-mo-group="fade"] > [data-in] {
+  animation-name: mo-fade;
+}
+html.mo [data-mo="left"][data-in] {
+  animation-name: mo-from-left;
+}
+html.mo [data-mo="right"][data-in] {
+  animation-name: mo-from-right;
+}
+html.mo [data-mo="pop"][data-in],
+html.mo [data-mo-group="pop"] > [data-in] {
+  animation-name: mo-pop;
+}
+/* If the controller never starts, nothing stays hidden. */
+html.mo:not(.mo-live) [data-mo]:not([data-in]),
+html.mo:not(.mo-live) [data-mo-group] > :not([data-in]),
+html.mo:not(.mo-live) [data-mo-at]:not([data-in]) {
+  animation: mo-show 1ms linear 3s forwards;
+}
+@media print {
+  html.mo [data-mo],
+  html.mo [data-mo-group] > *,
+  html.mo [data-mo-at] {
+    opacity: 1;
+    animation: none;
+  }
+}
+/* The dot of an eyebrow lands a moment after its words. */
+html.mo [data-in] > .eyebrow::before,
+html.mo .eyebrow[data-in]::before {
+  animation: mo-pop var(--dur-rise) var(--mo-spring) backwards;
+  animation-delay: calc(var(--mo-i) * var(--mo-step) + 260ms);
+}
+
+/* ---------- Hero: first light ---------- */
+/* The page opens before dawn. A veil of night lifts while the sun comes up, its glow blooms,
+   the rays reach out from it, and the words and the quotation bar rise into place. */
+@keyframes mo-dawn {
+  from {
+    opacity: 0.62;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes mo-sunrise {
+  from {
+    opacity: 0;
+    translate: 0 120px;
+  }
+  35% {
+    opacity: 1;
+  }
+}
+@keyframes mo-bloom {
+  from {
+    opacity: 0;
+    scale: 0.7;
+  }
+  45% {
+    opacity: 1;
+  }
+}
+@keyframes mo-ray {
+  from {
+    opacity: 0;
+    scale: 0.45;
+  }
+}
+@keyframes mo-shimmer {
+  50% {
+    opacity: 0.5;
+  }
+}
+@keyframes mo-breathe {
+  to {
+    scale: 1.04;
+    opacity: 0.88;
+  }
+}
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--sky-top);
+  opacity: 0;
+  pointer-events: none;
+  animation: mo-dawn 1700ms var(--ease-out) backwards;
+}
+.hero .halo {
+  animation: mo-bloom 1500ms var(--mo-ease) 80ms backwards;
+}
+.hero .glow {
+  animation:
+    mo-bloom 1500ms var(--mo-ease) 120ms backwards,
+    mo-breathe 7s ease-in-out 1800ms infinite alternate;
+}
+.hero .sun {
+  animation: mo-sunrise 1300ms var(--mo-ease) 80ms backwards;
+}
+.hero .price {
+  animation: mo-sunrise 1200ms var(--mo-ease) 220ms backwards;
+}
+.hero .rays polygon {
+  transform-box: view-box;
+  transform-origin: 720px 718px;
+  animation:
+    mo-ray 1100ms var(--mo-ease) backwards,
+    mo-shimmer 6s ease-in-out infinite;
+  animation-delay: calc(520ms + var(--mo-i) * 90ms), calc(2200ms + var(--mo-i) * 700ms);
+}
+/* The middle ray first, then outwards on both sides. */
+.hero .rays polygon:nth-child(4) {
+  --mo-i: 0;
+}
+.hero .rays polygon:nth-child(3),
+.hero .rays polygon:nth-child(5) {
+  --mo-i: 1;
+}
+.hero .rays polygon:nth-child(2),
+.hero .rays polygon:nth-child(6) {
+  --mo-i: 2;
+}
+.hero .rays polygon:nth-child(1),
+.hero .rays polygon:nth-child(7) {
+  --mo-i: 3;
+}
+.hero .meta {
+  animation: mo-rise-sm 800ms var(--mo-ease) 120ms backwards;
+}
+.hero h1 {
+  animation: mo-rise 1000ms var(--mo-ease) 180ms backwards;
+}
+.hero .incta {
+  animation: mo-rise 800ms var(--mo-ease) 700ms backwards;
+}
+.hero .flank.l > div {
+  animation: mo-from-left 900ms var(--mo-ease) backwards;
+}
+.hero .flank.r > div {
+  animation: mo-from-right 900ms var(--mo-ease) backwards;
+}
+.hero .flank > div:nth-child(1) {
+  animation-delay: 820ms;
+}
+.hero .flank > div:nth-child(2) {
+  animation-delay: 940ms;
+}
+.hero .qbar {
+  animation: mo-rise 900ms var(--mo-ease) 900ms backwards;
+}
+.hero .hnote {
+  animation: mo-fade 700ms var(--ease-out) 1400ms backwards;
+}
+.hero .proof > div {
+  animation: mo-rise-sm 700ms var(--mo-ease) backwards;
+}
+.hero .proof > div:nth-child(1) {
+  animation-delay: 820ms;
+}
+.hero .proof > div:nth-child(2) {
+  animation-delay: 900ms;
+}
+.hero .proof > div:nth-child(3) {
+  animation-delay: 980ms;
+}
+
+/* The hero follows the scroll and, on a desktop, the pointer: the sun sinks behind the bar as the
+   page moves on, the words lift away, and the layers shift by different amounts, which gives depth. */
+html.mo-live .hero .sun {
+  transform: translate3d(calc(var(--mo-x) * 8px), calc(var(--mo-p) * 96px + var(--mo-y) * 6px), 0);
+}
+html.mo-live .hero .price {
+  transform: translate3d(calc(var(--mo-x) * 10px), calc(var(--mo-p) * 64px + var(--mo-y) * 7px), 0);
+}
+html.mo-live .hero .incta {
+  transform: translate3d(calc(var(--mo-x) * 10px), calc(var(--mo-p) * 40px + var(--mo-y) * 7px), 0);
+}
+html.mo-live .hero .glow {
+  transform: translate3d(calc(var(--mo-x) * 16px), calc(var(--mo-p) * 60px + var(--mo-y) * 10px), 0);
+}
+html.mo-live .hero .halo {
+  transform: translate3d(calc(var(--mo-x) * -8px), calc(var(--mo-p) * 30px + var(--mo-y) * -5px), 0);
+}
+html.mo-live .hero .rays {
+  transform-origin: 50% 80%;
+  transform: translate3d(calc(var(--mo-x) * 10px), calc(var(--mo-p) * 96px), 0) rotate(calc(var(--mo-x) * 1.5deg));
+}
+html.mo-live .hero .top {
+  transform: translate3d(calc(var(--mo-x) * -6px), calc(var(--mo-p) * -70px + var(--mo-y) * -4px), 0);
+  opacity: calc(1 - var(--mo-p) * 1.7);
+}
+html.mo-live .hero .flank {
+  transform: translate3d(calc(var(--mo-x) * -4px), calc(var(--mo-p) * -30px), 0);
+}
+@media (max-width: 767px) {
+  html.mo-live .hero .sun,
+  html.mo-live .hero .price,
+  html.mo-live .hero .incta,
+  html.mo-live .hero .proof {
+    transform: translate3d(0, calc(var(--mo-p) * 44px), 0);
+  }
+  html.mo-live .hero .glow,
+  html.mo-live .hero .halo {
+    transform: translate3d(0, calc(var(--mo-p) * 24px), 0);
+  }
+  html.mo-live .hero .top {
+    transform: translate3d(0, calc(var(--mo-p) * -30px), 0);
+  }
+}
+
+/* ---------- Header ---------- */
+/* The solid header drops in instead of appearing, and marks the section the reader is in. */
+@keyframes mo-drop {
+  from {
+    translate: 0 -100%;
+  }
+}
+.site-header.is-fixed {
+  animation: mo-drop var(--dur-slow) var(--mo-ease);
+}
+.nav-pills a {
+  transition:
+    background-color var(--dur-base) var(--ease-out),
+    border-color var(--dur-base) var(--ease-out),
+    color var(--dur-base) var(--ease-out);
+}
+.site-header.is-solid .nav-pills a[data-active] {
+  background: var(--subtle);
+  border-color: var(--line-soft);
+  color: var(--brand);
+}
+
+/* ---------- Buttons and links ---------- */
+.btn {
+  transition:
+    background var(--dur-fast),
+    transform var(--dur-fast),
+    translate var(--dur-base) var(--mo-ease),
+    scale var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out);
+}
+.btn .ico {
+  transition: translate var(--dur-base) var(--mo-ease);
+}
+.btn:active {
+  scale: 0.97;
+}
+@media (hover: hover) {
+  .btn-primary:hover,
+  .btn-sun:hover {
+    translate: 0 -2px;
+  }
+  .btn:hover > .ico:last-child:not(:first-child) {
+    translate: 4px 0;
+  }
+  .btn:hover > .ico:first-child:not(:last-child) {
+    translate: -2px 0;
+  }
+  .hero .incta .lk {
+    transition: translate var(--dur-base) var(--mo-ease);
+  }
+  .hero .incta .lk:hover {
+    translate: 0 -2px;
+  }
+}
+.icon-btn {
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out),
+    scale var(--dur-fast) var(--ease-out),
+    rotate var(--dur-slow) var(--mo-ease);
+}
+.icon-btn:active {
+  scale: 0.92;
+}
+
+/* ---------- Stats ---------- */
+/* Each bracket draws itself from its middle while its figure rises under it. */
+html.mo .stats .bracket[data-in]::before {
+  animation: mo-draw-x 1000ms var(--mo-ease) backwards;
+  animation-delay: calc(var(--mo-i) * var(--mo-step) + 120ms);
+}
+
+/* ---------- The component explorer ---------- */
+.index-list li {
+  transition:
+    color var(--dur-base) var(--ease-out),
+    padding-left var(--dur-slow) var(--mo-ease);
+}
+.index-list li.is-on::after {
+  animation: mo-pop var(--dur-slow) var(--mo-spring);
+}
+@media (min-width: 1120px) and (hover: hover) {
+  .index-list li:hover {
+    color: var(--foreground);
+    padding-left: 6px;
+  }
+  .index-list li.is-on {
+    padding-left: 6px;
+  }
+}
+/* The orange arc travels round the ring to the chosen component: one tenth of a turn each. */
+.disc .arc {
+  rotate: calc(var(--mo-turn, 0) * 36deg);
+  transition: rotate 900ms var(--mo-ease);
+}
+.disc .n {
+  animation: mo-pop 500ms var(--mo-spring);
+}
+/* A panel that comes into view (the first time, and every time another component is chosen)
+   slides in, and its lines follow one after another. */
+html.mo .detail[data-in] {
+  animation-duration: 600ms;
+}
+html.mo .detail[data-in] > * {
+  animation: mo-rise-sm 600ms var(--mo-ease) backwards;
+}
+html.mo .detail[data-in] > :nth-child(1) {
+  animation-delay: 60ms;
+}
+html.mo .detail[data-in] > :nth-child(2) {
+  animation-delay: 110ms;
+}
+html.mo .detail[data-in] > :nth-child(3) {
+  animation-delay: 160ms;
+}
+html.mo .detail[data-in] > :nth-child(4) {
+  animation-delay: 210ms;
+}
+html.mo .detail[data-in] > :nth-child(5) {
+  animation-delay: 260ms;
+}
+html.mo .detail[data-in] > :nth-child(6) {
+  animation-delay: 310ms;
+}
+
+/* ---------- Logo wall ---------- */
+.logo-wall {
+  --mo-step: 45ms;
+}
+
+/* ---------- The 6S ---------- */
+/* Each card rises, then its mark lights: the rays reach out from the small sun at its foot. */
+@keyframes mo-drift {
+  to {
+    translate: -40px 30px;
+  }
+}
+@keyframes mo-pulse {
+  50% {
+    scale: 1.14;
+  }
+}
+.section.is-night .glass {
+  animation: mo-drift 16s ease-in-out infinite alternate;
+}
+.rays-six {
+  --mo-step: 90ms;
+}
+.rays-six svg polygon,
+.rays-six svg circle {
+  transform-box: view-box;
+  transform-origin: 28px 50px;
+}
+html.mo .rays-six .c[data-in] svg polygon,
+html.mo .rays-six .c[data-in] svg circle {
+  animation: mo-ray 800ms var(--mo-spring) backwards;
+  animation-delay: calc(var(--mo-i) * var(--mo-step) + 320ms);
+}
+.rays-six .c {
+  transition: background-color var(--dur-slow) var(--ease-out);
+}
+@media (hover: hover) {
+  .rays-six .c:hover {
+    background: var(--glass-1);
+  }
+  .rays-six .c:hover svg .lit {
+    animation: mo-pulse 900ms var(--mo-ease);
+  }
+}
+
+/* ---------- From booking to solar power ---------- */
+/* The curve draws itself as the reader scrolls, each step lights when the line reaches it,
+   and the sun at its end arrives last. */
+@keyframes mo-turn {
+  to {
+    rotate: 360deg;
+  }
+}
+html.mo-live .rise .curve {
+  stroke-dasharray: 1;
+  stroke-dashoffset: calc(1 - var(--mo-p));
+}
+html.mo-live .rise .area {
+  clip-path: inset(-40px calc((1 - var(--mo-p)) * 100%) 0 0);
+}
+.rise .pt,
+.rise .sun-end,
+.rise .sun-rays {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+html.mo .rise .pt[data-in] {
+  animation: mo-pop 520ms var(--mo-spring) backwards;
+}
+html.mo .rise .drop[data-in] {
+  animation: mo-fade 700ms var(--ease-out) backwards;
+}
+html.mo .rise .sun-end[data-in] {
+  animation: mo-pop 900ms var(--mo-spring) backwards;
+}
+.rise .sun-rays {
+  animation: mo-turn 48s linear infinite;
+}
+.steps {
+  --mo-step: 90ms;
+}
+@media (max-width: 767px) {
+  html.mo .steps .s[data-in]::before {
+    transform-origin: top;
+    animation: mo-draw-y 800ms var(--mo-ease) 260ms backwards;
+  }
+  html.mo .steps .s[data-in] .n {
+    animation: mo-pop 520ms var(--mo-spring) 120ms backwards;
+  }
+}
+
+/* ---------- Reviews ---------- */
+html.mo .rating[data-in] .st {
+  animation: mo-wipe 1100ms var(--ease-out) backwards;
+  animation-delay: calc(var(--mo-i) * var(--mo-step) + 300ms);
+}
+
+/* ---------- Questions ---------- */
+.acc {
+  --mo-step: 55ms;
+}
+.acc .row.is-open .icon-btn {
+  rotate: 180deg;
+}
+.acc .qh {
+  transition: color var(--dur-base) var(--ease-out);
+}
+@media (hover: hover) {
+  .acc .qh:hover {
+    color: var(--brand);
+  }
+}
+
+/* ---------- The closing section ---------- */
+/* The page ends as it began: its sun rises into place as the section scrolls in. */
+html.mo-live .closing .sun {
+  transform: translate3d(0, calc((1 - var(--mo-p)) * 150px), 0);
+}
+html.mo-live .closing .glow {
+  transform: scale(calc(0.78 + var(--mo-p) * 0.22));
+  opacity: calc(0.35 + var(--mo-p) * 0.65);
+}
+html.mo-live .closing .halo {
+  transform: scale(calc(0.9 + var(--mo-p) * 0.1));
+}
+.closing .in {
+  --mo-step: 90ms;
+}
+
+/* ---------- Phone dock ---------- */
+@keyframes mo-dock {
+  from {
+    translate: 0 130%;
+  }
+}
+.dock {
+  animation: mo-dock 700ms var(--mo-ease) 1100ms backwards;
+}
+
+/* ---------- The quotation sheet and the result ---------- */
+/* Each step of the sheet settles in when it opens. */
+.sheet .bd > .q-details > *,
+.sheet .bd > .q-quote > * {
+  animation: mo-rise-sm 480ms var(--mo-ease) backwards;
+}
+.sheet .bd > * > :nth-child(1) {
+  animation-delay: 80ms;
+}
+.sheet .bd > * > :nth-child(2) {
+  animation-delay: 120ms;
+}
+.sheet .bd > * > :nth-child(3) {
+  animation-delay: 160ms;
+}
+.sheet .bd > * > :nth-child(4) {
+  animation-delay: 200ms;
+}
+.sheet .bd > * > :nth-child(5) {
+  animation-delay: 240ms;
+}
+.sheet .bd > * > :nth-child(n + 6) {
+  animation-delay: 280ms;
+}
+/* The result: the mark lands with a small bounce, a ring spreads from it, the tick is drawn,
+   and the words follow. */
+@keyframes mo-orb {
+  from {
+    opacity: 0;
+    scale: 0.4;
+  }
+}
+@keyframes mo-ring {
+  from {
+    opacity: 0.7;
+    scale: 1;
+  }
+  to {
+    opacity: 0;
+    scale: 1.9;
+  }
+}
+@keyframes mo-stroke {
+  from {
+    stroke-dashoffset: 26;
+  }
+}
+.result .orb {
+  position: relative;
+  animation: mo-orb 700ms var(--mo-spring) backwards;
+}
+.result:not(.is-error) .orb::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px var(--sun);
+  opacity: 0;
+  pointer-events: none;
+  animation: mo-ring 1000ms var(--mo-ease) 280ms backwards;
+}
+.result .orb .ico {
+  stroke-dasharray: 26;
+  animation: mo-stroke 520ms var(--ease-out) 380ms backwards;
+}
+.result > :is(h1, h2) {
+  animation: mo-rise-sm 600ms var(--mo-ease) 420ms backwards;
+}
+.result > p {
+  animation: mo-rise-sm 600ms var(--mo-ease) 500ms backwards;
+}
+.result > :is(.btn, .alert) {
+  animation: mo-rise-sm 600ms var(--mo-ease) 580ms backwards;
+}
+
+/* ---------- Booking page ---------- */
+/* A working page: one quiet entrance, then nothing moves on its own. The legal pages do not move at all. */
+.book .book-head,
+.book .book-card,
+.book .book-actions,
+.book .book-result {
+  animation: mo-rise-sm 700ms var(--mo-ease) backwards;
+}
+.book .book-card:nth-of-type(1) {
+  animation-delay: 120ms;
+}
+.book .book-card:nth-of-type(2) {
+  animation-delay: 200ms;
+}
+.book .book-card:nth-of-type(3) {
+  animation-delay: 280ms;
+}
+.book .book-actions {
+  animation-delay: 340ms;
+}
+
+/* ---------- Reduce motion ---------- */
+/* The stylesheet's own rule stops every element. This stops the drawn parts (::before and ::after) too. */
+@media (prefers-reduced-motion: reduce) {
+  .sol *::before,
+  .sol *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

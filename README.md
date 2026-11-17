@@ -30,6 +30,7 @@ app/
     tailwind_theme_v2.css     Tailwind mapping of the tokens (copy, never edited)
     solarium.css              Design system stylesheet (copy, never edited)
     site.css                  The site's own rules, tokens only
+    motion.css                All motion: the hero's sunrise, rise into view, scroll and touch
   lib/
     content.ts                All copy, pricing, contact details, FAQs
     language.tsx              English and Gujarati switch
@@ -45,6 +46,7 @@ app/
     ui/                       Design system parts (Button, Field, Sheet, FileUpload, ...)
     quotation/                Quotation bar, sheet and their shared state
     legal/                    Layout of the privacy policy and terms pages
+    Motion.tsx                Motion controller: marks parts as they come into view (see docs/motion.md)
     Header.tsx                Header + phone menu
     BookButton.tsx            "Book at ₹0*" button
     Hero.tsx                  Hero with the sun, the price and the quotation bar
@@ -75,6 +77,7 @@ scripts/
 docs/
   design_rules_v2.md          The design rules
   quotation_pdf.md            How the quotation PDF is built from its parts
+  motion.md                   How the site moves, and how to make a new part move
 ```
 
 Institution names are rendered as text pills rather than client logos: the supplied logo files were too small to use legibly on a single page.

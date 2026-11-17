@@ -15,6 +15,11 @@ const NODES = [
 ];
 const SUN_RAYS = [-104, -78, -52, -26, 0, 26, 52, 78, 104];
 
+/** How far along the curve a node sits, from 0 to 1: the curve's line reaches it at that point of the scroll. */
+function reached(node: { x: number }) {
+  return ((node.x / NODES[NODES.length - 1].x) * 0.94).toFixed(3);
+}
+
 /** Step numbers without the leading zero, in Gujarati digits in Gujarati. */
 function stepNumber(step: (typeof JOURNEY)[number], isGu: boolean) {
   return (isGu ? step.guN : step.n).replace(/^[0૦]/, "");
@@ -28,11 +33,11 @@ export default function RisingSteps() {
     <section className="section" id="how">
       <div className="wrap">
         <div className="sec-head is-wide">
-          <div>
+          <div data-mo-group="">
             <div className="eyebrow">{isGu ? "બુકિંગ કર્યા પછી" : "After you book"}</div>
             <h2 className="h-sec">{isGu ? "બુકિંગથી લઈને સોલર પાવર સુધી" : "From booking to solar power"}</h2>
           </div>
-          <div>
+          <div data-mo-group="" data-mo-delay="2">
             <p className="lead">
               {isGu
                 ? "છ પગલાં, એક જ ટીમ. તમને હંમેશા ખબર હશે કે આગળ શું થશે અને તેનો ખર્ચ કેટલો થશે."
@@ -45,7 +50,7 @@ export default function RisingSteps() {
           </div>
         </div>
 
-        <div className="rise">
+        <div className="rise" data-mo-scroll="enter">
           <svg viewBox="0 0 1240 330" aria-hidden="true">
             <defs>
               <radialGradient id="rise-sun" cx="50%" cy="30%" r="70%">
@@ -58,36 +63,51 @@ export default function RisingSteps() {
                 <stop offset="1" className="stop-brand-bottom" />
               </linearGradient>
             </defs>
-            <path d={`${CURVE} L1063.0 330 L0 330 Z`} fill="url(#rise-fill)" />
+            <path className="area" d={`${CURVE} L1063.0 330 L0 330 Z`} fill="url(#rise-fill)" />
             <line className="base" x1="0" y1="329.5" x2="1240" y2="329.5" />
-            <path className="curve" d={CURVE} />
+            <path className="curve" d={CURVE} pathLength={1} />
             {NODES.map((node, index) => (
-              <line key={`drop-${index}`} className="drop" x1={node.x} y1={node.y} x2={node.x} y2="330" strokeDasharray="3 5" />
+              <line
+                key={`drop-${index}`}
+                className="drop"
+                x1={node.x}
+                y1={node.y}
+                x2={node.x}
+                y2="330"
+                strokeDasharray="3 5"
+                data-mo-at={reached(node)}
+              />
             ))}
             {NODES.slice(0, -1).map((node, index) => (
-              <g key={`node-${index}`}>
+              <g key={`node-${index}`} className="pt" data-mo-at={reached(node)}>
                 <circle className="node" cx={node.x} cy={node.y} r="15" />
                 <text x={node.x} y={node.y + 5} textAnchor="middle">
                   {stepNumber(JOURNEY[index], isGu)}
                 </text>
               </g>
             ))}
-            {SUN_RAYS.map((angle) => (
-              <polygon
-                key={angle}
-                className="ray"
-                points="-3,-44 3,-44 .8,-70 -.8,-70"
-                transform={`translate(${sun.x} ${sun.y}) rotate(${angle})`}
-              />
-            ))}
-            <circle cx={sun.x} cy={sun.y} r="34" fill="url(#rise-sun)" />
-            <text className="sun-n" x={sun.x} y={sun.y + 6} textAnchor="middle">
-              {stepNumber(JOURNEY[JOURNEY.length - 1], isGu)}
-            </text>
+            {/* The sun arrives when the curve reaches it. Its rays turn slowly, as a full ring so that they turn about its centre. */}
+            <g className="sun-end" data-mo-at="0.97">
+              <g className="sun-rays">
+                <circle cx={sun.x} cy={sun.y} r="70" fill="none" />
+                {SUN_RAYS.map((angle) => (
+                  <polygon
+                    key={angle}
+                    className="ray"
+                    points="-3,-44 3,-44 .8,-70 -.8,-70"
+                    transform={`translate(${sun.x} ${sun.y}) rotate(${angle})`}
+                  />
+                ))}
+              </g>
+              <circle cx={sun.x} cy={sun.y} r="34" fill="url(#rise-sun)" />
+              <text className="sun-n" x={sun.x} y={sun.y + 6} textAnchor="middle">
+                {stepNumber(JOURNEY[JOURNEY.length - 1], isGu)}
+              </text>
+            </g>
           </svg>
         </div>
 
-        <ol className="steps">
+        <ol className="steps" data-mo-group="">
           {JOURNEY.map((step) => (
             <li className="s" key={step.n}>
               <span className="n" aria-hidden="true">

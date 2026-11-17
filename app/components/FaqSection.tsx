@@ -15,7 +15,7 @@ export default function FaqSection() {
   return (
     <section className="section is-subtle" id="faq">
       <div className="wrap faq-g">
-        <div>
+        <div data-mo-group="">
           <div className="eyebrow">{isGu ? "સ્પષ્ટ જવાબો" : "Straight answers"}</div>
           <h2 className="h-sec">{isGu ? "તમારા પ્રશ્નોના સચોટ જવાબો." : "Questions, answered."}</h2>
           <p className="muted">
@@ -41,7 +41,7 @@ export default function FaqSection() {
           </div>
         </div>
 
-        <div className="acc">
+        <div className="acc" data-mo-group="">
           {FAQS.map((faq, index) => {
             const isOpen = open === index;
             return (

@@ -12,6 +12,7 @@ import {
   type StructureHeight,
 } from "../../lib/quotation";
 import Button from "../ui/Button";
+import TweenNumber from "../ui/TweenNumber";
 import SegmentedControl from "../ui/SegmentedControl";
 import { cx } from "../ui/cx";
 import { useQuotation } from "./QuotationProvider";
@@ -115,7 +116,7 @@ export default function QuotationBar({ copy }: { copy: "hero" | "phone" }) {
             <span className="pay-note">{isGu ? callbackOption.guSub : callbackOption.sub}</span>
           ) : (
             <>
-              {inr(q.calc.cash.netAfterSubsidy)}
+              <TweenNumber value={q.calc.cash.netAfterSubsidy} format={inr} />
               <sup className="star">*</sup>
             </>
           )}

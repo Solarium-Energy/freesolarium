@@ -60,6 +60,8 @@ Colours carry their own check. Every colour token names the tokens it is paired 
 | M2 | **Reduced motion is respected.** The stylesheet holds a `prefers-reduced-motion: reduce` rule that stops animation and transition. | checker |
 | M3 | **Focus is always visible.** No `outline: none` without a visible replacement. The ring is `ring`, and `sidebar-ring` over night surfaces. | checker |
 
+On the website, M1 is replaced by `docs/motion.md`, by the owner's decision of 18 Nov 2026: the page moves throughout, within the limits set there. M2 and M3 hold as written.
+
 ## Brand
 
 | Id | Rule | Checked by |

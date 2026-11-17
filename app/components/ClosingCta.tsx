@@ -17,10 +17,10 @@ export default function ClosingCta() {
     : ["Pay & get 100% subsidy in return", "5-year insurance free", "Installed by our own team"];
 
   return (
-    <section className="closing on-dark">
+    <section className="closing on-dark" data-mo-scroll="enter">
       <div className="halo" aria-hidden="true" />
       <div className="glow" aria-hidden="true" />
-      <div className="in">
+      <div className="in" data-mo-group="">
         <div className="eyebrow">{isGu ? "PM સૂર્ય ઘર · ગુજરાતના ઘરો" : "PM Surya Ghar · Gujarat homes"}</div>
         {isGu ? (
           <h2>
