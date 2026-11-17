@@ -73,7 +73,7 @@ export function drawQuotation218(ctx: CanvasRenderingContext2D, input: Quotation
       { label: "Date", value: quoteDate },
     ],
   });
-  gap(doc, 8);
+  gap(doc);
 
   FieldRows(doc, [
     [
