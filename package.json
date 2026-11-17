@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "check:design": "node scripts/solarium_check.mjs --tokens app/styles/tokens_v2.css --src app --allow app/lib/quotationPdf.ts --baseline solarium_baseline.json",
+    "check:design": "node scripts/solarium_check.mjs --tokens app/styles/tokens_v2.css --src app --allow app/lib/quotationPdf.ts",
     "build": "npm run check:design && next build",
     "start": "next start",
     "lint": "eslint"

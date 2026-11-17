@@ -79,5 +79,5 @@ The look comes from the Solarium design system, First Light, version 2.
 
 - `app/styles/tokens_v2.css`, `app/styles/tailwind_theme_v2.css` and `app/styles/solarium.css` are copies of the design system's files. They are never edited: a new version of the design system replaces them file for file.
 - Site rules go into `app/styles/site.css`, written with tokens only. The parts live in `app/components/ui/`.
-- `npm run check:design` checks the code against the design rules (`docs/design_rules_v2.md`). `npm run build` runs it first, so a new finding stops the build.
+- `npm run check:design` checks the code against the design rules (`docs/design_rules_v2.md`). `npm run build` runs it first, so any finding stops the build.
 - Light theme only: no dark theme, no theme switch.

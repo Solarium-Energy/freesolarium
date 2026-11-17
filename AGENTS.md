@@ -12,9 +12,9 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 The look of this product comes from the Solarium Design System. Its rules are checked by `scripts/solarium_check.mjs`.
 
-- Run the checker before you finish any change that touches the interface. Do not report the work as done while it shows a new error.
+- Run the checker before you finish any change that touches the interface. Do not report the work as done while it shows an error.
   `npm run check:design`
-- Fix a finding. Do not silence it. Never add to the baseline file without Mohit's yes.
+- Fix a finding. Do not silence it. There is no baseline: every finding fails the build.
 - A rule is broken on purpose only in writing: a comment `solarium-allow <rule id>: <reason>` on that line or the line above, and Mohit's yes in the pull request or the package report.
 - Never edit `app/styles/tokens_v2.css`, `app/styles/tailwind_theme_v2.css` or `app/styles/solarium.css`. A change to them is a new version of the design system: ask Mohit.
 
