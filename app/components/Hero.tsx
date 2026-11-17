@@ -9,10 +9,12 @@ import { useLanguage } from "../lib/language";
 import { buildMeta, isConfirmed, newSubmissionId, postJson, type PostResult } from "../lib/leadClient";
 import Reveal from "./Reveal";
 import QuotationSheetModal, {
+  BOOKING_AMOUNT,
   CENTRAL_SUBSIDY,
   GUJARAT_SUBSIDY,
   STANDARD_PRICE,
   computeQuotationNumbers,
+  type PaymentMode,
 } from "./QuotationSheetModal";
 
 /* ─── Constants ─── */
@@ -46,6 +48,31 @@ const DISCOM_OPTIONS = [
   { label: "Torrent Power", crm: "Torrent", guLabel: "Torrent Power", sub: "+₹5,409", guSub: "+₹5,409", extra: 5409 },
   { label: "Other", crm: "Other", guLabel: "અન્ય (Other)", sub: "Our team will contact you", guSub: "અમારી ટીમ તમારો સંપર્ક કરશે", extra: 0, custom: true },
 ] as const;
+
+/* The sheet's payment modes in the CRM's values, and the loan figures shown for each loan mode. */
+const PAYMENT_MODE_VALUES: Record<PaymentMode, string> = { cash: "cash", bank: "bank-loan", nbfc: "nbfc-loan" };
+
+function loanFigures(mode: PaymentMode | null, calc: ReturnType<typeof computeQuotationNumbers>) {
+  if (mode === "bank") {
+    return {
+      down_payment: calc.bank.downPayment,
+      loan_amount: calc.bank.loanAmount,
+      emi: calc.bank.emi,
+      interest_first_3_emis: calc.bank.interest,
+      net_cost: calc.bank.netAfterSubsidy,
+    };
+  }
+  if (mode === "nbfc") {
+    return {
+      down_payment: 0,
+      loan_amount: calc.nbfc.loanAmount,
+      emi: calc.nbfc.emi,
+      interest_first_3_emis: calc.nbfc.interest,
+      net_cost: calc.nbfc.netAfterSubsidy,
+    };
+  }
+  return undefined;
+}
 
 type Category        = "general" | "sc-st" | null;
 type FloorOption     = (typeof FLOOR_OPTIONS)[number]["label"] | "";
@@ -104,6 +131,8 @@ function QuotationCard() {
   const [attempted, setAttempted]             = useState(false);
   const [callbackSent, setCallbackSent]       = useState(false);
   const [showQuotationModal, setShowQuotationModal] = useState(false);
+  // The payment mode ticked in the sheet. The sheet opens with "Without loan" ticked.
+  const [paymentMode, setPaymentMode]         = useState<PaymentMode | null>("cash");
   const [sending, setSending]                 = useState(false);
   const [sendError, setSendError]             = useState<"general" | "rate" | null>(null);
   const [website, setWebsite]                 = useState("");
@@ -139,7 +168,7 @@ function QuotationCard() {
   }
 
   /** The visitor and the quotation they see, in the CRM's values. */
-  function buildQuote() {
+  function buildQuote(mode: PaymentMode | null = paymentMode) {
     const floorOpt = FLOOR_OPTIONS.find((o) => o.label === floor);
     const heightOpt = STRUCTURE_HEIGHT_OPTIONS.find((o) => o.label === structureHeight);
     const discomOpt = DISCOM_OPTIONS.find((o) => o.label === discom);
@@ -167,13 +196,19 @@ function QuotationCard() {
         subsidy_amount: CENTRAL_SUBSIDY + GUJARAT_SUBSIDY,
         customer_pays: priced ? calc.cash.netAfterSubsidy : undefined,
         needs_callback: needsCallback,
+        // Only the priced quotation has a sheet, so only it has a payment mode.
+        booking_amount: priced ? BOOKING_AMOUNT : undefined,
+        payment_mode: priced && mode ? PAYMENT_MODE_VALUES[mode] : undefined,
+        loan: priced ? loanFigures(mode, calc) : undefined,
       },
     };
   }
 
   /** Sends the quotation to the CRM, unless this exact one was already sent. */
-  async function sendQuote(options: { keepalive?: boolean } = {}): Promise<PostResult | "unchanged"> {
-    const quote = buildQuote();
+  async function sendQuote(
+    options: { keepalive?: boolean; paymentMode?: PaymentMode | null } = {}
+  ): Promise<PostResult | "unchanged"> {
+    const quote = buildQuote(options.paymentMode === undefined ? paymentMode : options.paymentMode);
     const key = JSON.stringify(quote);
     if (key === lastSentRef.current) return "unchanged";
     lastSentRef.current = key;
@@ -181,7 +216,7 @@ function QuotationCard() {
     const result = await postJson(
       "/api/quote",
       { submission_id: newSubmissionId(), ...quote, meta: buildMeta(), website },
-      options
+      { keepalive: options.keepalive }
     );
     if (isConfirmed(result)) {
       confirmedRef.current = key;
@@ -234,7 +269,9 @@ function QuotationCard() {
     }
 
     // The quotation opens whether or not the CRM call succeeds. The server logs failures.
-    void sendQuote();
+    // The sheet opens with "Without loan" ticked, so this first call carries cash.
+    setPaymentMode("cash");
+    void sendQuote({ paymentMode: "cash" });
     setShowQuotationModal(true);
   }
 
@@ -555,6 +592,7 @@ function QuotationCard() {
             onFloorChange: (val) => setFloor(val as FloorOption),
             onHeightChange: (val) => setStructureHeight(val as StructureHeight),
             onDiscomChange: (val) => setDiscom(val as DiscomOption),
+            onPaymentModeChange: (mode) => setPaymentMode(mode),
           }}
           onClose={() => {
             setShowQuotationModal(false);

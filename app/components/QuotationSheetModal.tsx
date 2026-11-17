@@ -20,6 +20,7 @@ export interface QuotationFormData {
   onFloorChange?: (floor: string) => void;
   onHeightChange?: (height: string) => void;
   onDiscomChange?: (discom: string) => void;
+  onPaymentModeChange?: (mode: PaymentMode | null) => void;
 }
 
 /* ─── Pricing Constants (exact match to offline sheet) ─── */
@@ -1321,7 +1322,7 @@ export default function QuotationSheetModal({
               <div className="grid grid-cols-1 divide-y divide-slate-300 md:grid-cols-3 md:divide-x md:divide-y-0">
                 {/* Column 1: Without loan */}
                 <div
-                  onClick={() => setPaymentMode("cash")}
+                  onClick={() => { setPaymentMode("cash"); data.onPaymentModeChange?.("cash"); }}
                   className={`flex cursor-pointer flex-col justify-between transition ${
                     isCash ? "bg-blue-50/35" : "hover:bg-slate-50/70"
                   }`}
@@ -1368,7 +1369,7 @@ export default function QuotationSheetModal({
 
                 {/* Column 2: Nationalised bank loan */}
                 <div
-                  onClick={() => setPaymentMode("bank")}
+                  onClick={() => { setPaymentMode("bank"); data.onPaymentModeChange?.("bank"); }}
                   className={`flex cursor-pointer flex-col justify-between transition ${
                     isBank ? "bg-blue-50/35" : "hover:bg-slate-50/70"
                   }`}
@@ -1442,7 +1443,7 @@ export default function QuotationSheetModal({
 
                 {/* Column 3: NBFC loan */}
                 <div
-                  onClick={() => setPaymentMode("nbfc")}
+                  onClick={() => { setPaymentMode("nbfc"); data.onPaymentModeChange?.("nbfc"); }}
                   className={`flex cursor-pointer flex-col justify-between transition ${
                     isNbfc ? "bg-blue-50/35" : "hover:bg-slate-50/70"
                   }`}

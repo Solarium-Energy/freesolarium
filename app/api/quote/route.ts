@@ -27,6 +27,8 @@ const AMOUNTS = [
   "subsidy_amount",
   "customer_pays",
 ] as const;
+const PAYMENT_MODES = ["cash", "bank-loan", "nbfc-loan"];
+const LOAN_KEYS = ["down_payment", "loan_amount", "emi", "interest_first_3_emis", "net_cost"] as const;
 
 /** The quotation card: one lead with the quotation the visitor saw. */
 export async function POST(request: Request) {
@@ -56,6 +58,22 @@ export async function POST(request: Request) {
   const allAmountsRequired = quotation.needs_callback === false;
   for (const key of AMOUNTS) {
     amount(quotationIn, key, quotation, errors, `quotation.${key}`, allAmountsRequired);
+  }
+
+  // Booking amount, payment mode and loan figures belong to the priced sheet only.
+  // A callback quotation drops them.
+  if (quotation.needs_callback === false) {
+    amount(quotationIn, "booking_amount", quotation, errors, "quotation.booking_amount", false);
+    oneOf(quotationIn, "payment_mode", PAYMENT_MODES, quotation, errors, "quotation.payment_mode");
+    const isLoan = quotation.payment_mode === "bank-loan" || quotation.payment_mode === "nbfc-loan";
+    if (isLoan && quotationIn.loan !== undefined && quotationIn.loan !== null) {
+      const loanIn = asObject(quotationIn.loan);
+      const loan: Out = {};
+      for (const key of LOAN_KEYS) {
+        amount(loanIn, key, loan, errors, `quotation.loan.${key}`, true);
+      }
+      quotation.loan = loan;
+    }
   }
 
   const meta = readMeta(body, errors);
