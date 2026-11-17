@@ -447,7 +447,7 @@ html:lang(gu) :is(.label, .help, .error-text, .qbar label, .dock small, .hero .p
   font-size: 13px;
 }
 /* Gujarati letters carry marks above and below: no tight tracking, room between the lines of a headline. */
-html:lang(gu) :is(.hero h1, .h-sec, .h-sub, .closing h2, .detail h3, .rays-six h3, .steps h3, .acc .qh, .sheet header h3, .result h2) {
+html:lang(gu) :is(.hero h1, .h-sec, .h-sub, .closing h2, .detail h3, .rays-six h3, .steps h3, .acc .qh, .sheet header h3, .result h2, .result h1) {
   letter-spacing: 0;
   line-height: 1.25;
 }
@@ -675,15 +675,6 @@ html:lang(gu) .file-row span.s {
     height: auto;
     aspect-ratio: 1;
   }
-  /* The Gujarati nav labels are long: here the phone number keeps its icon as the link, its digits stay for screen readers. */
-  html:lang(gu) .site-header .tel-digits {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
-  }
 }
 
 /* Below 1200 wide there is no room beside the sun for the hero's side texts, even at the page's edges:
@@ -738,4 +729,46 @@ html:lang(gu) .qbar .seg button {
   .dock > div {
     min-width: 0;
   }
+}
+
+/* ---------- The bar when the team calls back ---------- */
+/* The long label wraps inside its button instead of running out of it. */
+@media (min-width: 1120px) {
+  .hero .qbar .btn.is-callback {
+    white-space: normal;
+    text-align: left;
+    line-height: 1.25;
+  }
+  html:lang(gu) .hero .qbar .btn.is-callback {
+    line-height: 1.4;
+  }
+}
+/* Between 1120 and 1279 the columns are narrower: the button gives up some of its side padding, and the line
+   after "You pay" wraps at its own text size, not at the size of the price figure. */
+@media (min-width: 1120px) and (max-width: 1279px) {
+  .hero .qbar .btn.is-callback {
+    padding: 0 16px;
+  }
+  .hero .qbar .pay.is-note {
+    font-size: 15px;
+    line-height: 1.3;
+  }
+}
+
+/* The reference keeps 12px between the row of steps and the sheet's heading. */
+.sheet header .form-steps {
+  margin-bottom: 12px;
+}
+
+/* The result part styles its heading as an h2. On /book the result is the page's main heading, an h1. */
+.result h1 {
+  font: 300 40px/1.08 var(--font-display);
+  letter-spacing: -0.025em;
+}
+
+/* The remarks box matches the large fields around it. 16px also stops phones zooming in on focus. */
+.book .textarea {
+  font-size: 16px;
+  padding: 12px 16px;
+  border-radius: var(--corner-md);
 }

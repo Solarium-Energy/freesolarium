@@ -109,7 +109,7 @@ export default function QuotationBar({ copy }: { copy: "hero" | "phone" }) {
         <div className="ln">
           {inr(PRICING.systemValue)} − {inr(PRICING.centralSubsidy + PRICING.stateSubsidy)} {isGu ? "સબસિડી" : "subsidy"}
         </div>
-        <div className="pay">
+        <div className={cx("pay", callbackOption && "is-note")}>
           <em>{isGu ? "તમારે ચૂકવવાના:" : "You pay:"}</em>
           {callbackOption ? (
             <span className="pay-note">{isGu ? callbackOption.guSub : callbackOption.sub}</span>
@@ -121,7 +121,7 @@ export default function QuotationBar({ copy }: { copy: "hero" | "phone" }) {
           )}
         </div>
       </div>
-      <Button variant="primary" size="lg" onClick={() => q.openSheet()}>
+      <Button variant="primary" size="lg" className={q.needsCallback ? "is-callback" : undefined} onClick={() => q.openSheet()}>
         {q.needsCallback ? (
           <>
             <PhoneCall className="ico" aria-hidden="true" />
