@@ -6,6 +6,8 @@ type Option<T extends string> = { value: T; label: string };
 
 type Props<T extends string> = {
   label: string;
+  /** The id of a visible label that names the group. Used in place of the label text when given. */
+  labelledBy?: string;
   options: Option<T>[];
   value: T;
   onChange: (value: T) => void;
@@ -15,9 +17,14 @@ type Props<T extends string> = {
 };
 
 /** Two to four choices side by side in a pill track. The chosen one carries is-on and aria-pressed. */
-export default function SegmentedControl<T extends string>({ label, options, value, onChange, quiet, className }: Props<T>) {
+export default function SegmentedControl<T extends string>({ label, labelledBy, options, value, onChange, quiet, className }: Props<T>) {
   return (
-    <div className={cx("seg", quiet && "seg-quiet", className)} role="group" aria-label={label}>
+    <div
+      className={cx("seg", quiet && "seg-quiet", className)}
+      role="group"
+      aria-labelledby={labelledBy}
+      aria-label={labelledBy ? undefined : label}
+    >
       {options.map((option) => {
         const on = option.value === value;
         return (

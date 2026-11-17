@@ -72,7 +72,7 @@ export default function ComponentExplorer() {
         <div className="index-detail">
           <div>
             <div className="lbl" id="explorer-label">
-              {isGu ? "૧૦ ઘટકો જોવા માટે સ્વાઇપ અથવા એરોનો ઉપયોગ કરો" : "Explore all 10 certified components"}
+              {isGu ? "તમામ ૧૦ પ્રમાણિત ઘટકો" : "Explore all 10 certified components"}
             </div>
             <ol className="index-list" ref={listRef} aria-labelledby="explorer-label">
               {INCLUDED.map((item, index) => (

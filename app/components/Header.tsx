@@ -95,7 +95,7 @@ export default function Header() {
         </nav>
         <div className="r">
           <a className="tel" href={site.phoneHref}>
-            <Phone className="ico" aria-hidden="true" /> {site.phoneDisplay}
+            <Phone className="ico" aria-hidden="true" /> <span className="tel-digits">{site.phoneDisplay}</span>
           </a>
           <LanguageSwitch />
           <BookButton />

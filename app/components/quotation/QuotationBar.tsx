@@ -75,6 +75,7 @@ export default function QuotationBar({ copy }: { copy: "hero" | "phone" }) {
         <label id={`q-${copy}-category`}>{isGu ? "તમારી શ્રેણી" : "Your category"}</label>
         <SegmentedControl
           label={isGu ? "તમારી શ્રેણી" : "Your category"}
+          labelledBy={`q-${copy}-category`}
           value={q.category ?? "general"}
           onChange={(value) => q.setCategory(value)}
           options={[

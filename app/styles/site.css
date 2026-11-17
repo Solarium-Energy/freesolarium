@@ -627,3 +627,107 @@ html:lang(gu) .file-row span.s {
     width: 100%;
   }
 }
+
+/* ---------- Desktop layout between 1120 and 1279 wide ---------- */
+/* The design's desktop parts need about 1280px. In this range they shrink to the page instead of running off it. */
+@media (min-width: 1120px) and (max-width: 1279px) {
+  /* Header: tighter gaps and padding, and nothing wraps. */
+  .site-header {
+    padding: 0 var(--gutter-tablet);
+  }
+  .nav-pills {
+    gap: 4px;
+  }
+  .nav-pills a {
+    padding: 0 12px;
+    white-space: nowrap;
+  }
+  .site-header .r {
+    gap: 10px;
+  }
+  .site-header .tel {
+    white-space: nowrap;
+  }
+  /* Hero: the flanks move out to the page's edges, clear of the sun. */
+  .hero .flank.l {
+    left: var(--gutter-tablet);
+  }
+  .hero .flank.r {
+    right: var(--gutter-tablet);
+  }
+  /* The bar takes the page width less the tablet gutters. Its columns keep their proportions, in the same order
+     on one row, and never get narrower than their content. */
+  .hero .qbar {
+    left: var(--gutter-tablet);
+    width: calc(100% - 2 * var(--gutter-tablet));
+    margin-left: 0;
+    grid-template-columns:
+      minmax(min-content, 232fr) minmax(min-content, 170fr) minmax(min-content, 150fr)
+      minmax(min-content, 150fr) minmax(min-content, 322fr) minmax(min-content, 196fr);
+  }
+  /* The explorer's three columns shrink in proportion to fit the wrap. The disc scales with its column. */
+  .index-detail {
+    grid-template-columns: minmax(0, 300fr) minmax(0, 468fr) minmax(0, 372fr);
+  }
+  .disc {
+    width: 100%;
+    max-width: 468px;
+    height: auto;
+    aspect-ratio: 1;
+  }
+  /* The Gujarati nav labels are long: here the phone number keeps its icon as the link, its digits stay for screen readers. */
+  html:lang(gu) .site-header .tel-digits {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+/* ---------- Category control in Gujarati ---------- */
+/* "સામાન્ય (General)" is much longer than "SC / ST": each label sizes its own segment, with 10px of room on each side. */
+html:lang(gu) .qbar .seg button {
+  flex: 1 1 auto;
+  padding: 6px 10px;
+}
+@media (min-width: 1280px) {
+  html:lang(gu) .hero .qbar {
+    grid-template-columns: minmax(232px, max-content) 170px 150px 150px 1fr 196px;
+  }
+}
+@media (min-width: 768px) and (max-width: 1119px) {
+  html:lang(gu) .hero .qbar {
+    grid-template-columns: minmax(min-content, 1fr) 1fr 1fr 1fr;
+  }
+}
+
+/* ---------- Sheet corrections ---------- */
+/* Amounts never break across lines: the label cell wraps instead. */
+.price-table td:last-child {
+  white-space: nowrap;
+}
+/* Each step's content sits at the top of the sheet, the thank-you as one group in its middle. */
+.q-details,
+.q-quote {
+  align-content: start;
+}
+.sheet .bd > .result {
+  align-content: center;
+}
+
+/* ---------- Phones: stat values and the dock ---------- */
+@media (max-width: 767px) {
+  /* A stat value steps down with the screen until it fits its column, never below the size of t-display-6. */
+  .bracket b {
+    font-size: clamp(26px, 7.2vw, 34px);
+  }
+  /* At least 8px between the dock's text and its button: the small line wraps when it has to. */
+  .dock {
+    gap: var(--space-2);
+  }
+  .dock > div {
+    min-width: 0;
+  }
+}
