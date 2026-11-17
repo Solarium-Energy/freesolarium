@@ -20,7 +20,9 @@ export default function ResultScreen({ title, children, action, error, titleId }
       <span className="orb">
         <Icon className="ico" aria-hidden="true" />
       </span>
-      <h2 id={titleId}>{title}</h2>
+      <h2 id={titleId} tabIndex={titleId ? -1 : undefined}>
+        {title}
+      </h2>
       <p>{children}</p>
       {action}
     </div>

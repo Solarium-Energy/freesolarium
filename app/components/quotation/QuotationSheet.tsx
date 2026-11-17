@@ -25,7 +25,7 @@ import { Field, Input } from "../ui/Field";
 import FormSteps from "../ui/FormSteps";
 import PriceTable, { type PriceRow } from "../ui/PriceTable";
 import ResultScreen from "../ui/ResultScreen";
-import Sheet from "../ui/Sheet";
+import Sheet, { useSettled } from "../ui/Sheet";
 import { useQuotation } from "./QuotationProvider";
 
 const MODES: { mode: PaymentMode; title: string }[] = [
@@ -56,26 +56,7 @@ export default function QuotationSheet() {
   if (onQuotation) {
     footer = <QuotationFooter backLabel={backLabel} />;
   } else if (!result) {
-    footer = (
-      <>
-        <Button variant="outline" size="lg" onClick={() => q.closeSheet()}>
-          {backLabel}
-        </Button>
-        <Button variant="primary" size="lg" loading={q.sending} onClick={() => void q.handleActionClick()}>
-          {q.needsCallback ? (
-            <>
-              <PhoneCall className="ico" aria-hidden="true" />
-              {isGu ? "અમારી ટીમ તમારો સંપર્ક કરશે" : "Our team will contact you"}
-            </>
-          ) : (
-            <>
-              {isGu ? "ક્વોટેશન જુઓ" : "Show Quotation"}
-              <ArrowRight className="ico" aria-hidden="true" />
-            </>
-          )}
-        </Button>
-      </>
-    );
+    footer = <DetailsFooter backLabel={backLabel} />;
   }
 
   return (
@@ -96,10 +77,12 @@ export default function QuotationSheet() {
       above={result ? undefined : <FormSteps steps={steps} current={onQuotation ? 2 : 1} />}
       footer={footer}
       stepKey={result ? "result" : q.step}
+      labelId={result ? "quotation-result-title" : undefined}
       className="q-sheet"
     >
       {result ? (
         <ResultScreen
+          titleId="quotation-result-title"
           title={isGu ? "આભાર" : "Thank you"}
           action={
             <Button variant="primary" size="lg" onClick={() => q.closeSheet()}>
@@ -115,6 +98,34 @@ export default function QuotationSheet() {
         <DetailsStep />
       )}
     </Sheet>
+  );
+}
+
+/* Each step's buttons ignore a press in their first moment: on a double click the second press would
+   otherwise land on the button that just took the first one's place. */
+function DetailsFooter({ backLabel }: { backLabel: string }) {
+  const q = useQuotation();
+  const { isGu } = useLanguage();
+  const settled = useSettled();
+  return (
+    <>
+      <Button variant="outline" size="lg" onClick={() => settled() && q.closeSheet()}>
+        {backLabel}
+      </Button>
+      <Button variant="primary" size="lg" loading={q.sending} onClick={() => settled() && void q.handleActionClick()}>
+        {q.needsCallback ? (
+          <>
+            <PhoneCall className="ico" aria-hidden="true" />
+            {isGu ? "અમારી ટીમ તમારો સંપર્ક કરશે" : "Our team will contact you"}
+          </>
+        ) : (
+          <>
+            {isGu ? "ક્વોટેશન જુઓ" : "Show Quotation"}
+            <ArrowRight className="ico" aria-hidden="true" />
+          </>
+        )}
+      </Button>
+    </>
   );
 }
 
@@ -356,6 +367,7 @@ function QuotationFooter({ backLabel }: { backLabel: string }) {
   const q = useQuotation();
   const { isGu } = useLanguage();
   const [downloading, setDownloading] = useState(false);
+  const settled = useSettled();
 
   async function handleDownloadPdf() {
     setDownloading(true);
@@ -396,13 +408,24 @@ function QuotationFooter({ backLabel }: { backLabel: string }) {
 
   return (
     <>
-      <Button variant="outline" size="lg" onClick={() => q.backToDetails()}>
+      <Button variant="outline" size="lg" onClick={() => settled() && q.backToDetails()}>
         {backLabel}
       </Button>
-      <Button variant="outline" size="lg" href="/book" onClick={() => q.leaveForBooking()}>
+      <Button
+        variant="outline"
+        size="lg"
+        href="/book"
+        onClick={(event) => {
+          if (!settled()) {
+            event.preventDefault();
+            return;
+          }
+          q.leaveForBooking();
+        }}
+      >
         {isGu ? "મારી સિસ્ટમ બુક કરો" : "Book my system"}
       </Button>
-      <Button variant="primary" size="lg" loading={downloading} onClick={() => void handleDownloadPdf()}>
+      <Button variant="primary" size="lg" loading={downloading} onClick={() => settled() && void handleDownloadPdf()}>
         {downloading ? (
           "Generating PDF…"
         ) : (

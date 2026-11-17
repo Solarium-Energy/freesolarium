@@ -44,6 +44,20 @@ export function useSheet() {
   return { state, show, hide };
 }
 
+const SETTLE_MS = 400;
+
+/**
+ * True once a moment has passed since the caller appeared. A press that lands sooner is the second half
+ * of a double click on the button that opened it, so it is ignored.
+ */
+export function useSettled() {
+  const shownAt = useRef<number | null>(null);
+  useEffect(() => {
+    shownAt.current = performance.now();
+  }, []);
+  return () => shownAt.current !== null && performance.now() - shownAt.current >= SETTLE_MS;
+}
+
 const PHONE_QUERY = "(max-width: 767px)";
 
 function subscribePhone(onChange: () => void) {
@@ -75,6 +89,8 @@ type Props = {
   bottom?: boolean;
   /** When it changes, focus moves to the title (a new step of the same sheet). */
   stepKey?: string;
+  /** The heading that names the sheet, when a step has its own (the title otherwise). */
+  labelId?: string;
   className?: string;
   children: ReactNode;
 };
@@ -95,14 +111,16 @@ function SheetPanel({
   above,
   footer,
   stepKey,
+  labelId,
   fromBottom,
   className,
   children,
 }: Props & { fromBottom: boolean }) {
   const panelRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
-  const firstStep = useRef(true);
+  const lastStep = useRef(stepKey);
   const requestClose = useEffectEvent(onClose);
+  const settled = useSettled();
 
   useEffect(() => {
     const panel = panelRef.current;
@@ -127,15 +145,14 @@ function SheetPanel({
         event.preventDefault();
         return;
       }
-      const head = items[0];
-      const tail = items[items.length - 1];
-      const inside = panel.contains(document.activeElement);
-      if (event.shiftKey && (!inside || document.activeElement === head)) {
+      // Focus on the title or the panel itself is not in the list: it wraps like the ends do.
+      const at = items.indexOf(document.activeElement as HTMLElement);
+      if (event.shiftKey && at <= 0) {
         event.preventDefault();
-        tail.focus();
-      } else if (!event.shiftKey && (!inside || document.activeElement === tail)) {
+        items[items.length - 1].focus();
+      } else if (!event.shiftKey && (at === -1 || at === items.length - 1)) {
         event.preventDefault();
-        head.focus();
+        items[0].focus();
       }
     };
     document.addEventListener("keydown", onKey);
@@ -148,24 +165,29 @@ function SheetPanel({
   }, []);
 
   useEffect(() => {
-    if (firstStep.current) {
-      firstStep.current = false;
-      return;
-    }
-    titleRef.current?.focus();
-  }, [stepKey]);
+    if (lastStep.current === stepKey) return;
+    lastStep.current = stepKey;
+    const heading = (labelId && document.getElementById(labelId)) || titleRef.current;
+    heading?.focus();
+  }, [stepKey, labelId]);
 
   const closing = state === "closing";
 
   return (
     <>
-      <div className={cx("scrim sheet-scrim", closing && "is-closing")} onClick={() => onClose()} aria-hidden="true" />
+      <div
+        className={cx("scrim sheet-scrim", closing && "is-closing")}
+        onClick={() => {
+          if (settled()) onClose();
+        }}
+        aria-hidden="true"
+      />
       <div
         ref={panelRef}
         className={cx("sheet is-floating", fromBottom && "sheet-bottom", closing && "is-closing", className)}
         role="dialog"
         aria-modal="true"
-        aria-labelledby={titleId}
+        aria-labelledby={labelId ?? titleId}
         tabIndex={-1}
       >
         <header>
