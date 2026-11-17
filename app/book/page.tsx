@@ -5,6 +5,8 @@ import Link from "next/link";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { useLanguage } from "../lib/language";
+import { site, whatsappUrl } from "../lib/content";
+import { buildMeta, isConfirmed, newSubmissionId, postJson, type PostResult } from "../lib/leadClient";
 import {
   ArrowLeft,
   CheckCircle2,
@@ -16,13 +18,28 @@ import {
 
 /* ─── helpers ─── */
 const MAX_MB = 10;
-const MAX_BYTES = MAX_MB * 1024 * 1024;
+const MAX_VIDEO_MB = 50;
+
+const EXTENSION_TYPES: Record<string, string> = {
+  jpg: "image/jpeg",
+  jpeg: "image/jpeg",
+  png: "image/png",
+  pdf: "application/pdf",
+  mp4: "video/mp4",
+};
+
+/** The file's type, or when the browser gives none, the type its extension implies. */
+function fileType(file: File) {
+  if (file.type) return file.type;
+  const extension = file.name.split(".").pop()?.toLowerCase() ?? "";
+  return EXTENSION_TYPES[extension] ?? "";
+}
 
 function FileUpload({
   id,
   label,
   hint,
-  accept = "image/*,application/pdf",
+  accept = "image/jpeg,image/png,application/pdf",
   required = false,
   value,
   onChange,
@@ -82,11 +99,21 @@ function FileUpload({
         onChange={(e) => {
           const f = e.target.files?.[0];
           if (!f) return;
-          if (f.size > MAX_BYTES) {
+          const type = fileType(f);
+          if (!accept.split(",").includes(type)) {
             alert(
               isGu
-                ? `ફાઇલ ${MAX_MB} MB કરતા ઓછી હોવી જોઈએ.`
-                : `File must be under ${MAX_MB} MB.`
+                ? `આ ફાઇલનો પ્રકાર માન્ય નથી. કૃપા કરીને ${hint ?? ""} ફાઇલ અપલોડ કરો.`
+                : `This file type is not allowed. Please upload a ${hint ?? ""} file.`
+            );
+            return;
+          }
+          const maxMb = type === "video/mp4" ? MAX_VIDEO_MB : MAX_MB;
+          if (f.size > maxMb * 1024 * 1024) {
+            alert(
+              isGu
+                ? `ફાઇલ ${maxMb} MB કરતા ઓછી હોવી જોઈએ.`
+                : `File must be under ${maxMb} MB.`
             );
             return;
           }
@@ -163,13 +190,14 @@ function Select({
   );
 }
 
+/* `crm` is the value the CRM expects for each option. */
 const DISCOMS = [
-  { value: "UGVCL", en: "UGVCL", gu: "UGVCL" },
-  { value: "MGVCL", en: "MGVCL", gu: "MGVCL" },
-  { value: "DGVCL", en: "DGVCL", gu: "DGVCL" },
-  { value: "PGVCL", en: "PGVCL", gu: "PGVCL" },
-  { value: "TORRENT", en: "TORRENT", gu: "TORRENT" },
-  { value: "Other", en: "Other", gu: "અન્ય (Other)" },
+  { value: "UGVCL", en: "UGVCL", gu: "UGVCL", crm: "UGVCL" },
+  { value: "MGVCL", en: "MGVCL", gu: "MGVCL", crm: "MGVCL" },
+  { value: "DGVCL", en: "DGVCL", gu: "DGVCL", crm: "DGVCL" },
+  { value: "PGVCL", en: "PGVCL", gu: "PGVCL", crm: "PGVCL" },
+  { value: "TORRENT", en: "TORRENT", gu: "TORRENT", crm: "Torrent" },
+  { value: "Other", en: "Other", gu: "અન્ય (Other)", crm: "Other" },
 ];
 const PROJECT_TYPES = [
   { value: "Residential", en: "Residential", gu: "રહેણાંક (Residential)" },
@@ -231,6 +259,73 @@ const EMPTY_FILES: FileState = {
   site1: null, site2: null,
 };
 
+type FileKey = keyof FileState;
+
+const IMAGE_TYPES = "image/jpeg,image/png";
+
+/* Each file input: its CRM document type, the types it accepts, and its label. */
+const FILE_FIELDS: Record<FileKey, { docType: string; accept: string; en: string; gu: string }> = {
+  lightBill: { docType: "electricity-bill", accept: `${IMAGE_TYPES},application/pdf`, en: "Light Bill (Latest)", gu: "વીજળીનું બિલ (નવીનતમ)" },
+  passport: { docType: "passport-photo", accept: IMAGE_TYPES, en: "Passport Size Photograph", gu: "પાસપોર્ટ સાઈઝનો ફોટો" },
+  aadharFront: { docType: "aadhaar-front", accept: IMAGE_TYPES, en: "Aadhaar Card Front", gu: "આધાર કાર્ડનો આગળનો ભાગ" },
+  aadharBack: { docType: "aadhaar-back", accept: IMAGE_TYPES, en: "Aadhaar Card Back", gu: "આધાર કાર્ડનો પાછળનો ભાગ" },
+  panCard: { docType: "pan", accept: IMAGE_TYPES, en: "PAN Card", gu: "PAN કાર્ડ" },
+  cheque: { docType: "bank-proof", accept: `${IMAGE_TYPES},application/pdf`, en: "Cancelled Cheque / Passbook", gu: "કેન્સલ કરેલો ચેક / પાસબુક" },
+  housePhoto: { docType: "house-photo", accept: IMAGE_TYPES, en: "House Photo (all floors visible)", gu: "ઘરનો ફોટો (બધા માળ દેખાય તે રીતે)" },
+  geoTagged: { docType: "geotagged-photo", accept: IMAGE_TYPES, en: "Geo Tagged Photo (Solar Location)", gu: "જીઓ-ટેગ કરેલો ફોટો (સોલર માટેનું સ્થાન)" },
+  site1: { docType: "site-media", accept: `${IMAGE_TYPES},video/mp4`, en: "Site Photos & Videos 1", gu: "સાઇટના ફોટા અને વીડિયો 1" },
+  site2: { docType: "site-media", accept: `${IMAGE_TYPES},video/mp4`, en: "Site Photos & Videos 2", gu: "સાઇટના ફોટા અને વીડિયો 2" },
+};
+
+const FILE_KEYS = Object.keys(FILE_FIELDS) as FileKey[];
+
+/* Contract field path to the input that shows its error. */
+const FIELD_INPUTS: Record<string, keyof FormState> = {
+  "customer.name": "customerName",
+  "customer.phone": "contactNo",
+  "customer.email": "email",
+  "customer.city": "city",
+  "customer.pincode": "pincode",
+  "order.discom": "discom",
+  "order.project_type": "projectType",
+  "order.loan_interest": "loanRequirement",
+  "order.name_matches_bank": "nameSame",
+  "order.shadow_free_length": "shadowLength",
+  "order.shadow_free_width": "shadowWidth",
+  "order.remarks": "remarks",
+  "referral.name": "referralPartner",
+  "referral.phone": "referralNo",
+};
+
+type UploadedDoc = { doc_type: string; path: string; file_name: string };
+type SubmitError = { kind: "general" | "rate"; detail?: string };
+
+/** Ten digits after removing everything else and a leading 91 country code. */
+function cleanPhone(value: string) {
+  let digits = value.replace(/\D/g, "");
+  if (digits.length === 12 && digits.startsWith("91")) digits = digits.slice(2);
+  return digits;
+}
+
+/** A number typed in a text input, or undefined when empty or not a number. */
+function toNumber(value: string) {
+  const trimmed = value.trim();
+  if (!trimmed) return undefined;
+  const parsed = Number(trimmed);
+  return Number.isFinite(parsed) ? parsed : undefined;
+}
+
+/** Focuses the input that comes first on the page. */
+function scrollToFirst(ids: string[]) {
+  const elements = ids
+    .map((id) => document.getElementById(id))
+    .filter((el): el is HTMLElement => el !== null)
+    .sort((a, b) => (a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1));
+  const first = elements[0];
+  first?.scrollIntoView({ behavior: "smooth", block: "center" });
+  first?.focus();
+}
+
 export default function BookPage() {
   const { isGu } = useLanguage();
   const [form, setForm] = useState<FormState>(EMPTY_FORM);
@@ -238,6 +333,17 @@ export default function BookPage() {
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState<SubmitError | null>(null);
+  const [uploadProgress, setUploadProgress] = useState<{ current: number; total: number } | null>(null);
+  const [missingDocs, setMissingDocs] = useState<FileKey[]>([]);
+  const [devSkipped, setDevSkipped] = useState(false);
+  const [website, setWebsite] = useState("");
+
+  // One submission id per form session. Kept across retries while the chosen
+  // files stay the same, so files that already reached the CRM are not sent again.
+  const submissionIdRef = useRef<string | null>(null);
+  const uploadedRef = useRef<Partial<Record<FileKey, UploadedDoc>>>({});
+  const lastAttemptFilesRef = useRef<FileState | null>(null);
 
   function set(key: keyof FormState, val: string) {
     setForm((f) => ({ ...f, [key]: val }));
@@ -271,25 +377,179 @@ export default function BookPage() {
     return true;
   }
 
+  /** Shows a 400 answer: messages under the matching inputs, the rest as the general error. */
+  function showInvalid(body: PostResult["body"]) {
+    const message = typeof body?.message === "string" ? body.message : "";
+    const fields =
+      body && typeof body.fields === "object" && body.fields !== null
+        ? (body.fields as Record<string, unknown>)
+        : null;
+
+    const next: Partial<Record<keyof FormState, string>> = {};
+    let unmatched = !fields || Object.keys(fields).length === 0;
+    for (const [path, text] of Object.entries(fields ?? {})) {
+      const input = FIELD_INPUTS[path];
+      if (input) next[input] = String(text);
+      else unmatched = true;
+    }
+
+    if (Object.keys(next).length) {
+      setErrors(next);
+      scrollToFirst(Object.keys(next));
+    }
+    if (unmatched) setSubmitError({ kind: "general", detail: message });
+  }
+
+  /** Uploads the chosen files that have not reached the CRM yet. Returns the ones that failed. */
+  async function uploadFiles(submissionId: string, pending: FileKey[]): Promise<{ failed: FileKey[]; invalid?: PostResult }> {
+    const links = await postJson("/api/order/upload-links", {
+      submission_id: submissionId,
+      files: pending.map((key) => {
+        const file = files[key] as File;
+        return { doc_type: FILE_FIELDS[key].docType, content_type: fileType(file), size: file.size };
+      }),
+      website,
+    });
+
+    // A 400 is shown to the visitor. Any other failure: go on without the files.
+    if (links.status === 400) return { failed: pending, invalid: links };
+
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const publishableKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+    const bucket = links.body?.bucket;
+    const answered = Array.isArray(links.body?.files) ? (links.body.files as Record<string, unknown>[]) : [];
+    if (!isConfirmed(links) || links.body?.status !== "ok" || typeof bucket !== "string" || !supabaseUrl || !publishableKey) {
+      return { failed: pending };
+    }
+
+    let storage;
+    try {
+      const { createClient } = await import("@supabase/supabase-js");
+      const supabase = createClient(supabaseUrl, publishableKey, {
+        auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
+      });
+      storage = supabase.storage.from(bucket);
+    } catch {
+      return { failed: pending };
+    }
+
+    const failed: FileKey[] = [];
+    for (let index = 0; index < pending.length; index += 1) {
+      const key = pending[index];
+      const file = files[key] as File;
+      // Links are matched to files by position: both site inputs share one type.
+      const link = answered[index];
+      setUploadProgress({ current: index + 1, total: pending.length });
+
+      if (!link || link.doc_type !== FILE_FIELDS[key].docType || typeof link.path !== "string" || typeof link.token !== "string") {
+        failed.push(key);
+        continue;
+      }
+
+      let done = false;
+      for (let attempt = 0; attempt < 2 && !done; attempt += 1) {
+        try {
+          const { error } = await storage.uploadToSignedUrl(link.path, link.token, file, { contentType: fileType(file) });
+          done = !error;
+        } catch {
+          done = false;
+        }
+      }
+
+      if (done) {
+        uploadedRef.current[key] = { doc_type: FILE_FIELDS[key].docType, path: link.path, file_name: file.name };
+      } else {
+        failed.push(key);
+      }
+    }
+    return { failed };
+  }
+
   async function submit(e?: React.FormEvent) {
     if (e) e.preventDefault();
+    if (submitting) return;
     if (!validate()) return;
 
+    setSubmitError(null);
     setSubmitting(true);
     try {
-      const body = new FormData();
-      Object.entries(form).forEach(([k, v]) => body.set(k, v));
-      Object.entries(files).forEach(([k, v]) => { if (v) body.set(k, v); });
-      await fetch("/api/order", { method: "POST", body });
-      setSubmitted(true);
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      // A new submission when this is the first attempt or the files changed since the last one.
+      const last = lastAttemptFilesRef.current;
+      if (!submissionIdRef.current || (last && FILE_KEYS.some((key) => last[key] !== files[key]))) {
+        submissionIdRef.current = newSubmissionId();
+        uploadedRef.current = {};
+      }
+      lastAttemptFilesRef.current = files;
+      const submissionId = submissionIdRef.current;
+
+      const chosen = FILE_KEYS.filter((key) => files[key]);
+      const pending = chosen.filter((key) => !uploadedRef.current[key]);
+      let failed: FileKey[] = [];
+      if (pending.length) {
+        const upload = await uploadFiles(submissionId, pending);
+        setUploadProgress(null);
+        if (upload.invalid) {
+          showInvalid(upload.invalid.body);
+          return;
+        }
+        failed = upload.failed;
+      }
+
+      const referralRaw = form.referralNo.trim();
+      const referralPhone = cleanPhone(referralRaw).length === 10 ? cleanPhone(referralRaw) : "";
+      // The referral number is a reference, not a phone: until the CRM has a field
+      // for it, it goes on the first line of the remarks.
+      const remarks = [referralRaw && !referralPhone ? `Referral No.: ${referralRaw}` : "", form.remarks.trim()]
+        .filter(Boolean)
+        .join("\n");
+
+      const result = await postJson("/api/order", {
+        submission_id: submissionId,
+        customer: {
+          name: form.customerName.trim(),
+          phone: form.contactNo,
+          email: form.email.trim(),
+          city: form.city.trim(),
+          pincode: form.pincode,
+        },
+        order: {
+          discom: DISCOMS.find((o) => o.value === form.discom)?.crm,
+          project_type: form.projectType || undefined,
+          loan_interest: form.loanRequirement || undefined,
+          name_matches_bank: form.nameSame === "Yes" ? true : form.nameSame === "No" ? false : undefined,
+          shadow_free_length: toNumber(form.shadowLength),
+          shadow_free_width: toNumber(form.shadowWidth),
+          remarks,
+        },
+        referral: { name: form.referralPartner.trim(), phone: referralPhone },
+        documents: chosen.flatMap((key) => {
+          const doc = uploadedRef.current[key];
+          return doc ? [doc] : [];
+        }),
+        meta: buildMeta(),
+        website,
+      });
+
+      if (isConfirmed(result)) {
+        setDevSkipped(result.body?.status === "skipped");
+        setMissingDocs(failed);
+        // A new form session gets a new submission id.
+        submissionIdRef.current = null;
+        uploadedRef.current = {};
+        lastAttemptFilesRef.current = null;
+        setSubmitted(true);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else if (result.status === 400) {
+        showInvalid(result.body);
+      } else if (result.status === 429) {
+        setSubmitError({ kind: "rate" });
+      } else {
+        setSubmitError({ kind: "general" });
+      }
     } catch {
-      alert(
-        isGu
-          ? "સબમિશન નિષ્ફળ ગયું. કૃપા કરીને ફરી પ્રયાસ કરો અથવા અમને WhatsApp કરો."
-          : "Submission failed. Please try again or WhatsApp us."
-      );
+      setSubmitError({ kind: "general" });
     } finally {
+      setUploadProgress(null);
       setSubmitting(false);
     }
   }
@@ -318,6 +578,29 @@ export default function BookPage() {
                 </>
               )}
             </p>
+            {missingDocs.length > 0 && (
+              <p className="mt-3 text-[13px] leading-relaxed text-slate-500">
+                {isGu ? "આ દસ્તાવેજો અપલોડ થઈ શક્યા નથી: " : "These documents could not be uploaded: "}
+                <strong className="text-slate-700">
+                  {missingDocs.map((key) => (isGu ? FILE_FIELDS[key].gu : FILE_FIELDS[key].en)).join(", ")}
+                </strong>
+                {isGu ? ". કૃપા કરીને તે અમને " : ". Please send them to us on "}
+                <a
+                  href={whatsappUrl(isGu ? "મારા સોલેરિયમ ઓર્ડર માટેના દસ્તાવેજો" : "Documents for my Solarium order")}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-semibold text-[#034982] underline"
+                >
+                  WhatsApp
+                </a>
+                {isGu ? " પર મોકલો." : "."}
+              </p>
+            )}
+            {devSkipped && (
+              <p className="mt-3 text-[12px] text-slate-400">
+                {isGu ? "ડેવલપમેન્ટ મોડ: કંઈ મોકલવામાં આવ્યું નથી." : "Development mode: nothing was sent."}
+              </p>
+            )}
             <Link
               href="/"
               className="mt-8 inline-flex h-11 items-center gap-2 rounded-xl bg-[#034982] px-6 text-[13px] font-bold text-white transition hover:bg-[#022b4e]"
@@ -378,6 +661,7 @@ export default function BookPage() {
                 <Field
                   id="referralPartner"
                   label={isGu ? "રેફરલ પાર્ટનરનું નામ" : "Referral Partner Name"}
+                  error={errors.referralPartner}
                 >
                   <input
                     id="referralPartner"
@@ -390,6 +674,7 @@ export default function BookPage() {
                 <Field
                   id="referralNo"
                   label={isGu ? "રેફરલ નંબર" : "Referral No."}
+                  error={errors.referralNo}
                 >
                   <input
                     id="referralNo"
@@ -443,6 +728,7 @@ export default function BookPage() {
                 <Field
                   id="email"
                   label={isGu ? "ગ્રાહકનું ઈમેલ આઈડી" : "Customer Email ID"}
+                  error={errors.email}
                 >
                   <input
                     id="email"
@@ -526,6 +812,7 @@ export default function BookPage() {
               <Field
                 id="loanRequirement"
                 label={isGu ? "લોનની જરૂરિયાત" : "Loan Requirement"}
+                error={errors.loanRequirement}
               >
                 <Select
                   id="loanRequirement"
@@ -564,54 +851,54 @@ export default function BookPage() {
               <div className="grid gap-4 sm:grid-cols-2">
                 <FileUpload
                   id="lightBill"
-                  label={isGu ? "વીજળીનું બિલ (નવીનતમ)" : "Light Bill (Latest)"}
+                  label={isGu ? FILE_FIELDS.lightBill.gu : FILE_FIELDS.lightBill.en}
                   hint={isGu ? "JPG, PNG અથવા PDF" : "JPG, PNG or PDF"}
-                  accept="image/*,application/pdf"
+                  accept={FILE_FIELDS.lightBill.accept}
                   value={files.lightBill}
                   onChange={(f) => setFile("lightBill", f)}
                   isGu={isGu}
                 />
                 <FileUpload
                   id="passport"
-                  label={isGu ? "પાસપોર્ટ સાઈઝનો ફોટો" : "Passport Size Photograph"}
+                  label={isGu ? FILE_FIELDS.passport.gu : FILE_FIELDS.passport.en}
                   hint={isGu ? "JPG અથવા PNG" : "JPG or PNG"}
-                  accept="image/*"
+                  accept={FILE_FIELDS.passport.accept}
                   value={files.passport}
                   onChange={(f) => setFile("passport", f)}
                   isGu={isGu}
                 />
                 <FileUpload
                   id="aadharFront"
-                  label={isGu ? "આધાર કાર્ડનો આગળનો ભાગ" : "Aadhaar Card Front"}
+                  label={isGu ? FILE_FIELDS.aadharFront.gu : FILE_FIELDS.aadharFront.en}
                   hint={isGu ? "JPG અથવા PNG" : "JPG or PNG"}
-                  accept="image/*"
+                  accept={FILE_FIELDS.aadharFront.accept}
                   value={files.aadharFront}
                   onChange={(f) => setFile("aadharFront", f)}
                   isGu={isGu}
                 />
                 <FileUpload
                   id="aadharBack"
-                  label={isGu ? "આધાર કાર્ડનો પાછળનો ભાગ" : "Aadhaar Card Back"}
+                  label={isGu ? FILE_FIELDS.aadharBack.gu : FILE_FIELDS.aadharBack.en}
                   hint={isGu ? "JPG અથવા PNG" : "JPG or PNG"}
-                  accept="image/*"
+                  accept={FILE_FIELDS.aadharBack.accept}
                   value={files.aadharBack}
                   onChange={(f) => setFile("aadharBack", f)}
                   isGu={isGu}
                 />
                 <FileUpload
                   id="panCard"
-                  label={isGu ? "PAN કાર્ડ" : "PAN Card"}
+                  label={isGu ? FILE_FIELDS.panCard.gu : FILE_FIELDS.panCard.en}
                   hint={isGu ? "JPG અથવા PNG" : "JPG or PNG"}
-                  accept="image/*"
+                  accept={FILE_FIELDS.panCard.accept}
                   value={files.panCard}
                   onChange={(f) => setFile("panCard", f)}
                   isGu={isGu}
                 />
                 <FileUpload
                   id="cheque"
-                  label={isGu ? "કેન્સલ કરેલો ચેક / પાસબુક" : "Cancelled Cheque / Passbook"}
+                  label={isGu ? FILE_FIELDS.cheque.gu : FILE_FIELDS.cheque.en}
                   hint={isGu ? "JPG, PNG અથવા PDF" : "JPG, PNG or PDF"}
-                  accept="image/*,application/pdf"
+                  accept={FILE_FIELDS.cheque.accept}
                   value={files.cheque}
                   onChange={(f) => setFile("cheque", f)}
                   isGu={isGu}
@@ -627,6 +914,7 @@ export default function BookPage() {
                     ? "શું કેન્સલ કરેલા ચેક/પાસબુકમાં અને વીજળીના બિલમાં તમારું નામ સમાન છે?"
                     : "Is your name in Cancelled Cheque/Passbook and Electricity Bill the same?"
                 }
+                error={errors.nameSame}
               >
                 <Select
                   id="nameSame"
@@ -670,6 +958,7 @@ export default function BookPage() {
                       ? "(લંબાઈ) પડછાયા મુક્ત વિસ્તાર (મીટરમાં)"
                       : "(लम्बाई) Shadow Free Area (in mtr.)"
                   }
+                  error={errors.shadowLength}
                 >
                   <input
                     id="shadowLength"
@@ -687,6 +976,7 @@ export default function BookPage() {
                       ? "(પહોળાઈ) પડછાયા મુક્ત વિસ્તાર (મીટરમાં)"
                       : "(चौड़ाई) Shadow Free Area (in mtr.)"
                   }
+                  error={errors.shadowWidth}
                 >
                   <input
                     id="shadowWidth"
@@ -707,44 +997,36 @@ export default function BookPage() {
               <div className="grid gap-4 sm:grid-cols-2">
                 <FileUpload
                   id="housePhoto"
-                  label={
-                    isGu
-                      ? "ઘરનો ફોટો (બધા માળ દેખાય તે રીતે)"
-                      : "House Photo (all floors visible)"
-                  }
+                  label={isGu ? FILE_FIELDS.housePhoto.gu : FILE_FIELDS.housePhoto.en}
                   hint={isGu ? "JPG અથવા PNG" : "JPG or PNG"}
-                  accept="image/*"
+                  accept={FILE_FIELDS.housePhoto.accept}
                   value={files.housePhoto}
                   onChange={(f) => setFile("housePhoto", f)}
                   isGu={isGu}
                 />
                 <FileUpload
                   id="geoTagged"
-                  label={
-                    isGu
-                      ? "જીઓ-ટેગ કરેલો ફોટો (સોલર માટેનું સ્થાન)"
-                      : "Geo Tagged Photo (Solar Location)"
-                  }
+                  label={isGu ? FILE_FIELDS.geoTagged.gu : FILE_FIELDS.geoTagged.en}
                   hint={isGu ? "JPG અથવા PNG" : "JPG or PNG"}
-                  accept="image/*"
+                  accept={FILE_FIELDS.geoTagged.accept}
                   value={files.geoTagged}
                   onChange={(f) => setFile("geoTagged", f)}
                   isGu={isGu}
                 />
                 <FileUpload
                   id="site1"
-                  label={isGu ? "સાઇટના ફોટા અને વીડિયો 1" : "Site Photos & Videos 1"}
+                  label={isGu ? FILE_FIELDS.site1.gu : FILE_FIELDS.site1.en}
                   hint={isGu ? "JPG, PNG અથવા MP4" : "JPG, PNG or MP4"}
-                  accept="image/*,video/*"
+                  accept={FILE_FIELDS.site1.accept}
                   value={files.site1}
                   onChange={(f) => setFile("site1", f)}
                   isGu={isGu}
                 />
                 <FileUpload
                   id="site2"
-                  label={isGu ? "સાઇટના ફોટા અને વીડિયો 2" : "Site Photos & Videos 2"}
+                  label={isGu ? FILE_FIELDS.site2.gu : FILE_FIELDS.site2.en}
                   hint={isGu ? "JPG, PNG અથવા MP4" : "JPG, PNG or MP4"}
-                  accept="image/*,video/*"
+                  accept={FILE_FIELDS.site2.accept}
                   value={files.site2}
                   onChange={(f) => setFile("site2", f)}
                   isGu={isGu}
@@ -756,6 +1038,7 @@ export default function BookPage() {
               <Field
                 id="remarks"
                 label={isGu ? "વિગતવાર નોંધ" : "Detailed Remarks"}
+                error={errors.remarks}
               >
                 <textarea
                   id="remarks"
@@ -794,7 +1077,13 @@ export default function BookPage() {
               {submitting ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  {isGu ? "ઓર્ડર સબમિટ થઈ રહ્યો છે…" : "Submitting Order…"}
+                  {uploadProgress
+                    ? isGu
+                      ? `દસ્તાવેજો અપલોડ થઈ રહ્યા છે (${uploadProgress.total} માંથી ${uploadProgress.current})`
+                      : `Uploading documents (${uploadProgress.current} of ${uploadProgress.total})`
+                    : isGu
+                      ? "ઓર્ડર સબમિટ થઈ રહ્યો છે…"
+                      : "Submitting Order…"}
                 </>
               ) : isGu ? (
                 "ઓર્ડર સબમિટ કરો"
@@ -803,6 +1092,33 @@ export default function BookPage() {
               )}
             </button>
           </div>
+
+          {submitError && (
+            <p role="alert" className="mt-3 text-[12px] font-medium text-red-500 sm:text-right">
+              {submitError.kind === "rate"
+                ? isGu
+                  ? "અત્યારે ઘણી બધી વિનંતીઓ આવી છે. કૃપા કરીને થોડી મિનિટો પછી ફરી પ્રયાસ કરો અથવા "
+                  : "Too many requests right now. Please try again in a few minutes or call "
+                : isGu
+                  ? "અમે તમારી વિનંતી સબમિટ કરી શક્યા નથી. કૃપા કરીને "
+                  : "We could not submit your request. Please call "}
+              <a href={site.phoneHref} className="underline">8003080020</a>
+              {isGu ? " પર કૉલ કરો." : "."}
+              {submitError.detail ? ` ${submitError.detail}` : ""}
+            </p>
+          )}
+
+          {/* Left empty by people. Bots that fill it are answered without sending anything. */}
+          <input
+            type="text"
+            name="website"
+            value={website}
+            onChange={(e) => setWebsite(e.target.value)}
+            tabIndex={-1}
+            autoComplete="off"
+            aria-hidden="true"
+            className="sr-only"
+          />
         </form>
       </main>
 
