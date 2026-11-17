@@ -68,7 +68,7 @@ These values came from the client brief or the existing Solarium site. Anything 
 
 ## Notes
 
-- Uploads are capped at 5 MB per file and limited to JPG/PNG/WebP/HEIC/PDF.
+- Booking form uploads: photos (JPG, PNG, WebP, HEIC, HEIF) and PDFs up to 10 MB each, MP4 videos up to 50 MB on the two site inputs.
 - The booking form validates name, 10-digit mobile, 6-digit pincode and consumer number before continuing.
 - All animations respect `prefers-reduced-motion`.
 - Fonts: Inter (body) and Sora (display) via `next/font`.

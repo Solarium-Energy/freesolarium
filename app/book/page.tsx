@@ -24,9 +24,17 @@ const EXTENSION_TYPES: Record<string, string> = {
   jpg: "image/jpeg",
   jpeg: "image/jpeg",
   png: "image/png",
+  webp: "image/webp",
+  heic: "image/heic",
+  heif: "image/heif",
   pdf: "application/pdf",
   mp4: "video/mp4",
 };
+
+// Accepted on every photo input but deliberately left out of `accept`: with them listed,
+// Safari converts ordinary JPG and PNG photos to HEIC. Without them, an iPhone converts
+// HEIC photos to JPEG itself. A HEIC file that still arrives is uploaded as it is.
+const HEIC_TYPES = ["image/heic", "image/heif"];
 
 /** The file's type, or when the browser gives none, the type its extension implies. */
 function fileType(file: File) {
@@ -39,7 +47,7 @@ function FileUpload({
   id,
   label,
   hint,
-  accept = "image/jpeg,image/png,application/pdf",
+  accept = "image/jpeg,image/png,image/webp,application/pdf",
   required = false,
   value,
   onChange,
@@ -100,11 +108,15 @@ function FileUpload({
           const f = e.target.files?.[0];
           if (!f) return;
           const type = fileType(f);
-          if (!accept.split(",").includes(type)) {
+          const allowed = accept.split(",");
+          const takesPhotos = allowed.includes("image/jpeg");
+          if (!allowed.includes(type) && !(takesPhotos && HEIC_TYPES.includes(type))) {
+            const takesPdf = allowed.includes("application/pdf");
+            const takesVideo = allowed.includes("video/mp4");
             alert(
               isGu
-                ? `આ ફાઇલનો પ્રકાર માન્ય નથી. કૃપા કરીને ${hint ?? ""} ફાઇલ અપલોડ કરો.`
-                : `This file type is not allowed. Please upload a ${hint ?? ""} file.`
+                ? `આ ફાઇલનો પ્રકાર માન્ય નથી. કૃપા કરીને JPG, PNG, WebP અથવા HEIC ફોટો${takesPdf ? ", અથવા PDF" : takesVideo ? ", અથવા MP4 વીડિયો" : ""} પસંદ કરો.`
+                : `This file type is not allowed. Please choose a JPG, PNG, WebP or HEIC photo${takesPdf ? ", or a PDF" : takesVideo ? ", or an MP4 video" : ""}.`
             );
             return;
           }
@@ -261,7 +273,8 @@ const EMPTY_FILES: FileState = {
 
 type FileKey = keyof FileState;
 
-const IMAGE_TYPES = "image/jpeg,image/png";
+// image/jpeg stays first in every list: Safari converts photos to the first type listed.
+const IMAGE_TYPES = "image/jpeg,image/png,image/webp";
 
 /* Each file input: its CRM document type, the types it accepts, and its label. */
 const FILE_FIELDS: Record<FileKey, { docType: string; accept: string; en: string; gu: string }> = {
@@ -419,6 +432,10 @@ export default function BookPage() {
     const publishableKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
     const bucket = links.body?.bucket;
     const answered = Array.isArray(links.body?.files) ? (links.body.files as Record<string, unknown>[]) : [];
+    // Each link names the position of its file in the request (`index`). Both site
+    // inputs share one type, so links are never matched by type. Without an index on
+    // every link, they are matched by their own position.
+    const byIndex = answered.length > 0 && answered.every((entry) => Number.isInteger(entry.index));
     if (!isConfirmed(links) || links.body?.status !== "ok" || typeof bucket !== "string" || !supabaseUrl || !publishableKey) {
       return { failed: pending };
     }
@@ -438,8 +455,7 @@ export default function BookPage() {
     for (let index = 0; index < pending.length; index += 1) {
       const key = pending[index];
       const file = files[key] as File;
-      // Links are matched to files by position: both site inputs share one type.
-      const link = answered[index];
+      const link = byIndex ? answered.find((entry) => entry.index === index) : answered[index];
       setUploadProgress({ current: index + 1, total: pending.length });
 
       if (!link || link.doc_type !== FILE_FIELDS[key].docType || typeof link.path !== "string" || typeof link.token !== "string") {

@@ -7,6 +7,9 @@ const MB = 1024 * 1024;
 const MAX_SIZE = new Map<string, number>([
   ["image/jpeg", 10 * MB],
   ["image/png", 10 * MB],
+  ["image/webp", 10 * MB],
+  ["image/heic", 10 * MB],
+  ["image/heif", 10 * MB],
   ["application/pdf", 10 * MB],
   ["video/mp4", 50 * MB],
 ]);
