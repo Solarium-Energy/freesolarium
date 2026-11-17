@@ -501,3 +501,46 @@ html:lang(gu) .hero h1 {
     display: inline-grid;
   }
 }
+
+/* ---------- Privacy policy and terms of service ---------- */
+.legal-updated {
+  margin-top: var(--space-3);
+  color: var(--muted-foreground);
+}
+.legal-note {
+  margin-top: var(--space-6);
+  max-width: 70ch;
+}
+/* One column at a reading width of about 70 characters. */
+.legal-body {
+  max-width: 70ch;
+  margin-top: var(--space-10);
+}
+.legal-body > * + * {
+  margin-top: var(--space-4);
+}
+.legal-body h2 {
+  margin-top: var(--space-12);
+}
+.legal-body h2 + * {
+  margin-top: var(--space-3);
+}
+/* The stylesheet removes list markers inside .sol: this text keeps its bullets. */
+.legal-body ul {
+  list-style: disc;
+  padding-left: var(--space-6);
+}
+.legal-body li + li {
+  margin-top: var(--space-2);
+}
+.legal-body li::marker {
+  color: var(--muted-foreground);
+}
+.legal-back {
+  margin-top: var(--space-12);
+}
+@media (max-width: 767px) {
+  .legal-back .link {
+    min-height: var(--touch-min);
+  }
+}

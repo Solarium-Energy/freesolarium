@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { DISCLAIMER, site } from "../lib/content";
 import { useLanguage } from "../lib/language";
 
@@ -56,6 +57,8 @@ const SOCIALS = [
 
 export default function Footer() {
   const { isGu } = useLanguage();
+  // The disclaimer and the top of the page are on the offer page: from other pages these links go there.
+  const home = usePathname() === "/" ? "" : "/";
   return (
     <footer className="site-footer">
       <div className="wrap">
@@ -149,11 +152,10 @@ export default function Footer() {
               : `© ${new Date().getFullYear()} ${site.legalName}. All rights reserved.`}
           </span>
           <span className="cp-links">
-            <a href="https://solariumenergy.in/privacy-policy/" target="_blank" rel="noopener noreferrer">
-              {isGu ? "ગોપનીયતા નીતિ (Privacy)" : "Privacy"}
-            </a>
-            <a href="#disclaimer">{isGu ? "ડિસક્લેમર (અસ્વીકરણ)" : "Disclaimer"}</a>
-            <a href="#top">{isGu ? "ઉપર પાછા જાઓ" : "Back to top"}</a>
+            <Link href="/privacy">{isGu ? "ગોપનીયતા નીતિ (Privacy)" : "Privacy"}</Link>
+            <Link href="/terms">{isGu ? "નિયમો અને શરતો (Terms)" : "Terms"}</Link>
+            <Link href={`${home}#disclaimer`}>{isGu ? "ડિસક્લેમર (અસ્વીકરણ)" : "Disclaimer"}</Link>
+            <Link href={`${home}#top`}>{isGu ? "ઉપર પાછા જાઓ" : "Back to top"}</Link>
           </span>
         </div>
       </div>
