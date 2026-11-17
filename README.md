@@ -29,7 +29,6 @@ app/
   components/
     Header.tsx                Sticky nav + mobile menu
     Hero.tsx                  Hero + price card
-    BookingSection.tsx        Interactive 3-step order flow + live order summary
     TrustStrip.tsx
     ProductSection.tsx
     Institutions.tsx
@@ -39,7 +38,8 @@ app/
     Footer.tsx
     MobileCta.tsx              Sticky mobile conversion bar
     Reveal.tsx                 Lightweight scroll reveal
-  api/order/route.ts          Order endpoint (stores leads locally)
+  book/page.tsx               Booking form (/book)
+  api/order/route.ts          Order endpoint (sends the booking form to the Solarium CRM)
 public/
   images/                     Hero / product imagery
 ```
@@ -69,6 +69,6 @@ These values came from the client brief or the existing Solarium site. Anything 
 ## Notes
 
 - Booking form uploads: photos (JPG, PNG, WebP, HEIC, HEIF) and PDFs up to 10 MB each, MP4 videos up to 50 MB on the two site inputs.
-- The booking form validates name, 10-digit mobile, 6-digit pincode and consumer number before continuing.
+- The booking form requires name, 10-digit mobile, 6-digit pincode, city, DISCOM and project type before it submits.
 - All animations respect `prefers-reduced-motion`.
 - Fonts: Inter (body) and Sora (display) via `next/font`.
