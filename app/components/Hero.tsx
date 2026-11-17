@@ -2,12 +2,18 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Check, ChevronDown, PhoneCall, RefreshCw, Star } from "lucide-react";
-import { useState } from "react";
-import { CUSTOMER_SAVINGS, HERO_PRICE, PRICING, inr } from "../lib/content";
+import { ArrowRight, Check, ChevronDown, Loader2, PhoneCall, RefreshCw, Star } from "lucide-react";
+import { useEffect, useEffectEvent, useRef, useState } from "react";
+import { CUSTOMER_SAVINGS, HERO_PRICE, PRICING, inr, site } from "../lib/content";
 import { useLanguage } from "../lib/language";
+import { buildMeta, isConfirmed, newSubmissionId, postJson, type PostResult } from "../lib/leadClient";
 import Reveal from "./Reveal";
-import QuotationSheetModal from "./QuotationSheetModal";
+import QuotationSheetModal, {
+  CENTRAL_SUBSIDY,
+  GUJARAT_SUBSIDY,
+  STANDARD_PRICE,
+  computeQuotationNumbers,
+} from "./QuotationSheetModal";
 
 /* ─── Constants ─── */
 const HERO_FEATURES = [
@@ -16,28 +22,29 @@ const HERO_FEATURES = [
   { line1: "Installed by", line2: "our own team", guLine1: "અમારી પોતાની ટીમ દ્વારા", guLine2: "ઇન્સ્ટોલેશન" },
 ] as const;
 
+/* `crm` is the value the CRM expects for each option. */
 const FLOOR_OPTIONS = [
-  { label: "Ground / G+1", guLabel: "ગ્રાઉન્ડ / G+1", sub: "Included", guSub: "સમાવિષ્ટ", extra: 0 },
-  { label: "G+2", guLabel: "G+2", sub: "+₹3,600", guSub: "+₹3,600", extra: 3600 },
-  { label: "G+3", guLabel: "G+3", sub: "+₹5,600", guSub: "+₹5,600", extra: 5600 },
-  { label: "G+4", guLabel: "G+4", sub: "+₹7,500", guSub: "+₹7,500", extra: 7500 },
-  { label: "G+5 and above", guLabel: "G+5 અને તેથી વધુ", sub: "Our team will contact you", guSub: "અમારી ટીમ તમારો સંપર્ક કરશે", extra: 0, custom: true },
+  { label: "Ground / G+1", crm: "G+1", guLabel: "ગ્રાઉન્ડ / G+1", sub: "Included", guSub: "સમાવિષ્ટ", extra: 0 },
+  { label: "G+2", crm: "G+2", guLabel: "G+2", sub: "+₹3,600", guSub: "+₹3,600", extra: 3600 },
+  { label: "G+3", crm: "G+3", guLabel: "G+3", sub: "+₹5,600", guSub: "+₹5,600", extra: 5600 },
+  { label: "G+4", crm: "G+4", guLabel: "G+4", sub: "+₹7,500", guSub: "+₹7,500", extra: 7500 },
+  { label: "G+5 and above", crm: "G+5+", guLabel: "G+5 અને તેથી વધુ", sub: "Our team will contact you", guSub: "અમારી ટીમ તમારો સંપર્ક કરશે", extra: 0, custom: true },
 ] as const;
 
 const STRUCTURE_HEIGHT_OPTIONS = [
-  { label: "0.5 m", guLabel: "0.5 m", sub: "Included", guSub: "સમાવિષ્ટ", extra: 0 },
-  { label: "1.0 m", guLabel: "1.0 m", sub: "+₹2,800", guSub: "+₹2,800", extra: 2800 },
-  { label: "1.5 m", guLabel: "1.5 m", sub: "+₹4,200", guSub: "+₹4,200", extra: 4200 },
-  { label: "2.0 m", guLabel: "2.0 m", sub: "+₹5,600", guSub: "+₹5,600", extra: 5600 },
-  { label: "2.5 m", guLabel: "2.5 m", sub: "+₹7,000", guSub: "+₹7,000", extra: 7000 },
-  { label: "3.0 m", guLabel: "3.0 m", sub: "+₹8,400", guSub: "+₹8,400", extra: 8400 },
-  { label: "3.0 m and above", guLabel: "3.0 m અને તેથી વધુ", sub: "Our team will contact you", guSub: "અમારી ટીમ તમારો સંપર્ક કરશે", extra: 0, custom: true },
+  { label: "0.5 m", crm: "0.5", guLabel: "0.5 m", sub: "Included", guSub: "સમાવિષ્ટ", extra: 0 },
+  { label: "1.0 m", crm: "1", guLabel: "1.0 m", sub: "+₹2,800", guSub: "+₹2,800", extra: 2800 },
+  { label: "1.5 m", crm: "1.5", guLabel: "1.5 m", sub: "+₹4,200", guSub: "+₹4,200", extra: 4200 },
+  { label: "2.0 m", crm: "2", guLabel: "2.0 m", sub: "+₹5,600", guSub: "+₹5,600", extra: 5600 },
+  { label: "2.5 m", crm: "2.5", guLabel: "2.5 m", sub: "+₹7,000", guSub: "+₹7,000", extra: 7000 },
+  { label: "3.0 m", crm: "3", guLabel: "3.0 m", sub: "+₹8,400", guSub: "+₹8,400", extra: 8400 },
+  { label: "3.0 m and above", crm: "3+", guLabel: "3.0 m અને તેથી વધુ", sub: "Our team will contact you", guSub: "અમારી ટીમ તમારો સંપર્ક કરશે", extra: 0, custom: true },
 ] as const;
 
 const DISCOM_OPTIONS = [
-  { label: "UGVCL", guLabel: "UGVCL", sub: "₹0", guSub: "₹0", extra: 0 },
-  { label: "Torrent Power", guLabel: "Torrent Power", sub: "+₹5,409", guSub: "+₹5,409", extra: 5409 },
-  { label: "Other", guLabel: "અન્ય (Other)", sub: "Our team will contact you", guSub: "અમારી ટીમ તમારો સંપર્ક કરશે", extra: 0, custom: true },
+  { label: "UGVCL", crm: "UGVCL", guLabel: "UGVCL", sub: "₹0", guSub: "₹0", extra: 0 },
+  { label: "Torrent Power", crm: "Torrent", guLabel: "Torrent Power", sub: "+₹5,409", guSub: "+₹5,409", extra: 5409 },
+  { label: "Other", crm: "Other", guLabel: "અન્ય (Other)", sub: "Our team will contact you", guSub: "અમારી ટીમ તમારો સંપર્ક કરશે", extra: 0, custom: true },
 ] as const;
 
 type Category        = "general" | "sc-st" | null;
@@ -97,6 +104,14 @@ function QuotationCard() {
   const [attempted, setAttempted]             = useState(false);
   const [callbackSent, setCallbackSent]       = useState(false);
   const [showQuotationModal, setShowQuotationModal] = useState(false);
+  const [sending, setSending]                 = useState(false);
+  const [sendError, setSendError]             = useState<"general" | "rate" | null>(null);
+  const [website, setWebsite]                 = useState("");
+  // The last quotation sent (without id and meta), so the same one is not sent twice,
+  // and the last one the CRM confirmed.
+  const lastSentRef = useRef<string | null>(null);
+  const confirmedRef = useRef<string | null>(null);
+  const sendingRef = useRef(false);
 
   const validNameBill   = customerNameBill.trim().length > 1;
   const validNameBank   = customerNameBank.trim().length > 1;
@@ -120,21 +135,106 @@ function QuotationCard() {
     setConsumerNo("");
     setAttempted(false);
     setCallbackSent(false);
+    setSendError(null);
   }
 
-  function handleActionClick() {
+  /** The visitor and the quotation they see, in the CRM's values. */
+  function buildQuote() {
+    const floorOpt = FLOOR_OPTIONS.find((o) => o.label === floor);
+    const heightOpt = STRUCTURE_HEIGHT_OPTIONS.find((o) => o.label === structureHeight);
+    const discomOpt = DISCOM_OPTIONS.find((o) => o.label === discom);
+    const calc = computeQuotationNumbers(floor, structureHeight, discom);
+    // A callback shows no price: only the charges of options that have one are sent.
+    const priced = !needsCallback;
+    return {
+      customer: {
+        name: customerNameBill.trim(),
+        phone: mobile,
+        address: address.trim(),
+        bank_account_name: customerNameBank.trim(),
+        consumer_no: consumerNo.trim(),
+      },
+      quotation: {
+        subsidy_category: category ?? undefined,
+        discom: discomOpt?.crm,
+        floor: floorOpt?.crm,
+        structure_height: heightOpt?.crm,
+        base_price: STANDARD_PRICE,
+        floor_charge: floorOpt && !("custom" in floorOpt) ? calc.floorCost : undefined,
+        height_charge: heightOpt && !("custom" in heightOpt) ? calc.heightCost : undefined,
+        discom_charge: discomOpt && !("custom" in discomOpt) ? calc.meterCost : undefined,
+        total: priced ? calc.finalPrice : undefined,
+        subsidy_amount: CENTRAL_SUBSIDY + GUJARAT_SUBSIDY,
+        customer_pays: priced ? calc.cash.netAfterSubsidy : undefined,
+        needs_callback: needsCallback,
+      },
+    };
+  }
+
+  /** Sends the quotation to the CRM, unless this exact one was already sent. */
+  async function sendQuote(options: { keepalive?: boolean } = {}): Promise<PostResult | "unchanged"> {
+    const quote = buildQuote();
+    const key = JSON.stringify(quote);
+    if (key === lastSentRef.current) return "unchanged";
+    lastSentRef.current = key;
+
+    const result = await postJson(
+      "/api/quote",
+      { submission_id: newSubmissionId(), ...quote, meta: buildMeta(), website },
+      options
+    );
+    if (isConfirmed(result)) {
+      confirmedRef.current = key;
+    } else if (lastSentRef.current === key) {
+      // A send that did not go through is forgotten, so the next action tries again.
+      lastSentRef.current = null;
+    }
+    return result;
+  }
+
+  // The visitor may download the PDF and leave: send the last numbers they saw.
+  const onPageHidden = useEffectEvent(() => {
+    void sendQuote({ keepalive: true });
+  });
+
+  useEffect(() => {
+    if (!showQuotationModal) return;
+    const listener = () => {
+      if (document.visibilityState === "hidden") onPageHidden();
+    };
+    document.addEventListener("visibilitychange", listener);
+    return () => document.removeEventListener("visibilitychange", listener);
+  }, [showQuotationModal]);
+
+  async function handleActionClick() {
+    if (sendingRef.current) return;
     if (!allReady) {
       setAttempted(true);
       return;
     }
 
     setAttempted(false);
+    setSendError(null);
 
     if (needsCallback) {
-      setCallbackSent(true);
+      // The thank-you promises a call back, so it waits until the CRM confirmed.
+      sendingRef.current = true;
+      setSending(true);
+      const result = await sendQuote();
+      sendingRef.current = false;
+      setSending(false);
+      const confirmed =
+        result === "unchanged" ? confirmedRef.current === JSON.stringify(buildQuote()) : isConfirmed(result);
+      if (confirmed) {
+        setCallbackSent(true);
+      } else {
+        setSendError(result !== "unchanged" && result.status === 429 ? "rate" : "general");
+      }
       return;
     }
 
+    // The quotation opens whether or not the CRM call succeeds. The server logs failures.
+    void sendQuote();
     setShowQuotationModal(true);
   }
 
@@ -361,8 +461,35 @@ function QuotationCard() {
           </div>
         </div>
 
-        {/* Subtle, refined inline hint when fields are incomplete */}
-        {attempted && !allReady && (
+        {/* Left empty by people. Bots that fill it are answered without sending anything. */}
+        <input
+          type="text"
+          name="website"
+          value={website}
+          onChange={(e) => setWebsite(e.target.value)}
+          tabIndex={-1}
+          autoComplete="off"
+          aria-hidden="true"
+          className="sr-only"
+        />
+
+        {/* Subtle, refined inline hint when fields are incomplete, or why a callback request failed */}
+        {sendError ? (
+          <div role="alert" className="flex items-center justify-center gap-1.5 rounded-xl bg-slate-50 px-3 py-2 text-[10px] font-medium text-slate-500">
+            <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-orange" aria-hidden="true" />
+            <span>
+              {sendError === "rate"
+                ? isGu
+                  ? "અત્યારે ઘણી બધી વિનંતીઓ આવી છે. કૃપા કરીને થોડી મિનિટો પછી ફરી પ્રયાસ કરો અથવા "
+                  : "Too many requests right now. Please try again in a few minutes or call "
+                : isGu
+                  ? "અમે તમારી વિનંતી સબમિટ કરી શક્યા નથી. કૃપા કરીને "
+                  : "We could not submit your request. Please call "}
+              <a href={site.phoneHref} className="underline">8003080020</a>
+              {isGu ? " પર કૉલ કરો." : "."}
+            </span>
+          </div>
+        ) : attempted && !allReady && (
           <div className="flex items-center justify-center gap-1.5 rounded-xl bg-slate-50 px-3 py-2 text-[10px] font-medium text-slate-500">
             <span className="h-1.5 w-1.5 rounded-full bg-orange" aria-hidden="true" />
             <span>
@@ -394,11 +521,16 @@ function QuotationCard() {
           <button
             type="button"
             onClick={handleActionClick}
-            className="group flex h-8 sm:h-10 w-full items-center justify-center gap-1.5 sm:gap-2 rounded-lg sm:rounded-xl bg-navy px-3 sm:px-4 text-[10px] sm:text-[11px] font-bold text-white shadow-[0_8px_20px_-10px_rgba(3,73,130,0.45)] transition-all duration-200 hover:bg-navy-deep"
+            disabled={sending}
+            className="group flex h-8 sm:h-10 w-full items-center justify-center gap-1.5 sm:gap-2 rounded-lg sm:rounded-xl bg-navy px-3 sm:px-4 text-[10px] sm:text-[11px] font-bold text-white shadow-[0_8px_20px_-10px_rgba(3,73,130,0.45)] transition-all duration-200 hover:bg-navy-deep disabled:cursor-not-allowed disabled:opacity-60"
           >
             {needsCallback ? (
               <>
-                <PhoneCall className="h-3.5 w-3.5 text-orange" />
+                {sending ? (
+                  <Loader2 className="h-3.5 w-3.5 animate-spin text-orange" />
+                ) : (
+                  <PhoneCall className="h-3.5 w-3.5 text-orange" />
+                )}
                 {isGu ? "અમારી ટીમ તમારો સંપર્ક કરશે" : "Our team will contact you"}
               </>
             ) : (
@@ -424,7 +556,11 @@ function QuotationCard() {
             onHeightChange: (val) => setStructureHeight(val as StructureHeight),
             onDiscomChange: (val) => setDiscom(val as DiscomOption),
           }}
-          onClose={() => setShowQuotationModal(false)}
+          onClose={() => {
+            setShowQuotationModal(false);
+            // Sends again only when floor, height or DISCOM changed inside the sheet.
+            void sendQuote();
+          }}
         />
       )}
     </div>
