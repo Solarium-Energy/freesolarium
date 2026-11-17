@@ -34,6 +34,11 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
+  // The page language follows the switch, so Gujarati text gets the Gujarati rules of the stylesheet.
+  useEffect(() => {
+    document.documentElement.lang = lang === "gu" ? "gu" : "en-IN";
+  }, [lang]);
+
   const setLang = (next: Lang) => {
     setLangState(next);
     try {

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { LanguageProvider } from "./lib/language";
 
@@ -6,9 +6,9 @@ export const metadata: Metadata = {
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://solariumenergy.in"
   ),
-  title: "Solarium 2.18 kW Home Solar — ₹0 Under PM Surya Ghar",
+  title: "Solarium 2.18 kW Home Solar | ₹0 Under PM Surya Ghar",
   description:
-    "A complete 2.18 kW rooftop solar system for Gujarat homes at an effective cost of ₹0 after central and state subsidy. 5-year insurance included. Book online — pay & get 100% subsidy in return.",
+    "A complete 2.18 kW rooftop solar system for Gujarat homes at an effective cost of ₹0 after central and state subsidy. 5-year insurance included. Book online. Pay & get 100% subsidy in return.",
   keywords: [
     "PM Surya Ghar",
     "free solar Gujarat",
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     apple: "/apple-icon.png",
   },
   openGraph: {
-    title: "Solar for your home at ₹0 — Solarium 2.18 kW Home Solar",
+    title: "Solar for your home at ₹0 | Solarium 2.18 kW Home Solar",
     description:
       "Complete 2.18 kW rooftop solar, installed by Solarium. Central and Gujarat state subsidy cover the system value for eligible homes. 5-year insurance included.",
     type: "website",
@@ -33,11 +33,16 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Solar for your home at ₹0 — Solarium",
+    title: "Solar for your home at ₹0 | Solarium",
     description:
-      "A complete 2.18 kW rooftop solar system for eligible Gujarat homes. Book online — pay & get 100% subsidy in return.",
+      "A complete 2.18 kW rooftop solar system for eligible Gujarat homes. Book online. Pay & get 100% subsidy in return.",
     images: ["/images/home-solar.png"],
   },
+};
+
+// Customer-facing pages use the light theme only.
+export const viewport: Viewport = {
+  colorScheme: "only light",
 };
 
 export default function RootLayout({
@@ -55,14 +60,11 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
         <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Noto+Sans+Gujarati:wght@100..900&family=Sora:wght@100..800&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,400&family=Hanken+Grotesk:wght@400;500;600;700&family=Noto+Sans+Gujarati:wght@400;600&family=Noto+Serif+Gujarati:wght@300;400&display=swap"
           rel="stylesheet"
         />
-        <noscript>
-          <style>{`.reveal{opacity:1 !important;transform:none !important}`}</style>
-        </noscript>
       </head>
-      <body>
+      <body className="sol web">
         <LanguageProvider>{children}</LanguageProvider>
       </body>
     </html>

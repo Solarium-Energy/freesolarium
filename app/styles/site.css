@@ -1,0 +1,17 @@
+/* Site rules on top of the Solarium stylesheet (solarium.css).
+   Tokens only: no raw colour, no corner, shadow or font typed by hand. */
+
+/* Light theme only. */
+:root {
+  color-scheme: only light;
+}
+
+/* Tailwind's preflight sets line-height 0 on sup, which moves the asterisk of the price. */
+:where(.sol) sup {
+  line-height: inherit;
+}
+
+/* Section links land below the fixed header. */
+[id] {
+  scroll-margin-top: 88px;
+}

@@ -1,0 +1,2325 @@
+{
+ "name": "Solarium Design System, First Light",
+ "version": 2,
+ "tokensFile": "tokens_v2.css",
+ "tokensSha256": "e63fba3ece3a6dff10ded8c18e71c60ea75f893be280aa66b2454de815f578e3",
+ "scaleTokens": [
+  "blue-950",
+  "blue-900",
+  "blue-800",
+  "blue-700",
+  "blue-600",
+  "blue-500",
+  "blue-400",
+  "blue-300",
+  "blue-200",
+  "blue-100",
+  "blue-50",
+  "blue-25",
+  "orange-900",
+  "orange-800",
+  "orange-700",
+  "orange-600",
+  "orange-500",
+  "orange-400",
+  "orange-300",
+  "orange-200",
+  "orange-100",
+  "orange-50",
+  "white"
+ ],
+ "colorTokens": [
+  "blue-950",
+  "blue-900",
+  "blue-800",
+  "blue-700",
+  "blue-600",
+  "blue-500",
+  "blue-400",
+  "blue-300",
+  "blue-200",
+  "blue-100",
+  "blue-50",
+  "blue-25",
+  "orange-900",
+  "orange-800",
+  "orange-700",
+  "orange-600",
+  "orange-500",
+  "orange-400",
+  "orange-300",
+  "orange-200",
+  "orange-100",
+  "orange-50",
+  "white",
+  "background",
+  "foreground",
+  "card",
+  "card-foreground",
+  "popover",
+  "popover-foreground",
+  "primary",
+  "primary-hover",
+  "primary-active",
+  "primary-foreground",
+  "secondary",
+  "secondary-foreground",
+  "muted",
+  "muted-foreground",
+  "accent",
+  "accent-foreground",
+  "destructive",
+  "destructive-foreground",
+  "border",
+  "input",
+  "ring",
+  "sun",
+  "sun-hover",
+  "sun-active",
+  "sun-core",
+  "sun-edge",
+  "sun-foreground",
+  "brand",
+  "brand-foreground",
+  "ember",
+  "subtle",
+  "selected",
+  "card-edge",
+  "inverse",
+  "inverse-foreground",
+  "line-soft",
+  "line-strong",
+  "on-dark",
+  "on-dark-muted",
+  "on-dark-soft",
+  "on-dark-accent",
+  "paper",
+  "paper-muted",
+  "paper-ink",
+  "sky-top",
+  "sky-high",
+  "sky-mid",
+  "sky-low",
+  "sky-haze",
+  "sky-horizon",
+  "chart-1",
+  "chart-2",
+  "chart-3",
+  "chart-4",
+  "chart-5",
+  "sidebar",
+  "sidebar-foreground",
+  "sidebar-primary",
+  "sidebar-primary-foreground",
+  "sidebar-accent",
+  "sidebar-accent-foreground",
+  "sidebar-border",
+  "sidebar-ring",
+  "status-neutral",
+  "status-neutral-fg",
+  "status-neutral-bg",
+  "status-info",
+  "status-info-fg",
+  "status-info-bg",
+  "status-progress",
+  "status-progress-fg",
+  "status-progress-bg",
+  "status-waiting",
+  "status-waiting-fg",
+  "status-waiting-bg",
+  "status-attention",
+  "status-attention-fg",
+  "status-attention-bg",
+  "status-positive",
+  "status-positive-fg",
+  "status-positive-bg",
+  "status-paused",
+  "status-paused-fg",
+  "status-paused-bg",
+  "status-negative",
+  "status-negative-fg",
+  "status-negative-bg",
+  "status-muted",
+  "status-muted-fg",
+  "status-muted-bg",
+  "status-done",
+  "status-done-fg",
+  "status-done-bg",
+  "stage-1",
+  "stage-2",
+  "stage-3",
+  "stage-4",
+  "stage-5",
+  "stage-6",
+  "stage-7",
+  "stage-8",
+  "temp-hot",
+  "temp-warm",
+  "temp-cold"
+ ],
+ "gradients": [
+  "gradient-sky",
+  "gradient-dusk",
+  "gradient-dusk-short",
+  "gradient-horizon",
+  "gradient-mist",
+  "gradient-night",
+  "gradient-appbar",
+  "gradient-sun",
+  "gradient-glow",
+  "gradient-caret",
+  "gradient-halo"
+ ],
+ "pairs": [
+  {
+   "a": "blue-950",
+   "b": "white",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "blue-950",
+   "b": "blue-200",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "blue-950",
+   "b": "orange-300",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "blue-900",
+   "b": "white",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "blue-900",
+   "b": "blue-200",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "blue-900",
+   "b": "orange-500",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "blue-900",
+   "b": "orange-400",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "blue-800",
+   "b": "white",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "blue-800",
+   "b": "blue-200",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "blue-700",
+   "b": "white",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "blue-700",
+   "b": "blue-200",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "blue-700",
+   "b": "blue-100",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "blue-600",
+   "b": "white",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "blue-600",
+   "b": "blue-100",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "blue-500",
+   "b": "white",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "blue-500",
+   "b": "blue-50",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "blue-400",
+   "b": "blue-950",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "blue-400",
+   "b": "blue-900",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "blue-300",
+   "b": "blue-950",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "blue-300",
+   "b": "blue-900",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "blue-300",
+   "b": "blue-800",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "blue-200",
+   "b": "blue-950",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "blue-200",
+   "b": "blue-900",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "blue-200",
+   "b": "blue-800",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "blue-200",
+   "b": "blue-700",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "blue-100",
+   "b": "blue-900",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "blue-100",
+   "b": "blue-700",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "blue-50",
+   "b": "blue-900",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "blue-50",
+   "b": "blue-700",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "blue-25",
+   "b": "blue-900",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "blue-25",
+   "b": "blue-700",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "orange-900",
+   "b": "orange-100",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "orange-900",
+   "b": "orange-50",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "orange-900",
+   "b": "white",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "orange-800",
+   "b": "white",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "orange-800",
+   "b": "orange-50",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "orange-800",
+   "b": "blue-50",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "orange-700",
+   "b": "blue-950",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "orange-600",
+   "b": "blue-950",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "orange-600",
+   "b": "blue-900",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "orange-500",
+   "b": "blue-900",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "orange-500",
+   "b": "blue-950",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "orange-400",
+   "b": "blue-900",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "orange-300",
+   "b": "blue-950",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "orange-300",
+   "b": "blue-900",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "orange-300",
+   "b": "blue-800",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "orange-300",
+   "b": "blue-700",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "orange-200",
+   "b": "blue-900",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "orange-100",
+   "b": "blue-900",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "orange-100",
+   "b": "orange-900",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "orange-50",
+   "b": "blue-900",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "orange-50",
+   "b": "orange-800",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "white",
+   "b": "blue-950",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "white",
+   "b": "blue-900",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "white",
+   "b": "blue-800",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "white",
+   "b": "blue-700",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "background",
+   "b": "foreground",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "background",
+   "b": "muted-foreground",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "background",
+   "b": "brand",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "foreground",
+   "b": "background",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "foreground",
+   "b": "card",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "foreground",
+   "b": "popover",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "foreground",
+   "b": "muted",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "foreground",
+   "b": "secondary",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "foreground",
+   "b": "accent",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "foreground",
+   "b": "subtle",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "foreground",
+   "b": "selected",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "card",
+   "b": "card-foreground",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "card",
+   "b": "muted-foreground",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "card",
+   "b": "brand",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "card",
+   "b": "ember",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "card-foreground",
+   "b": "card",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "popover",
+   "b": "popover-foreground",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "popover",
+   "b": "muted-foreground",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "popover-foreground",
+   "b": "popover",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "primary",
+   "b": "primary-foreground",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "primary-hover",
+   "b": "primary-foreground",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "primary-active",
+   "b": "primary-foreground",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "primary-foreground",
+   "b": "primary",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "primary-foreground",
+   "b": "primary-hover",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "primary-foreground",
+   "b": "primary-active",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "secondary",
+   "b": "secondary-foreground",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "secondary-foreground",
+   "b": "secondary",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "muted",
+   "b": "foreground",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "muted",
+   "b": "muted-foreground",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "muted-foreground",
+   "b": "background",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "muted-foreground",
+   "b": "card",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "muted-foreground",
+   "b": "popover",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "muted-foreground",
+   "b": "muted",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "muted-foreground",
+   "b": "subtle",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "muted-foreground",
+   "b": "selected",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "muted-foreground",
+   "b": "secondary",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "muted-foreground",
+   "b": "accent",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "accent",
+   "b": "accent-foreground",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "accent",
+   "b": "muted-foreground",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "accent-foreground",
+   "b": "accent",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "destructive",
+   "b": "destructive-foreground",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "destructive",
+   "b": "card",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "destructive",
+   "b": "background",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "destructive-foreground",
+   "b": "destructive",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "border",
+   "b": "foreground",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "input",
+   "b": "card",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "input",
+   "b": "background",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "input",
+   "b": "popover",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "input",
+   "b": "muted",
+   "min": 3.0,
+   "kind": "against"
+  },
+  {
+   "a": "input",
+   "b": "subtle",
+   "min": 3.0,
+   "kind": "against"
+  },
+  {
+   "a": "input",
+   "b": "secondary",
+   "min": 3.0,
+   "kind": "against"
+  },
+  {
+   "a": "ring",
+   "b": "background",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "ring",
+   "b": "card",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "ring",
+   "b": "popover",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "sun",
+   "b": "sun-foreground",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "sun-hover",
+   "b": "sun-foreground",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "sun-active",
+   "b": "sun-foreground",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "sun-core",
+   "b": "sun-foreground",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "sun-edge",
+   "b": "sun-foreground",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "sun-foreground",
+   "b": "sun",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "sun-foreground",
+   "b": "sun-hover",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "sun-foreground",
+   "b": "sun-active",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "brand",
+   "b": "card",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "brand",
+   "b": "background",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "brand",
+   "b": "subtle",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "brand",
+   "b": "muted",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "brand",
+   "b": "popover",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "brand-foreground",
+   "b": "brand",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "ember",
+   "b": "card",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "ember",
+   "b": "background",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "ember",
+   "b": "muted",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "ember",
+   "b": "subtle",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "ember",
+   "b": "selected",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "ember",
+   "b": "popover",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "subtle",
+   "b": "foreground",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "subtle",
+   "b": "muted-foreground",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "subtle",
+   "b": "brand",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "subtle",
+   "b": "ember",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "selected",
+   "b": "foreground",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "selected",
+   "b": "muted-foreground",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "card-edge",
+   "b": "foreground",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "inverse",
+   "b": "inverse-foreground",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "inverse-foreground",
+   "b": "inverse",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "line-soft",
+   "b": "foreground",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "line-strong",
+   "b": "foreground",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "on-dark",
+   "b": "blue-950",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "on-dark",
+   "b": "blue-900",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "on-dark",
+   "b": "blue-800",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "on-dark",
+   "b": "blue-700",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "on-dark-muted",
+   "b": "blue-950",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "on-dark-muted",
+   "b": "blue-900",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "on-dark-muted",
+   "b": "blue-800",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "on-dark-muted",
+   "b": "blue-700",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "on-dark-soft",
+   "b": "blue-950",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "on-dark-soft",
+   "b": "blue-900",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "on-dark-soft",
+   "b": "blue-800",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "on-dark-soft",
+   "b": "blue-700",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "on-dark-accent",
+   "b": "blue-950",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "on-dark-accent",
+   "b": "blue-900",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "on-dark-accent",
+   "b": "blue-800",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "on-dark-accent",
+   "b": "blue-700",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "paper",
+   "b": "paper-ink",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "paper-muted",
+   "b": "paper",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "paper-ink",
+   "b": "paper",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "sky-top",
+   "b": "white",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "sky-top",
+   "b": "blue-200",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "sky-high",
+   "b": "white",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "sky-high",
+   "b": "blue-200",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "sky-mid",
+   "b": "white",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "sky-mid",
+   "b": "blue-200",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "sky-low",
+   "b": "white",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "sky-haze",
+   "b": "foreground",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "sky-horizon",
+   "b": "foreground",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "sky-horizon",
+   "b": "muted-foreground",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "chart-1",
+   "b": "brand-foreground",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "chart-1",
+   "b": "card",
+   "min": 3.0,
+   "kind": "against"
+  },
+  {
+   "a": "chart-2",
+   "b": "blue-950",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "chart-2",
+   "b": "card",
+   "min": 3.0,
+   "kind": "against"
+  },
+  {
+   "a": "chart-3",
+   "b": "blue-950",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "chart-3",
+   "b": "card",
+   "min": 3.0,
+   "kind": "against"
+  },
+  {
+   "a": "chart-4",
+   "b": "blue-950",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "chart-4",
+   "b": "card",
+   "min": 3.0,
+   "kind": "against"
+  },
+  {
+   "a": "chart-5",
+   "b": "primary-foreground",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "chart-5",
+   "b": "card",
+   "min": 3.0,
+   "kind": "against"
+  },
+  {
+   "a": "sidebar",
+   "b": "sidebar-foreground",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "sidebar",
+   "b": "sidebar-accent-foreground",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "sidebar-foreground",
+   "b": "sidebar",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "sidebar-foreground",
+   "b": "sidebar-accent",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "sidebar-primary",
+   "b": "sidebar-primary-foreground",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "sidebar-primary-foreground",
+   "b": "sidebar-primary",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "sidebar-accent",
+   "b": "sidebar-accent-foreground",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "sidebar-accent",
+   "b": "sidebar-foreground",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "sidebar-accent-foreground",
+   "b": "sidebar-accent",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "sidebar-border",
+   "b": "sidebar-foreground",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "sidebar-ring",
+   "b": "sidebar",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "sidebar-ring",
+   "b": "blue-950",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "sidebar-ring",
+   "b": "blue-900",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "sidebar-ring",
+   "b": "blue-800",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "sidebar-ring",
+   "b": "blue-700",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "status-neutral",
+   "b": "card",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "status-neutral",
+   "b": "background",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "status-neutral",
+   "b": "status-neutral-bg",
+   "min": 3.0,
+   "kind": "against"
+  },
+  {
+   "a": "status-neutral",
+   "b": "popover",
+   "min": 3.0,
+   "kind": "against"
+  },
+  {
+   "a": "status-neutral-fg",
+   "b": "status-neutral-bg",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "status-neutral-fg",
+   "b": "card",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "status-neutral-fg",
+   "b": "background",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "status-neutral-bg",
+   "b": "status-neutral-fg",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "status-info",
+   "b": "card",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "status-info",
+   "b": "background",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "status-info",
+   "b": "status-info-bg",
+   "min": 3.0,
+   "kind": "against"
+  },
+  {
+   "a": "status-info",
+   "b": "popover",
+   "min": 3.0,
+   "kind": "against"
+  },
+  {
+   "a": "status-info-fg",
+   "b": "status-info-bg",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "status-info-fg",
+   "b": "card",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "status-info-fg",
+   "b": "background",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "status-info-bg",
+   "b": "status-info-fg",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "status-progress",
+   "b": "card",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "status-progress",
+   "b": "background",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "status-progress",
+   "b": "status-progress-bg",
+   "min": 3.0,
+   "kind": "against"
+  },
+  {
+   "a": "status-progress",
+   "b": "popover",
+   "min": 3.0,
+   "kind": "against"
+  },
+  {
+   "a": "status-progress-fg",
+   "b": "status-progress-bg",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "status-progress-fg",
+   "b": "card",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "status-progress-fg",
+   "b": "background",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "status-progress-bg",
+   "b": "status-progress-fg",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "status-waiting",
+   "b": "card",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "status-waiting",
+   "b": "background",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "status-waiting",
+   "b": "status-waiting-bg",
+   "min": 3.0,
+   "kind": "against"
+  },
+  {
+   "a": "status-waiting",
+   "b": "popover",
+   "min": 3.0,
+   "kind": "against"
+  },
+  {
+   "a": "status-waiting-fg",
+   "b": "status-waiting-bg",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "status-waiting-fg",
+   "b": "card",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "status-waiting-fg",
+   "b": "background",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "status-waiting-bg",
+   "b": "status-waiting-fg",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "status-attention",
+   "b": "card",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "status-attention",
+   "b": "background",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "status-attention",
+   "b": "status-attention-bg",
+   "min": 3.0,
+   "kind": "against"
+  },
+  {
+   "a": "status-attention",
+   "b": "popover",
+   "min": 3.0,
+   "kind": "against"
+  },
+  {
+   "a": "status-attention-fg",
+   "b": "status-attention-bg",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "status-attention-fg",
+   "b": "card",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "status-attention-fg",
+   "b": "background",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "status-attention-bg",
+   "b": "status-attention-fg",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "status-positive",
+   "b": "card",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "status-positive",
+   "b": "background",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "status-positive",
+   "b": "status-positive-bg",
+   "min": 3.0,
+   "kind": "against"
+  },
+  {
+   "a": "status-positive",
+   "b": "popover",
+   "min": 3.0,
+   "kind": "against"
+  },
+  {
+   "a": "status-positive-fg",
+   "b": "status-positive-bg",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "status-positive-fg",
+   "b": "card",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "status-positive-fg",
+   "b": "background",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "status-positive-bg",
+   "b": "status-positive-fg",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "status-paused",
+   "b": "card",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "status-paused",
+   "b": "background",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "status-paused",
+   "b": "status-paused-bg",
+   "min": 3.0,
+   "kind": "against"
+  },
+  {
+   "a": "status-paused",
+   "b": "popover",
+   "min": 3.0,
+   "kind": "against"
+  },
+  {
+   "a": "status-paused-fg",
+   "b": "status-paused-bg",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "status-paused-fg",
+   "b": "card",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "status-paused-fg",
+   "b": "background",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "status-paused-bg",
+   "b": "status-paused-fg",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "status-negative",
+   "b": "card",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "status-negative",
+   "b": "background",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "status-negative",
+   "b": "status-negative-bg",
+   "min": 3.0,
+   "kind": "against"
+  },
+  {
+   "a": "status-negative",
+   "b": "popover",
+   "min": 3.0,
+   "kind": "against"
+  },
+  {
+   "a": "status-negative-fg",
+   "b": "status-negative-bg",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "status-negative-fg",
+   "b": "card",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "status-negative-fg",
+   "b": "background",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "status-negative-bg",
+   "b": "status-negative-fg",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "status-muted",
+   "b": "card",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "status-muted",
+   "b": "background",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "status-muted",
+   "b": "status-muted-bg",
+   "min": 3.0,
+   "kind": "against"
+  },
+  {
+   "a": "status-muted",
+   "b": "popover",
+   "min": 3.0,
+   "kind": "against"
+  },
+  {
+   "a": "status-muted-fg",
+   "b": "status-muted-bg",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "status-muted-fg",
+   "b": "card",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "status-muted-fg",
+   "b": "background",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "status-muted-bg",
+   "b": "status-muted-fg",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "status-done",
+   "b": "status-done-bg",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "status-done-fg",
+   "b": "status-done-bg",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "status-done-bg",
+   "b": "status-done-fg",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "status-done-bg",
+   "b": "status-done",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "stage-1",
+   "b": "foreground",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "stage-2",
+   "b": "foreground",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "stage-3",
+   "b": "foreground",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "stage-4",
+   "b": "blue-950",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "stage-5",
+   "b": "primary-foreground",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "stage-6",
+   "b": "primary-foreground",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "stage-7",
+   "b": "primary-foreground",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "stage-8",
+   "b": "sun-foreground",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "temp-hot",
+   "b": "card",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "temp-hot",
+   "b": "background",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "temp-warm",
+   "b": "card",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "temp-warm",
+   "b": "background",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "temp-cold",
+   "b": "card",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "temp-cold",
+   "b": "background",
+   "min": 4.5,
+   "kind": "named"
+  },
+  {
+   "a": "muted-foreground",
+   "b": "sky-horizon",
+   "min": 4.5,
+   "kind": "extra"
+  },
+  {
+   "a": "foreground",
+   "b": "sky-horizon",
+   "min": 4.5,
+   "kind": "extra"
+  },
+  {
+   "a": "foreground",
+   "b": "sky-haze",
+   "min": 4.5,
+   "kind": "extra"
+  },
+  {
+   "a": "brand",
+   "b": "sky-horizon",
+   "min": 4.5,
+   "kind": "extra"
+  },
+  {
+   "a": "ember",
+   "b": "sky-horizon",
+   "min": 4.5,
+   "kind": "extra"
+  },
+  {
+   "a": "white",
+   "b": "sky-top",
+   "min": 4.5,
+   "kind": "extra"
+  },
+  {
+   "a": "white",
+   "b": "sky-high",
+   "min": 4.5,
+   "kind": "extra"
+  },
+  {
+   "a": "white",
+   "b": "sky-mid",
+   "min": 4.5,
+   "kind": "extra"
+  },
+  {
+   "a": "blue-200",
+   "b": "sky-mid",
+   "min": 4.5,
+   "kind": "extra"
+  },
+  {
+   "a": "orange-300",
+   "b": "sky-mid",
+   "min": 4.5,
+   "kind": "extra"
+  },
+  {
+   "a": "blue-100",
+   "b": "blue-700",
+   "min": 4.5,
+   "kind": "extra"
+  },
+  {
+   "a": "sidebar-foreground",
+   "b": "blue-700",
+   "min": 4.5,
+   "kind": "extra"
+  },
+  {
+   "a": "blue-900",
+   "b": "white",
+   "min": 4.5,
+   "kind": "extra"
+  },
+  {
+   "a": "primary",
+   "b": "card",
+   "min": 3,
+   "kind": "extra"
+  },
+  {
+   "a": "primary",
+   "b": "background",
+   "min": 3,
+   "kind": "extra"
+  },
+  {
+   "a": "sun",
+   "b": "sidebar",
+   "min": 3,
+   "kind": "extra"
+  },
+  {
+   "a": "sun",
+   "b": "blue-700",
+   "min": 3,
+   "kind": "extra"
+  },
+  {
+   "a": "line-strong",
+   "b": "card",
+   "min": 1.5,
+   "kind": "extra"
+  },
+  {
+   "a": "input",
+   "b": "selected",
+   "min": 3,
+   "kind": "extra"
+  },
+  {
+   "a": "destructive",
+   "b": "popover",
+   "min": 4.5,
+   "kind": "extra"
+  },
+  {
+   "a": "destructive",
+   "b": "status-negative-bg",
+   "min": 4.5,
+   "kind": "extra"
+  },
+  {
+   "a": "status-done",
+   "b": "card",
+   "min": 1.0,
+   "kind": "extra"
+  }
+ ],
+ "rules": [
+  {
+   "id": "C1",
+   "group": "Colour",
+   "level": "error",
+   "check": "review",
+   "title": "One sun per screen",
+   "statement": "`sun` is for the offer price and for the single most important action of a screen. One sun button per screen, no sun for decoration or for a second action.",
+   "why": "The sun only works while it is rare. The checker counts sun buttons per file and reports more than one."
+  },
+  {
+   "id": "C2",
+   "group": "Colour",
+   "level": "error",
+   "check": "auto",
+   "title": "Orange is never text",
+   "statement": "Orange text is `ember`. `sun` is never a text colour.",
+   "why": "`sun` on a white card is 2.57 to 1 and fails as text. `ember` holds 4.5 to 1 in both themes."
+  },
+  {
+   "id": "C3",
+   "group": "Colour",
+   "level": "error",
+   "check": "auto",
+   "title": "Never white text on the sun",
+   "statement": "Text, numerals and icons on `sun` are `sun-foreground`.",
+   "why": "White on the sun is 2.5 to 1. The deep blue is 5.6 to 1."
+  },
+  {
+   "id": "C4",
+   "group": "Colour",
+   "level": "error",
+   "check": "auto",
+   "title": "No raw colour values",
+   "statement": "A colour value (hex, rgb, hsl, oklch) appears only in the tokens file. Everything else uses a token.",
+   "why": "A value typed by hand is not in a checked pair and does not follow the theme."
+  },
+  {
+   "id": "C5",
+   "group": "Colour",
+   "level": "error",
+   "check": "auto",
+   "title": "Components use the role tokens, not the scales",
+   "statement": "`blue-950` to `blue-25`, `orange-900` to `orange-50` and `white` are used only inside the tokens file, to build role tokens and gradients. Components use role tokens such as `foreground`, `brand`, `on-dark`, `paper`. No Tailwind palette colours.",
+   "why": "Version 1 used `blue-900` for headlines. In dark theme the ground changed and the headline did not, so it vanished."
+  },
+  {
+   "id": "C6",
+   "group": "Colour",
+   "level": "error",
+   "check": "auto",
+   "title": "Every colour belongs to a checked pair",
+   "statement": "Every colour token names the tokens it is checked with. Named pairs hold 4.5 to 1 in light and in dark. Large fills and edges also hold 3 to 1 against the surfaces named for them.",
+   "why": "A colour without a pair cannot be checked, and a pair that fails cannot be read."
+  },
+  {
+   "id": "C7",
+   "group": "Colour",
+   "level": "error",
+   "check": "auto",
+   "title": "The tokens file is not edited by hand",
+   "statement": "The tokens file in a product is the file the design system published, byte for byte. A change is a new version from the design system.",
+   "why": "One edited value breaks the pairs silently. The checker compares the file with its published fingerprint."
+  },
+  {
+   "id": "C8",
+   "group": "Colour",
+   "level": "error",
+   "check": "review",
+   "title": "A status takes one of the ten roles",
+   "statement": "Every status maps to a role in the Status and sequences section and uses that role's three tokens. No status gets a colour of its own.",
+   "why": "Ten meanings can be learnt. Forty colours cannot."
+  },
+  {
+   "id": "C9",
+   "group": "Colour",
+   "level": "error",
+   "check": "review",
+   "title": "Never by colour alone",
+   "statement": "A state always has a word, and where it helps a shape or a count: the chip has a label, the stepper has circles and diamonds, the temperature has bars and a word.",
+   "why": "Colour is lost in sunlight, on poor screens and for colour-blind people."
+  },
+  {
+   "id": "C10",
+   "group": "Colour",
+   "level": "error",
+   "check": "review",
+   "title": "Night surfaces stay night",
+   "statement": "The sky, the night band, the app bar, the side navigation, the call panel and the footer stay dark in both themes and take `on-dark`, `on-dark-soft`, `on-dark-muted` and `on-dark-accent`. Every other surface follows the theme and takes themed text.",
+   "why": "Mixing the two families is how text disappears in one of the themes."
+  },
+  {
+   "id": "C11",
+   "group": "Colour",
+   "level": "error",
+   "check": "auto",
+   "title": "No new gradients",
+   "statement": "Only the gradient tokens: `gradient-sky`, `gradient-dusk`, `gradient-dusk-short`, `gradient-horizon`, `gradient-mist`, `gradient-night`, `gradient-appbar`, `gradient-sun`, `gradient-glow`, `gradient-halo`, and `gradient-caret` for the arrow of a select.",
+   "why": "The sky and the sun are the brand's pictures. A new gradient is a new picture."
+  },
+  {
+   "id": "T1",
+   "group": "Type",
+   "level": "error",
+   "check": "auto",
+   "title": "Two font families",
+   "statement": "Fonts come from `font-display` and `font-sans` only.",
+   "why": "Newsreader and Hanken Grotesk carry the look, with the Gujarati faces in the same stacks."
+  },
+  {
+   "id": "T2",
+   "group": "Type",
+   "level": "error",
+   "check": "auto",
+   "title": "Nothing below 12px",
+   "statement": "No text is smaller than 12px. Gujarati text is never smaller than 13px.",
+   "why": "Smaller text is not readable on the phones the customers and the field staff use."
+  },
+  {
+   "id": "T3",
+   "group": "Type",
+   "level": "error",
+   "check": "auto",
+   "title": "No words in capitals",
+   "statement": "No `text-transform: uppercase` and no labels typed in capitals, except names such as DISCOM, UGVCL and BSE.",
+   "why": "Sentence case is the brand's voice."
+  },
+  {
+   "id": "T4",
+   "group": "Type",
+   "level": "warn",
+   "check": "review",
+   "title": "Headlines stay whole",
+   "statement": "A headline is never set with one word in another colour or style, and takes two lines at most on a desktop.",
+   "why": ""
+  },
+  {
+   "id": "T5",
+   "group": "Type",
+   "level": "warn",
+   "check": "review",
+   "title": "The price style is for the price",
+   "statement": "Only the offer price uses `t-price`.",
+   "why": ""
+  },
+  {
+   "id": "S1",
+   "group": "Shape",
+   "level": "error",
+   "check": "auto",
+   "title": "Corners from the corner tokens",
+   "statement": "Corner radii are `corner-3xs` to `corner-full`, or 50% for a circle. No radius typed in pixels.",
+   "why": ""
+  },
+  {
+   "id": "S2",
+   "group": "Shape",
+   "level": "warn",
+   "check": "auto",
+   "title": "Shadows from the shadow tokens",
+   "statement": "Shadows are `shadow-xs`, `shadow-card`, `shadow-float` and the two sun rims. A line or a ring drawn as a shadow, with no blur and a token colour, is allowed.",
+   "why": ""
+  },
+  {
+   "id": "S3",
+   "group": "Shape",
+   "level": "error",
+   "check": "review",
+   "title": "A side bar means selected or overdue",
+   "statement": "A coloured bar on one side of a row or card means selected (sun) or overdue (attention). Never decoration.",
+   "why": ""
+  },
+  {
+   "id": "S4",
+   "group": "Shape",
+   "level": "error",
+   "check": "review",
+   "title": "Touch targets of 44px",
+   "statement": "Nothing a finger presses on a phone is smaller than `touch-min`.",
+   "why": ""
+  },
+  {
+   "id": "S5",
+   "group": "Shape",
+   "level": "warn",
+   "check": "auto",
+   "title": "Layers from the layer tokens",
+   "statement": "Stacking uses `z-header`, `z-dock`, `z-overlay`, `z-modal`, `z-toast`. Small local values up to 9 are allowed.",
+   "why": ""
+  },
+  {
+   "id": "S6",
+   "group": "Shape",
+   "level": "warn",
+   "check": "auto",
+   "title": "Spacing follows the grid",
+   "statement": "Padding, margin and gap are multiples of 2px. Gaps between blocks, gutters and section padding use the spacing tokens, `space-1` to `space-30`, which run in 4px steps.",
+   "why": ""
+  },
+  {
+   "id": "W1",
+   "group": "Words",
+   "level": "error",
+   "check": "auto",
+   "title": "No em dash, no en dash",
+   "statement": "No em dash and no en dash in any text people read. Use a comma, a full stop or the word to.",
+   "why": "House rule for every Solarium text."
+  },
+  {
+   "id": "W2",
+   "group": "Words",
+   "level": "warn",
+   "check": "auto",
+   "title": "No emoji, no exclamation marks",
+   "statement": "No emoji anywhere. No exclamation marks in interface text.",
+   "why": ""
+  },
+  {
+   "id": "W3",
+   "group": "Words",
+   "level": "error",
+   "check": "review",
+   "title": "The price and its footnote travel together",
+   "statement": "The offer price is written ₹0* and the footnote that explains the asterisk is on the same screen.",
+   "why": ""
+  },
+  {
+   "id": "W4",
+   "group": "Words",
+   "level": "error",
+   "check": "review",
+   "title": "Last digits only",
+   "statement": "The CRM shows only the last digits of phone numbers, consumer numbers and payment references. Mock-ups and demos use invented names.",
+   "why": ""
+  },
+  {
+   "id": "W5",
+   "group": "Words",
+   "level": "error",
+   "check": "review",
+   "title": "English and Gujarati",
+   "statement": "Every text on the website exists in English and Gujarati, set from the same styles.",
+   "why": ""
+  },
+  {
+   "id": "M1",
+   "group": "Motion",
+   "level": "warn",
+   "check": "review",
+   "title": "One moment per page",
+   "statement": "On the website only the sun moves on its own when the page opens. Everything else moves only in answer to a press.",
+   "why": ""
+  },
+  {
+   "id": "M2",
+   "group": "Motion",
+   "level": "error",
+   "check": "auto",
+   "title": "Reduced motion is respected",
+   "statement": "The stylesheet holds a `prefers-reduced-motion: reduce` rule that stops animation and transition.",
+   "why": ""
+  },
+  {
+   "id": "M3",
+   "group": "Motion",
+   "level": "error",
+   "check": "auto",
+   "title": "Focus is always visible",
+   "statement": "No `outline: none` without a visible replacement. The ring is `ring`, and `sidebar-ring` over night surfaces.",
+   "why": ""
+  },
+  {
+   "id": "B1",
+   "group": "Brand",
+   "level": "error",
+   "check": "review",
+   "title": "The logo files are used unchanged",
+   "statement": "Never recolour, redraw or trace the logo. There is no vector file.",
+   "why": ""
+  },
+  {
+   "id": "B2",
+   "group": "Brand",
+   "level": "error",
+   "check": "review",
+   "title": "Client marks stay in the logo wall",
+   "statement": "Client marks appear only in the logo wall, on `paper`, in their own colours, with the line that names them as projects executed.",
+   "why": ""
+  },
+  {
+   "id": "P1",
+   "group": "Process",
+   "level": "error",
+   "check": "auto",
+   "title": "A rule is broken only in writing",
+   "statement": "To break a rule on purpose, write `solarium-allow <rule id>: <reason>` in a comment on that line or the line above, and get Mohit's yes. The checker lists every such line in its report.",
+   "why": "So a rule is never broken without someone knowing."
+  },
+  {
+   "id": "P2",
+   "group": "Process",
+   "level": "error",
+   "check": "review",
+   "title": "The checker runs before every release",
+   "statement": "Each product runs the checker in its build. A build with errors does not ship.",
+   "why": ""
+  }
+ ]
+}

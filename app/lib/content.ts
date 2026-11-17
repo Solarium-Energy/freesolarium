@@ -99,13 +99,13 @@ export const INCLUDED = [
     guBody:
       "વીજ ઉત્પાદન, સુરક્ષા અને મોનિટરિંગનું સંયોજન. LCD ડિસ્પ્લે અને રિમોટ ડેશબોર્ડ સાથે મજબૂત એલ્યુમિનિયમ ડાઈ-કાસ્ટ બોડી.",
     specs: [
-      "Up to 130% overloading capacity & 20–23A input",
+      "Up to 130% overloading capacity & 20-23A input",
       "Type-II SPD surge protection (DC & AC)",
       "In-built anti-islanding & optional AFCI protection",
       "Remote plant monitoring & 10 years warranty",
     ],
     guSpecs: [
-      "130% સુધી ઓવરલોડિંગ ક્ષમતા અને 20–23A ઇનપુટ",
+      "130% સુધી ઓવરલોડિંગ ક્ષમતા અને 20-23A ઇનપુટ",
       "Type-II SPD સર્જ પ્રોટેક્શન (DC અને AC)",
       "ઇન-બિલ્ટ એન્ટી-આઇલેન્ડિંગ અને વૈકલ્પિક AFCI સુરક્ષા",
       "રિમોટ પ્લાન્ટ મોનિટરિંગ અને 10 વર્ષની વોરંટી",
@@ -257,9 +257,9 @@ export const INCLUDED = [
     guSubtitle: "દિવાલની પાછળ છુપાયેલા કેબલ્સ જ સુરક્ષા સુનિશ્ચિત કરે છે",
     tag: "Solar Cabling",
     guTag: "સોલર કેબલિંગ",
-    body: "After installation, cables become invisible — verify quality first. High-purity copper guarantees low loss and safety.",
+    body: "After installation, cables become invisible. Verify quality first. High-purity copper guarantees low loss and safety.",
     guBody:
-      "ઇન્સ્ટોલેશન પછી, કેબલ્સ દેખાતા નથી — તેથી તેની ગુણવત્તા પહેલા જ તપાસી લેવી જોઈએ. ઉચ્ચ શુદ્ધતા ધરાવતું તાંબું (કોપર) ઉર્જાનો ઓછો વ્યય અને સુરક્ષાની ખાતરી આપે છે.",
+      "ઇન્સ્ટોલેશન પછી, કેબલ્સ દેખાતા નથી, તેથી તેની ગુણવત્તા પહેલા જ તપાસી લેવી જોઈએ. ઉચ્ચ શુદ્ધતા ધરાવતું તાંબું (કોપર) ઉર્જાનો ઓછો વ્યય અને સુરક્ષાની ખાતરી આપે છે.",
     specs: [
       "DC Solar Cable: 1 Core 4.0 SQ MM Polycab/Johanson Type 1",
       "AC Cable: 2 Core 4.0 SQ MM copper flexible (Polycab/Johanson)",
@@ -497,8 +497,8 @@ export const FAQS = [
   {
     q: "When is the subsidy credited, and to whom?",
     guQ: "સબસિડી ક્યારે અને કોના ખાતામાં જમા થાય છે?",
-    a: "Assistance is credited by the government directly to the customer's bank account after installation, commissioning and DISCOM inspection. Timelines are set by MNRE, GEDA and your DISCOM — your relationship manager tracks the claim with you and shares the status at each stage.",
-    guA: "સિસ્ટમ ઇન્સ્ટોલ થયા પછી, કાર્યરત (commissioning) થયા બાદ અને DISCOM દ્વારા નિરીક્ષણ (inspection) પૂર્ણ થયા પછી, સરકાર દ્વારા સબસિડીની રકમ સીધી ગ્રાહકના બેંક ખાતામાં જમા કરવામાં આવે છે. આ પ્રક્રિયાનો સમયગાળો MNRE, GEDA અને તમારી DISCOM દ્વારા નક્કી કરવામાં આવે છે — અમારા રિલેશનશિપ મેનેજર તમારી સાથે રહીને આ ક્લેમ (claim) પર નજર રાખશે અને દરેક તબક્કે તમને સ્ટેટસ જણાવશે.",
+    a: "Assistance is credited by the government directly to the customer's bank account after installation, commissioning and DISCOM inspection. Timelines are set by MNRE, GEDA and your DISCOM. Your relationship manager tracks the claim with you and shares the status at each stage.",
+    guA: "સિસ્ટમ ઇન્સ્ટોલ થયા પછી, કાર્યરત (commissioning) થયા બાદ અને DISCOM દ્વારા નિરીક્ષણ (inspection) પૂર્ણ થયા પછી, સરકાર દ્વારા સબસિડીની રકમ સીધી ગ્રાહકના બેંક ખાતામાં જમા કરવામાં આવે છે. આ પ્રક્રિયાનો સમયગાળો MNRE, GEDA અને તમારી DISCOM દ્વારા નક્કી કરવામાં આવે છે. અમારા રિલેશનશિપ મેનેજર તમારી સાથે રહીને આ ક્લેમ (claim) પર નજર રાખશે અને દરેક તબક્કે તમને સ્ટેટસ જણાવશે.",
   },
   {
     q: "Who is eligible?",

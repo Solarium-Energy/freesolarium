@@ -71,4 +71,13 @@ These values came from the client brief or the existing Solarium site. Anything 
 - Booking form uploads: photos (JPG, PNG, WebP, HEIC, HEIF) and PDFs up to 10 MB each, MP4 videos up to 50 MB on the two site inputs.
 - The booking form requires name, 10-digit mobile, 6-digit pincode, city, DISCOM and project type before it submits.
 - All animations respect `prefers-reduced-motion`.
-- Fonts: Inter (body) and Sora (display) via `next/font`.
+- Fonts: Newsreader (display) and Hanken Grotesk (text), with Noto Serif Gujarati and Noto Sans Gujarati for Gujarati, loaded from Google Fonts in `app/layout.tsx`.
+
+## Design system
+
+The look comes from the Solarium design system, First Light, version 2.
+
+- `app/styles/tokens_v2.css`, `app/styles/tailwind_theme_v2.css` and `app/styles/solarium.css` are copies of the design system's files. They are never edited: a new version of the design system replaces them file for file.
+- Site rules go into `app/styles/site.css`, written with tokens only. The parts live in `app/components/ui/`.
+- `npm run check:design` checks the code against the design rules (`docs/design_rules_v2.md`). `npm run build` runs it first, so a new finding stops the build.
+- Light theme only: no dark theme, no theme switch.
