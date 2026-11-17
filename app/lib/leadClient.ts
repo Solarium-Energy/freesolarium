@@ -46,13 +46,27 @@ export function buildMeta(): LeadMeta {
   return meta;
 }
 
+/**
+ * Test mode is on when the page URL has `?test=1`. The lead routes then pass
+ * `"test": true` to the CRM, which checks everything (uploaded files too) and
+ * stores nothing.
+ */
+export function isTestMode() {
+  return typeof window !== "undefined" && new URLSearchParams(window.location.search).get("test") === "1";
+}
+
+/** Routes whose bodies carry `"test": true` in test mode. Upload links are asked for as usual. */
+const TEST_ROUTES = new Set(["/api/quote", "/api/order"]);
+
 /** POSTs JSON. Never throws: a network failure comes back as status 0. */
 export async function postJson(url: string, body: unknown, options: { keepalive?: boolean } = {}): Promise<PostResult> {
+  const payload =
+    isTestMode() && TEST_ROUTES.has(url) && typeof body === "object" && body !== null ? { ...body, test: true } : body;
   try {
     const response = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
+      body: JSON.stringify(payload),
       keepalive: options.keepalive,
     });
     let json: unknown = null;

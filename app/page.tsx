@@ -11,6 +11,7 @@ import MobileCta from "./components/MobileCta";
 import ProductSection from "./components/ProductSection";
 import SixPillars from "./components/SixPillars";
 import Testimonials from "./components/Testimonials";
+import TestModeBar from "./components/TestModeBar";
 import TrustStrip from "./components/TrustStrip";
 import { FAQS } from "./lib/content";
 
@@ -49,6 +50,7 @@ export default function Page() {
       </main>
       <Footer />
       <MobileCta />
+      <TestModeBar />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{

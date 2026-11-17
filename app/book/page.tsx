@@ -4,6 +4,7 @@ import { useState, useRef } from "react";
 import Link from "next/link";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import TestModeBar from "../components/TestModeBar";
 import { useLanguage } from "../lib/language";
 import { site, whatsappUrl } from "../lib/content";
 import { buildMeta, isConfirmed, newSubmissionId, postJson, type PostResult } from "../lib/leadClient";
@@ -351,6 +352,7 @@ export default function BookPage() {
   const [uploadProgress, setUploadProgress] = useState<{ current: number; total: number } | null>(null);
   const [missingDocs, setMissingDocs] = useState<FileKey[]>([]);
   const [devSkipped, setDevSkipped] = useState(false);
+  const [testOk, setTestOk] = useState(false);
   const [website, setWebsite] = useState("");
 
   // One submission id per form session. Kept across retries while the chosen
@@ -546,6 +548,7 @@ export default function BookPage() {
 
       if (isConfirmed(result)) {
         setDevSkipped(result.body?.status === "skipped");
+        setTestOk(result.body?.status === "test-ok");
         setMissingDocs(failed);
         // A new form session gets a new submission id.
         submissionIdRef.current = null;
@@ -572,6 +575,7 @@ export default function BookPage() {
   if (submitted) {
     return (
       <div className="flex min-h-screen flex-col bg-[#f7f9fc]">
+        <TestModeBar />
         <Header />
         <main className="flex flex-1 items-center justify-center px-5 py-28 text-center">
           <div className="w-full max-w-md rounded-3xl bg-white p-10 shadow-[0_24px_80px_-16px_rgba(3,73,130,0.14)]">
@@ -582,7 +586,10 @@ export default function BookPage() {
               {isGu ? "ઓર્ડર સબમિટ થઈ ગયો!" : "Order Submitted!"}
             </h1>
             <p className="mt-2 text-[13.5px] leading-relaxed text-slate-500">
-              {isGu ? (
+              {/* A test run says so instead of thanking, so it is never mistaken for a real order. */}
+              {testOk ? (
+                "Test OK: nothing was stored."
+              ) : isGu ? (
                 <>
                   આભાર, <strong className="text-slate-700">{form.customerName || "ગ્રાહક"}</strong>. અમારી ટીમ તમારી વિગતોની સમીક્ષા કરશે અને 24 કામકાજના કલાકોમાં તમારો સંપર્ક કરશે.
                 </>
@@ -631,6 +638,7 @@ export default function BookPage() {
 
   return (
     <div className="min-h-screen bg-[#f7f9fc]">
+      <TestModeBar />
       <Header />
 
       <main className="mx-auto max-w-3xl px-4 pb-24 pt-20 sm:px-5 sm:pt-28">
