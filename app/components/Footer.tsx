@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight, Mail, MapPin, Phone } from "lucide-react";
 import { DISCLAIMER, site } from "../lib/content";
 import { useLanguage } from "../lib/language";
 
@@ -58,32 +57,27 @@ const SOCIALS = [
 export default function Footer() {
   const { isGu } = useLanguage();
   return (
-    <footer className="bg-navy-deep text-paper">
-      <div className="mx-auto max-w-[1200px] px-5 pb-24 pt-14 sm:pb-10 lg:px-6 lg:pt-16">
-        <div className="grid gap-10 lg:grid-cols-[1.35fr_0.7fr_1.05fr] lg:gap-14">
+    <footer className="site-footer">
+      <div className="wrap">
+        <div className="g">
           <div>
-            <a href="/#top" className="inline-flex items-center">
+            <Link href="/#top" className="brand">
               <Image
+                className="logo"
                 src="/images/solarium-logo-white.png"
-                alt={
-                  isGu
-                    ? "સોલેરિયમ ગ્રીન એનર્જી (Solarium Green Energy)"
-                    : "Solarium Green Energy"
-                }
+                alt={isGu ? "સોલેરિયમ ગ્રીન એનર્જી (Solarium Green Energy)" : "Solarium Green Energy"}
                 width={3349}
                 height={1119}
-                sizes="130px"
-                className="h-8 w-auto"
+                sizes="160px"
               />
-            </a>
-            <p className="mt-3 max-w-[300px] text-[12px] leading-relaxed text-paper/55">
+            </Link>
+            <p>
               {isGu
-                ? "ભારતની એકીકૃત સોલર કંપની — ૨૦૧૮થી એક જ છત નીચે મોડ્યુલ્સ, એન્જિનિયરિંગ અને ઇન્સ્ટોલેશનની સુવિધા."
-                : "India's integrated solar company — modules, engineering and installation under one roof since 2018."}
+                ? "ભારતની એકીકૃત સોલર કંપની, ૨૦૧૮થી એક જ છત નીચે મોડ્યુલ્સ, એન્જિનિયરિંગ અને ઇન્સ્ટોલેશનની સુવિધા."
+                : "India's integrated solar company, modules, engineering and installation under one roof since 2018."}
             </p>
-
-            <div className="mt-4 flex flex-wrap items-center gap-2.5">
-              <span className="inline-flex items-center rounded-lg bg-white px-2.5 py-1 shadow-sm">
+            <div className="ft-badges">
+              <span className="ft-bse">
                 <Image
                   src="/images/bse-listed.png"
                   alt={
@@ -93,28 +87,25 @@ export default function Footer() {
                   }
                   width={300}
                   height={228}
-                  className="h-8 w-auto object-contain"
+                  sizes="44px"
                 />
               </span>
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-white/15 px-2.5 py-1 text-[10px] font-semibold text-paper/65">
-                {isGu ? "MNRE દ્વારા માન્ય ચેનલ પાર્ટનર" : "MNRE approved channel partner"}
-              </span>
+              <span className="mn">{isGu ? "MNRE દ્વારા માન્ય ચેનલ પાર્ટનર" : "MNRE approved channel partner"}</span>
             </div>
-
-            <div className="mt-5 flex items-center gap-2.5">
+            <div className="ft-social">
               {SOCIALS.map((social) => {
                 const Icon = social.icon;
                 return (
                   <a
                     key={social.label}
+                    className="icon-btn icon-btn-lg"
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={social.label}
                     title={social.label}
-                    className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/[0.04] text-paper/70 transition-all hover:border-white/25 hover:bg-white/[0.08] hover:text-orange"
                   >
-                    <Icon className="h-4 w-4" />
+                    <Icon className="ico ico-fill" />
                   </a>
                 );
               })}
@@ -122,109 +113,48 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="text-[10.5px] font-bold uppercase tracking-[0.18em] text-paper/65">
-              {isGu ? "આ પેજ પર" : "On this page"}
-            </h3>
-            <ul className="mt-4 space-y-2.5">
-              {LINKS.map((link) => (
-                <li key={link.href}>
-                  {link.href === "/book" ? (
-                    <Link
-                      href={link.href}
-                      className="inline-flex items-center gap-1 text-[12.5px] font-semibold text-orange transition-colors hover:text-white"
-                    >
-                      {isGu ? link.guLabel : link.label}
-                      <ArrowUpRight className="h-3.5 w-3.5" />
-                    </Link>
-                  ) : (
-                    <a
-                      href={link.href}
-                      className="text-[12.5px] font-medium text-paper/70 transition-colors hover:text-orange"
-                    >
-                      {isGu ? link.guLabel : link.label}
-                    </a>
-                  )}
-                </li>
-              ))}
-            </ul>
+            <h4>{isGu ? "આ પેજ પર" : "On this page"}</h4>
+            {LINKS.map((link) => (
+              <Link key={link.href} href={link.href}>
+                {isGu ? link.guLabel : link.label}
+              </Link>
+            ))}
           </div>
 
           <div>
-            <h3 className="text-[10.5px] font-bold uppercase tracking-[0.18em] text-paper/65">
-              {isGu ? "અમારો સંપર્ક કરો" : "Get in touch"}
-            </h3>
-            <ul className="mt-4 space-y-3 text-[12.5px] text-paper/70">
-              <li>
-                <a
-                  href={site.phoneHref}
-                  className="flex items-start gap-2.5 transition-colors hover:text-orange"
-                >
-                  <Phone className="mt-0.5 h-3.5 w-3.5 shrink-0 text-orange" />
-                  <span>
-                    {site.phoneDisplay}
-                    <span className="block text-[10.5px] text-paper/55">
-                      {isGu
-                        ? "ટોલ-ફ્રી · સોમ–શનિ, સવારે ૯:૩૦ થી સાંજે ૬:૩૦"
-                        : "Toll-free · Mon–Sat, 9:30 am – 6:30 pm"}
-                    </span>
-                  </span>
-                </a>
-              </li>
-              <li>
-                <a
-                  href={`mailto:${site.email}`}
-                  className="flex items-start gap-2.5 transition-colors hover:text-orange"
-                >
-                  <Mail className="mt-0.5 h-3.5 w-3.5 shrink-0 text-orange" />
-                  {site.email}
-                </a>
-              </li>
-              <li className="flex items-start gap-2.5">
-                <MapPin className="mt-0.5 h-3.5 w-3.5 shrink-0 text-orange" />
-                <span className="leading-relaxed">
-                  {isGu
-                    ? "B-1207, વર્લ્ડ ટ્રેડ ટાવર, S.G. હાઇવે, સરખેજ, અમદાવાદ, ગુજરાત ૩૮૦૦૫૧"
-                    : site.address}
-                </span>
-              </li>
-            </ul>
+            <h4>{isGu ? "અમારો સંપર્ક કરો" : "Get in touch"}</h4>
+            <a className="big" href={site.phoneHref}>
+              {site.phoneDisplay}
+            </a>
+            <span className="ft-line">
+              {isGu ? "ટોલ-ફ્રી · સોમથી શનિ, સવારે ૯:૩૦ થી સાંજે ૬:૩૦" : "Toll-free · Mon to Sat, 9:30 am to 6:30 pm"}
+            </span>
+            <a href={`mailto:${site.email}`}>{site.email}</a>
+            <span className="ft-line">
+              {isGu ? "B-1207, વર્લ્ડ ટ્રેડ ટાવર, S.G. હાઇવે, સરખેજ, અમદાવાદ, ગુજરાત ૩૮૦૦૫૧" : site.address}
+            </span>
           </div>
         </div>
 
-        <div
-          id="disclaimer"
-          className="mt-12 rounded-2xl border border-white/10 bg-white/[0.03] p-4 text-[10px] leading-[1.7] text-paper/55 sm:p-5"
-        >
-          <p>
-            {isGu
-              ? "*અસરકારક ખર્ચની ગણતરીમાં ૨.૧૮ kW ના પ્રમાણભૂત (standard) સેટઅપ માટે 'PM સૂર્ય ઘર: મફત વીજળી યોજના' હેઠળ કેન્દ્રીય સહાય અને કમિશનિંગ સમયે જાહેર કરાયેલ ગુજરાત રાજ્યની સહાય મળવાની ધારણા રાખવામાં આવી છે. સબસિડીની રકમ, પાત્રતા અને ચૂકવણીનો સમયગાળો MNRE, GEDA અને DISCOM દ્વારા નક્કી કરવામાં આવે છે, સોલેરિયમ દ્વારા નહીં. સાઇટ મુજબના ફેરફારો (customisation) માટેનો ખર્ચ સર્વેક્ષણ પછી અને ઓર્ડર કન્ફર્મ કરતા પહેલા જણાવવામાં આવશે. ‘ગુજરાતમાં #૧’: PM સૂર્ય ઘર ઇન્સ્ટોલેશન રેન્કિંગ. ઉલ્લેખિત સંસ્થાઓના નામ પૂર્ણ થયેલા પ્રોજેક્ટ્સના સંદર્ભમાં છે; આનો અર્થ એવો નથી કે તે સંસ્થાઓ દ્વારા કોઈ સમર્થન (endorsement) આપવામાં આવ્યું છે."
-              : `*${DISCLAIMER} ‘#1 in Gujarat’: PM Surya Ghar installation ranking. Institution names refer to projects executed; no endorsement implied.`}
-          </p>
+        <div className="ds" id="disclaimer">
+          {isGu
+            ? "*અસરકારક ખર્ચની ગણતરીમાં ૨.૧૮ kW ના પ્રમાણભૂત (standard) સેટઅપ માટે 'PM સૂર્ય ઘર: મફત વીજળી યોજના' હેઠળ કેન્દ્રીય સહાય અને કમિશનિંગ સમયે જાહેર કરાયેલ ગુજરાત રાજ્યની સહાય મળવાની ધારણા રાખવામાં આવી છે. સબસિડીની રકમ, પાત્રતા અને ચૂકવણીનો સમયગાળો MNRE, GEDA અને DISCOM દ્વારા નક્કી કરવામાં આવે છે, સોલેરિયમ દ્વારા નહીં. સાઇટ મુજબના ફેરફારો (customisation) માટેનો ખર્ચ સર્વેક્ષણ પછી અને ઓર્ડર કન્ફર્મ કરતા પહેલા જણાવવામાં આવશે. ‘ગુજરાતમાં #૧’: PM સૂર્ય ઘર ઇન્સ્ટોલેશન રેન્કિંગ. ઉલ્લેખિત સંસ્થાઓના નામ પૂર્ણ થયેલા પ્રોજેક્ટ્સના સંદર્ભમાં છે; આનો અર્થ એવો નથી કે તે સંસ્થાઓ દ્વારા કોઈ સમર્થન (endorsement) આપવામાં આવ્યું છે."
+            : `*${DISCLAIMER} ‘#1 in Gujarat’: PM Surya Ghar installation ranking. Institution names refer to projects executed; no endorsement implied.`}
         </div>
 
-        <div className="mt-7 flex flex-col gap-3 border-t border-white/10 pt-6 text-[10.5px] text-paper/55 sm:flex-row sm:items-center sm:justify-between">
-          <p>
+        <div className="cp">
+          <span>
             {isGu
               ? "© ૨૦૨૬ સોલેરિયમ ગ્રીન એનર્જી લિ. સર્વાધિકાર સુરક્ષિત."
               : `© ${new Date().getFullYear()} ${site.legalName}. All rights reserved.`}
-          </p>
-          <div className="flex items-center gap-5">
-            <a
-              href="https://solariumenergy.in/privacy-policy/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="transition-colors hover:text-orange"
-            >
+          </span>
+          <span className="cp-links">
+            <a href="https://solariumenergy.in/privacy-policy/" target="_blank" rel="noopener noreferrer">
               {isGu ? "ગોપનીયતા નીતિ (Privacy)" : "Privacy"}
             </a>
-            <a href="#disclaimer" className="transition-colors hover:text-orange">
-              {isGu ? "ડિસક્લેમર (અસ્વીકરણ)" : "Disclaimer"}
-            </a>
-            <a href="#top" className="inline-flex items-center gap-1 transition-colors hover:text-orange">
-              {isGu ? "ઉપર પાછા જાઓ" : "Back to top"}
-              <ArrowUpRight className="h-3 w-3" />
-            </a>
-          </div>
+            <a href="#disclaimer">{isGu ? "ડિસક્લેમર (અસ્વીકરણ)" : "Disclaimer"}</a>
+            <a href="#top">{isGu ? "ઉપર પાછા જાઓ" : "Back to top"}</a>
+          </span>
         </div>
       </div>
     </footer>

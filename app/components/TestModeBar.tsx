@@ -2,6 +2,7 @@
 
 import { useSyncExternalStore } from "react";
 import { isTestMode } from "../lib/leadClient";
+import Alert from "./ui/Alert";
 
 const subscribe = () => () => {};
 
@@ -10,11 +11,8 @@ export default function TestModeBar() {
   const testMode = useSyncExternalStore(subscribe, isTestMode, () => false);
   if (!testMode) return null;
   return (
-    <div
-      role="status"
-      className="pointer-events-none fixed inset-x-0 top-0 z-[200] bg-amber-400 py-1 text-center text-[12px] font-bold text-slate-900"
-    >
+    <Alert meaning="waiting" role="status" className="test-bar">
       Test mode: nothing will be stored.
-    </div>
+    </Alert>
   );
 }

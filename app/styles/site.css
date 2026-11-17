@@ -15,3 +15,270 @@
 [id] {
   scroll-margin-top: 88px;
 }
+
+/* ---------- Icons ---------- */
+/* The four social glyphs of the footer are filled marks. */
+.ico.ico-fill {
+  fill: currentColor;
+  stroke: none;
+}
+
+/* ---------- Header ---------- */
+/* On the offer page the solid header stays fixed to the top. On other pages it keeps its place in the flow. */
+.site-header.is-fixed {
+  position: fixed;
+}
+.site-header .brand {
+  display: flex;
+  align-items: center;
+  min-height: var(--touch-min);
+}
+.site-header .logo {
+  width: auto;
+}
+.site-header .logo-on-light,
+.site-header.is-solid .logo-on-dark {
+  display: none;
+}
+.site-header.is-solid .logo-on-light {
+  display: block;
+}
+.site-header.is-solid .menu-btn {
+  background: var(--secondary);
+  border-color: var(--border);
+}
+.site-header .menu-btn {
+  position: relative;
+  cursor: pointer;
+}
+.site-header .menu-btn::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+}
+
+/* The language switch: real buttons that look like the drawn spans, with a 44px pressable area. */
+.lang button {
+  position: relative;
+  padding: 6px 12px;
+  border: 0;
+  border-radius: var(--corner-full);
+  background: none;
+  cursor: pointer;
+}
+.lang button::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: var(--touch-min);
+  transform: translateY(-50%);
+}
+.lang button:first-child::after {
+  left: -6px;
+}
+.lang button:last-child::after {
+  right: -6px;
+}
+
+/* The phone menu, a bottom sheet. */
+.menu-links {
+  display: grid;
+}
+.menu-links a {
+  display: flex;
+  align-items: center;
+  min-height: var(--touch-min);
+  border-bottom: 1px solid var(--border);
+  font-weight: 500;
+}
+.menu-tel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: var(--touch-min);
+  font-weight: 600;
+}
+
+/* ---------- What you get ---------- */
+/* Each item of the index is a button that fills its row or pill. */
+.index-list li button {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+/* The product photos are wide shots with the part in the middle. */
+.disc img {
+  object-position: 50% 50%;
+}
+
+/* ---------- Logo wall ---------- */
+.logo-wall img {
+  width: auto;
+  height: auto;
+}
+
+/* ---------- Rising steps ---------- */
+.rise .stop-sun-core {
+  stop-color: var(--sun-core);
+}
+.rise .stop-sun {
+  stop-color: var(--sun);
+}
+.rise .stop-sun-edge {
+  stop-color: var(--sun-edge);
+}
+.rise .stop-brand-top {
+  stop-color: var(--brand);
+  stop-opacity: 0.1;
+}
+.rise .stop-brand-bottom {
+  stop-color: var(--brand);
+  stop-opacity: 0;
+}
+.rise .sun-n {
+  font: 400 22px var(--font-display);
+  fill: var(--sun-foreground);
+}
+
+/* ---------- Reviews ---------- */
+.rev-g .rating {
+  margin-top: 26px;
+}
+.rev-g .h-sub {
+  margin-top: 38px;
+}
+.rev-g p.muted {
+  margin-top: 18px;
+}
+.who .link {
+  display: flex;
+  width: fit-content;
+  margin-top: 2px;
+}
+
+/* ---------- FAQ ---------- */
+.faq-g p.muted {
+  margin-top: 20px;
+}
+.talk .btn {
+  margin-top: 14px;
+  height: 46px;
+}
+.acc .qh {
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  text-align: left;
+}
+.acc .row.is-open .ans {
+  animation: sol-acc-open var(--dur-base) var(--ease-out);
+}
+@keyframes sol-acc-open {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+/* ---------- Footer ---------- */
+.site-footer .logo {
+  width: auto;
+}
+.ft-badges {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: 18px;
+}
+.ft-badges .mn {
+  margin-top: 0;
+}
+.ft-bse {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: var(--corner-full);
+  background: var(--paper);
+}
+.ft-bse img {
+  width: auto;
+  height: 32px;
+}
+.ft-social {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+/* Icon buttons on the dark ground, drawn like the on-dark button. */
+.site-footer .ft-social .icon-btn {
+  display: inline-grid;
+  padding: 0;
+  background: transparent;
+  border-color: var(--glass-edge);
+  color: var(--on-dark);
+}
+.site-footer .ft-social .icon-btn:hover {
+  background: var(--glass-2);
+}
+.site-footer .ft-line {
+  display: block;
+  padding: 4px 0;
+}
+.cp-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+/* ---------- Test mode ---------- */
+.test-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--z-toast);
+  justify-content: center;
+  border-radius: 0;
+  pointer-events: none;
+}
+
+/* ---------- Phones: 44px pressable areas ---------- */
+@media (max-width: 1119px) {
+  .index-list li {
+    position: relative;
+    padding: 0;
+  }
+  .index-list li button {
+    padding: 0 14px;
+  }
+  .index-list li::before {
+    content: "";
+    position: absolute;
+    inset: -3px 0;
+  }
+}
+@media (max-width: 767px) {
+  .site-footer .g a,
+  .cp-links a,
+  .who .link {
+    display: flex;
+    align-items: center;
+    min-height: var(--touch-min);
+  }
+  .site-footer .ft-social .icon-btn {
+    display: inline-grid;
+  }
+}

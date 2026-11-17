@@ -1,18 +1,18 @@
 import type { Metadata } from "next";
 
-import Faq from "./components/Faq";
-import FinalCta from "./components/FinalCta";
+import ClosingCta from "./components/ClosingCta";
+import ComponentExplorer from "./components/ComponentExplorer";
+import FaqSection from "./components/FaqSection";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
 import Hero from "./components/Hero";
-import HowItWorks from "./components/HowItWorks";
-import Institutions from "./components/Institutions";
-import MobileCta from "./components/MobileCta";
-import ProductSection from "./components/ProductSection";
-import SixPillars from "./components/SixPillars";
-import Testimonials from "./components/Testimonials";
+import LogoWall from "./components/LogoWall";
+import PhoneDock from "./components/PhoneDock";
+import Reviews from "./components/Reviews";
+import RisingSteps from "./components/RisingSteps";
+import SixRays from "./components/SixRays";
+import StatsBand from "./components/StatsBand";
 import TestModeBar from "./components/TestModeBar";
-import TrustStrip from "./components/TrustStrip";
 import { FAQS } from "./lib/content";
 
 export const metadata: Metadata = {
@@ -38,18 +38,17 @@ export default function Page() {
       <Header />
       <main>
         <Hero />
-
-        <TrustStrip />
-        <ProductSection />
-        <Institutions />
-        <SixPillars />
-        <HowItWorks />
-        <Testimonials />
-        <Faq />
-        <FinalCta />
+        <StatsBand />
+        <ComponentExplorer />
+        <LogoWall />
+        <SixRays />
+        <RisingSteps />
+        <Reviews />
+        <FaqSection />
+        <ClosingCta />
       </main>
       <Footer />
-      <MobileCta />
+      <PhoneDock />
       <TestModeBar />
       <script
         type="application/ld+json"

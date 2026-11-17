@@ -1,0 +1,76 @@
+"use client";
+
+import { ArrowRight, Check, Phone } from "lucide-react";
+import { HERO_PRICE, PRICING, inr, site } from "../lib/content";
+import { useLanguage } from "../lib/language";
+import Button from "./ui/Button";
+
+/** The closing screen: the question, the facts, the two actions and the sun with the effective cost. */
+export default function ClosingCta() {
+  const { isGu } = useLanguage();
+  const subsidy = PRICING.centralSubsidy + PRICING.stateSubsidy;
+  const pills = isGu
+    ? ["2.18 kW", `સિસ્ટમનું મૂલ્ય ${inr(PRICING.systemValue)}`, `પાત્ર સબસિડી* ${inr(subsidy)}`, "5 વર્ષનો વીમો"]
+    : ["2.18 kW", `${inr(PRICING.systemValue)} system value`, `${inr(subsidy)} eligible subsidy*`, "5-year insurance"];
+  const ticks = isGu
+    ? ["ચુકવણી કરો અને બદલામાં 100% સબસિડી મેળવો", "5 વર્ષનો વીમો મફત", "અમારી પોતાની ટીમ દ્વારા ઇન્સ્ટોલેશન"]
+    : ["Pay & get 100% subsidy in return", "5-year insurance free", "Installed by our own team"];
+
+  return (
+    <section className="closing on-dark">
+      <div className="halo" aria-hidden="true" />
+      <div className="glow" aria-hidden="true" />
+      <div className="in">
+        <div className="eyebrow">{isGu ? "PM સૂર્ય ઘર · ગુજરાતના ઘરો" : "PM Surya Ghar · Gujarat homes"}</div>
+        {isGu ? (
+          <h2>
+            તમારી છત તૈયાર છે.
+            <br />
+            શું તમે તૈયાર છો?
+          </h2>
+        ) : (
+          <h2>
+            Your roof is ready.
+            <br />
+            Are you?
+          </h2>
+        )}
+        <div className="pill-row">
+          {pills.map((pill) => (
+            <span key={pill}>{pill}</span>
+          ))}
+        </div>
+        <div className="tick-row">
+          {ticks.map((tick) => (
+            <span key={tick}>
+              <Check className="ico" aria-hidden="true" />
+              {tick}
+            </span>
+          ))}
+        </div>
+        <div className="cta">
+          <Button variant="sun" size="lg" href="/book">
+            {isGu ? "₹0* માં બુક કરો" : "Book at ₹0*"}
+            <ArrowRight className="ico" aria-hidden="true" />
+          </Button>
+          <Button variant="on-dark" size="lg" href={site.phoneHref}>
+            <Phone className="ico" aria-hidden="true" /> {site.phoneDisplay}
+          </Button>
+        </div>
+        <div className="nt">
+          {isGu
+            ? `*કુલ ${inr(subsidy)} સબસિડી મળ્યા પછી. ચુકવણી કરો અને બદલામાં 100% સબસિડી મેળવો.`
+            : `*After ${inr(subsidy)} total subsidy. Pay & get 100% subsidy in return.`}
+        </div>
+      </div>
+      <div className="sun">
+        <small>{isGu ? "અસરકારક ખર્ચ" : "Effective cost"}</small>
+        <b>
+          {inr(HERO_PRICE)}
+          <sup>*</sup>
+        </b>
+        <small>{isGu ? "ગુજરાતના પાત્ર ઘરો માટે" : "For eligible Gujarat homes"}</small>
+      </div>
+    </section>
+  );
+}

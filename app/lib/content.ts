@@ -432,7 +432,6 @@ export const TESTIMONIALS = [
     guSystem: "3 kW સોલેરિયમ સોલર સિસ્ટમ",
     rating: 5,
     reviewUrl: "https://www.google.com/maps/contrib/106552496677713033949/reviews?hl=en-IN",
-    avatarColor: "#0A4D8C",
     photos: ["/images/solar-panels.webp", "/images/solar-inverter-installation.webp"],
     quote:
       "I had 3kW solar panels from Solarium Green Energy installed 10 months ago. My experience has been absolutely fantastic. My electricity bill has become negligible. The installation was completed very quickly, and the support team is extremely helpful. If you are looking for a reliable and high-efficiency solar system, this is an excellent choice.",
@@ -454,7 +453,6 @@ export const TESTIMONIALS = [
     guSystem: "સોલેરિયમ સોલર + 5 વર્ષનો વીમો",
     rating: 5,
     reviewUrl: "https://www.google.com/maps/contrib/111887772841502566003/reviews?hl=en-IN",
-    avatarColor: "#D97724",
     photos: ["/images/solar-monitoring-app.webp", "/images/solar-net-meter-kit.webp"],
     quote:
       "I purchased solar insurance through Solarium, and my claim experience was very smooth. The insurance team was highly responsive, and the entire process was completed on time without any hassle. The service felt reliable, and overall I am very satisfied. I would definitely recommend Solarium.",
@@ -476,7 +474,6 @@ export const TESTIMONIALS = [
     guSystem: "4.4 kW સોલેરિયમ સોલર સિસ્ટમ",
     rating: 5,
     reviewUrl: "https://www.google.com/maps/contrib/104149512153706818945/reviews?hl=en-IN",
-    avatarColor: "#1E7E45",
     photos: ["/images/solar-mounting-kit.webp", "/images/home-solar.png"],
     quote:
       "I have installed a 4.4 kW solar panel from a solarium company. My experience is very good. After talking to the company, solar installation was completed at my home within 20 days. The quality and durability of the solar panel is very good, all the material required to install the solar was of good quality and good.",
