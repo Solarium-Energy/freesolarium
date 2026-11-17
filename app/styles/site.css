@@ -544,3 +544,25 @@ html:lang(gu) .hero h1 {
     min-height: var(--touch-min);
   }
 }
+
+/* ---------- File upload ---------- */
+/* The drop zone is a button: the whole zone opens the file dialog. */
+button.upload {
+  width: 100%;
+  cursor: pointer;
+}
+button.upload:hover {
+  border-color: var(--ring);
+  background: var(--accent);
+}
+.file-row .file-meta {
+  min-width: 0;
+}
+.file-row .file-meta b {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+html:lang(gu) .file-row span.s {
+  font-size: 13px;
+}

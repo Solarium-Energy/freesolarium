@@ -11,6 +11,7 @@ type Props = {
   onClick?: MouseEventHandler<HTMLButtonElement>;
   "aria-expanded"?: boolean;
   "aria-controls"?: string;
+  "aria-describedby"?: string;
 };
 
 /** A round button that holds one icon. Use the large size (44px) wherever a finger presses it. */
