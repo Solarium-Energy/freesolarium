@@ -62,6 +62,7 @@ export async function POST(request: Request) {
   const referralIn = asObject(body.referral);
   const referral: Out = {};
   text(referralIn, "name", 120, referral, errors, "referral.name");
+  text(referralIn, "code", 40, referral, errors, "referral.code");
   phone(referralIn, "phone", referral, errors, "referral.phone", false);
 
   const documentsIn = Array.isArray(body.documents) ? body.documents : [];

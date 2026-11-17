@@ -294,6 +294,7 @@ const FIELD_INPUTS: Record<string, keyof FormState> = {
   "order.shadow_free_width": "shadowWidth",
   "order.remarks": "remarks",
   "referral.name": "referralPartner",
+  "referral.code": "referralNo",
   "referral.phone": "referralNo",
 };
 
@@ -495,13 +496,10 @@ export default function BookPage() {
         failed = upload.failed;
       }
 
-      const referralRaw = form.referralNo.trim();
-      const referralPhone = cleanPhone(referralRaw).length === 10 ? cleanPhone(referralRaw) : "";
-      // The referral number is a reference, not a phone: until the CRM has a field
-      // for it, it goes on the first line of the remarks.
-      const remarks = [referralRaw && !referralPhone ? `Referral No.: ${referralRaw}` : "", form.remarks.trim()]
-        .filter(Boolean)
-        .join("\n");
+      // "Referral No." always goes as the referral code, and also as the phone when it is a mobile number.
+      const referralCode = form.referralNo.trim();
+      const referralDigits = cleanPhone(referralCode);
+      const referralPhone = referralDigits.length === 10 ? referralDigits : "";
 
       const result = await postJson("/api/order", {
         submission_id: submissionId,
@@ -519,9 +517,9 @@ export default function BookPage() {
           name_matches_bank: form.nameSame === "Yes" ? true : form.nameSame === "No" ? false : undefined,
           shadow_free_length: toNumber(form.shadowLength),
           shadow_free_width: toNumber(form.shadowWidth),
-          remarks,
+          remarks: form.remarks.trim(),
         },
-        referral: { name: form.referralPartner.trim(), phone: referralPhone },
+        referral: { name: form.referralPartner.trim(), code: referralCode, phone: referralPhone },
         documents: chosen.flatMap((key) => {
           const doc = uploadedRef.current[key];
           return doc ? [doc] : [];
@@ -680,6 +678,7 @@ export default function BookPage() {
                     id="referralNo"
                     className={inputCls}
                     placeholder={isGu ? "ઉદા. SOL-REF-001" : "e.g. SOL-REF-001"}
+                    maxLength={40}
                     value={form.referralNo}
                     onChange={(e) => set("referralNo", e.target.value)}
                   />
