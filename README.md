@@ -34,7 +34,11 @@ app/
     content.ts                All copy, pricing, contact details, FAQs
     language.tsx              English and Gujarati switch
     quotation.ts              Quotation prices, options and calculation
-    quotationPdf.ts           Quotation PDF
+    quotationPdf.ts           Quotation PDF, browser side (fonts, logo, canvas, PDF)
+    pdf/
+      pdfTheme.ts             PDF colours, type and sizes, copied from the tokens
+      pdfParts.ts             Document parts of the PDF
+      quotation218.ts         What the 2.18 kW quotation contains
     leadClient.ts             Sends the forms to the site's server routes
     legal.ts                  Privacy policy and terms of service text
   components/
@@ -67,8 +71,10 @@ public/
   clients/                    Client marks for the logo wall
 scripts/
   solarium_check.mjs          Design rule checker (npm run check:design)
+  check_pdf_theme.mjs         Checks the PDF's colours against the tokens (part of check:design)
 docs/
   design_rules_v2.md          The design rules
+  quotation_pdf.md            How the quotation PDF is built from its parts
 ```
 
 Institution names are rendered as text pills rather than client logos: the supplied logo files were too small to use legibly on a single page.
