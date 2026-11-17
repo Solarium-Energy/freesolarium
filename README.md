@@ -61,10 +61,10 @@ These values came from the client brief or the existing Solarium site. Anything 
 4. **Ranking claim** — the footer retains `[SOURCE AND DATE]` for the “#1 in Gujarat” claim. Replace or remove it.
 5. **Legal** — the footer links Privacy to `https://solariumenergy.in/privacy-policy/` and Disclaimer to the on-page disclaimer note. The main site has no Terms page, so no Terms link is included. Add CIN and registered address if the client wants them in the footer.
 6. **Phone / WhatsApp** — uses the existing toll-free number `80030 80020` (`+91 80030 80020` for WhatsApp). Confirm WhatsApp is enabled on this number, or update `site.whatsappNumber`.
-7. **Order handling** — `app/api/order/route.ts` writes each order to `.uploads/orders.jsonl` and stores uploaded documents under `.uploads/<booking-id>/`. This is a local fallback so no lead is lost during hand-off.
-   - Connect it to the Solarium CRM / email service before going live.
-   - On serverless hosts (e.g. Vercel) the filesystem is ephemeral — use object storage or a CRM webhook instead.
-   - `.uploads/` is gitignored.
+7. **Order handling**: the quotation card and the booking form send each lead to the Solarium CRM through the site's server routes (`/api/quote`, `/api/order/upload-links`, `/api/order`). The site keeps no copy.
+   - Documents upload from the browser straight into the CRM's storage through one-time links.
+   - Environment variables: `CRM_INTAKE_URL` and `CRM_INTAKE_KEY` (server only), `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (browser).
+   - Without the two CRM variables, development skips the call and production shows the visitor an error instead of a confirmation.
 
 ## Notes
 

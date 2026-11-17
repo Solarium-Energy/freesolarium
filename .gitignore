@@ -27,6 +27,3 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-
-# local order submissions (see app/api/order/route.ts)
-/.uploads
