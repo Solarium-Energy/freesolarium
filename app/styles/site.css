@@ -255,8 +255,218 @@
   pointer-events: none;
 }
 
-/* ---------- Phones: 44px pressable areas ---------- */
+/* ---------- Hero ---------- */
+/* The one motion of the page: the sun and its glow rise and fade in when the page opens. */
+@keyframes sol-sun-rise {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+}
+.hero .sun,
+.hero .glow {
+  animation: sol-sun-rise var(--dur-rise) var(--ease-out) both;
+}
+.hero .flank div > span {
+  display: block;
+}
+.hero .incta .lk {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--touch-min);
+}
+
+/* Links to /#quotation bring the bar into view under the header at every width. */
+.quote-anchor {
+  display: block;
+  height: 0;
+}
+.quote-anchor[id] {
+  scroll-margin-top: 232px;
+}
+
+/* ---------- Quotation bar ---------- */
+.qbar .seg button {
+  position: relative;
+  flex: 1;
+  padding: 6px 0;
+  text-align: center;
+}
+.qbar .seg button::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: var(--touch-min);
+  transform: translateY(-50%);
+}
+/* A native select covers the whole cell. The drawn value and caret show the choice. */
+.q-pick {
+  position: relative;
+}
+.q-pick .v span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.q-pick .q-select {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  opacity: 0;
+  appearance: none;
+  font: inherit;
+  cursor: pointer;
+}
+.q-pick:has(.q-select:focus-visible) {
+  outline: 2px solid var(--ring);
+  outline-offset: -2px;
+  border-radius: var(--corner-sm);
+}
+.qbar .sum .pay-note {
+  font: 600 15px/1.3 var(--font-sans);
+  letter-spacing: 0;
+}
+
+/* ---------- Sheet ---------- */
+@keyframes sol-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes sol-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes sol-sheet-in-right {
+  from {
+    transform: translateX(100%);
+  }
+}
+@keyframes sol-sheet-out-right {
+  to {
+    transform: translateX(100%);
+  }
+}
+@keyframes sol-sheet-in-bottom {
+  from {
+    transform: translateY(100%);
+  }
+}
+@keyframes sol-sheet-out-bottom {
+  to {
+    transform: translateY(100%);
+  }
+}
+.sheet-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-overlay);
+  animation: sol-fade-in var(--dur-base) var(--ease-out);
+}
+.sheet-scrim.is-closing {
+  animation: sol-fade-out var(--dur-base) var(--ease-out) forwards;
+}
+.sheet.is-floating {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: var(--z-modal);
+  animation: sol-sheet-in-right var(--dur-base) var(--ease-out);
+}
+.sheet.is-floating.is-closing {
+  animation: sol-sheet-out-right var(--dur-base) var(--ease-out) forwards;
+}
+.sheet.is-floating.sheet-bottom {
+  top: auto;
+  left: 0;
+  max-height: 92vh;
+  animation-name: sol-sheet-in-bottom;
+}
+.sheet.is-floating.sheet-bottom.is-closing {
+  animation-name: sol-sheet-out-bottom;
+}
+.sheet.is-floating .bd {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+.sheet footer {
+  flex-wrap: wrap;
+}
+
+/* The quotation in the sheet. */
+.q-details,
+.q-quote,
+.q-pay {
+  display: grid;
+  gap: 14px;
+}
+.q-quote .fine {
+  margin-top: 0;
+}
+.q-pay h4 {
+  margin-top: 8px;
+  font: 600 15px/1.3 var(--font-sans);
+}
+.q-modes {
+  display: grid;
+  gap: 8px;
+}
+.choice {
+  width: 100%;
+  text-align: left;
+}
+.kv-note,
+.pt-note {
+  display: block;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--muted-foreground);
+}
+.price-table td:first-child {
+  padding-right: 16px;
+}
+.price-table tr.is-sum td {
+  font-weight: 600;
+}
+.alert a {
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ---------- Gujarati ---------- */
+/* Nothing below 13px in Gujarati. */
+html:lang(gu) :is(.label, .help, .error-text, .qbar label, .dock small, .hero .proof, .hero .hnote, .logo-wall div, .fine, .closing .nt, .site-footer .ds, .steps .when, .tag, .kv-note, .pt-note) {
+  font-size: 13px;
+}
+/* Gujarati letters carry marks above and below: no tight tracking, room between the lines of a headline. */
+html:lang(gu) :is(.hero h1, .h-sec, .h-sub, .closing h2, .detail h3, .rays-six h3, .steps h3, .acc .qh, .sheet header h3, .result h2) {
+  letter-spacing: 0;
+  line-height: 1.25;
+}
+html:lang(gu) :is(.hero .price, .closing .sun b, .qbar .sum .pay, .dock b, .bracket b, .hero .flank b, .hero .proof b, .q-lead, .talk .num, .site-footer .big, .rating .big) {
+  letter-spacing: 0;
+}
+/* The Gujarati headline is longer and keeps the price inside it: it steps down so it never runs into the sun. */
+html:lang(gu) .hero h1 {
+  font-size: 64px;
+}
+
+/* ---------- Tablets and phones ---------- */
 @media (max-width: 1119px) {
+  .quote-anchor[id] {
+    scroll-margin-top: 312px;
+  }
+  html:lang(gu) .hero h1 {
+    font-size: 56px;
+  }
   .index-list li {
     position: relative;
     padding: 0;
@@ -271,6 +481,15 @@
   }
 }
 @media (max-width: 767px) {
+  .quote-anchor[id] {
+    scroll-margin-top: 88px;
+  }
+  html:lang(gu) .hero h1 {
+    font-size: 48px;
+  }
+  html:lang(gu) .hero .meta {
+    font-size: 13px;
+  }
   .site-footer .g a,
   .cp-links a,
   .who .link {

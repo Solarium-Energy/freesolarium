@@ -114,7 +114,7 @@ export default function Header() {
 
       <Sheet
         state={menu.state}
-        onClose={menu.hide}
+        onClose={() => menu.hide()}
         titleId="site-menu-title"
         title={menuLabel}
         closeLabel={isGu ? "બંધ કરો" : "Close"}
@@ -123,7 +123,7 @@ export default function Header() {
       >
         <nav className="menu-links" aria-label="Primary">
           {NAV.map((item) => (
-            <Link key={item.href} href={item.href} onClick={menu.hide}>
+            <Link key={item.href} href={item.href} onClick={() => menu.hide()}>
               {isGu ? item.guLabel : item.label}
             </Link>
           ))}
@@ -131,7 +131,7 @@ export default function Header() {
         <a className="menu-tel" href={site.phoneHref}>
           <Phone className="ico" aria-hidden="true" /> {site.phoneDisplay}
         </a>
-        <BookButton block onClick={menu.hide} />
+        <BookButton block onClick={() => menu.hide()} />
       </Sheet>
     </>
   );

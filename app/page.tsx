@@ -5,9 +5,10 @@ import ComponentExplorer from "./components/ComponentExplorer";
 import FaqSection from "./components/FaqSection";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
-import Hero from "./components/Hero";
+import Hero, { PhoneQuotationBar } from "./components/Hero";
 import LogoWall from "./components/LogoWall";
 import PhoneDock from "./components/PhoneDock";
+import QuotationProvider from "./components/quotation/QuotationProvider";
 import Reviews from "./components/Reviews";
 import RisingSteps from "./components/RisingSteps";
 import SixRays from "./components/SixRays";
@@ -37,8 +38,14 @@ export default function Page() {
     <>
       <Header />
       <main>
-        <Hero />
-        <StatsBand />
+        <QuotationProvider>
+          <Hero />
+          {/* Links to /#quotation land here, with the bar in view at every width. */}
+          <span id="quotation" className="quote-anchor" />
+          <StatsBand>
+            <PhoneQuotationBar />
+          </StatsBand>
+        </QuotationProvider>
         <ComponentExplorer />
         <LogoWall />
         <SixRays />

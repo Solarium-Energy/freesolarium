@@ -28,11 +28,15 @@ export function useSheet() {
     setState("open");
   }, []);
 
-  const hide = useCallback(() => {
+  /** onClosed runs once the sheet has left the page. */
+  const hide = useCallback((onClosed?: () => void) => {
     window.clearTimeout(timer.current);
     setState((current) => (current === "closed" ? current : "closing"));
     const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    timer.current = window.setTimeout(() => setState("closed"), still ? 0 : MOTION_MS);
+    timer.current = window.setTimeout(() => {
+      setState("closed");
+      if (typeof onClosed === "function") onClosed();
+    }, still ? 0 : MOTION_MS);
   }, []);
 
   useEffect(() => () => window.clearTimeout(timer.current), []);
@@ -139,7 +143,7 @@ function SheetPanel({
     return () => {
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = overflow;
-      if (opener?.isConnected) opener.focus();
+      if (opener?.isConnected) opener.focus({ preventScroll: true });
     };
   }, []);
 
@@ -155,7 +159,7 @@ function SheetPanel({
 
   return (
     <>
-      <div className={cx("scrim sheet-scrim", closing && "is-closing")} onClick={onClose} aria-hidden="true" />
+      <div className={cx("scrim sheet-scrim", closing && "is-closing")} onClick={() => onClose()} aria-hidden="true" />
       <div
         ref={panelRef}
         className={cx("sheet is-floating", fromBottom && "sheet-bottom", closing && "is-closing", className)}
@@ -171,7 +175,7 @@ function SheetPanel({
               {title}
             </h3>
           </div>
-          <IconButton label={closeLabel} size="lg" onClick={onClose}>
+          <IconButton label={closeLabel} size="lg" onClick={() => onClose()}>
             <X className="ico" aria-hidden="true" />
           </IconButton>
         </header>
