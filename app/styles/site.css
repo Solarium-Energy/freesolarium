@@ -686,6 +686,14 @@ html:lang(gu) .file-row span.s {
   }
 }
 
+/* Below 1200 wide there is no room beside the sun for the hero's side texts, even at the page's edges:
+   they are hidden, as the stylesheet does below 1120. */
+@media (min-width: 1120px) and (max-width: 1199px) {
+  .hero .flank {
+    display: none;
+  }
+}
+
 /* ---------- Category control in Gujarati ---------- */
 /* "સામાન્ય (General)" is much longer than "SC / ST": each label sizes its own segment, with 10px of room on each side. */
 html:lang(gu) .qbar .seg button {
