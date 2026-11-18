@@ -176,9 +176,17 @@
 /* A photo of several parts side by side is shown whole: fitted by its width to 89% of the circle (a 2 to 1
    picture just fits it there) and in the middle. Behind it the same photo fills the circle, enlarged and
    blurred, so there are no empty bands and no new colour. Its upper and lower edge fade out. */
+/* The backing is a soft ground with no shape left to recognise: blurred by 40px, in a box 2.2 times the
+   circle's size, so the faded edge of the blur lies well outside the circle at every size of disc. */
 .ph.is-whole .bg {
-  filter: blur(14px);
-  transform: scale(1.4);
+  position: absolute;
+  left: -60%;
+  top: -60%;
+  width: 220%;
+  max-width: none;
+  height: 220%;
+  border-radius: 0;
+  filter: blur(40px);
 }
 .ph.is-whole .fg {
   position: absolute;
@@ -232,6 +240,14 @@
   }
   .details > .detail:not(.is-on) {
     visibility: visible;
+  }
+  /* Each card is as tall as its own text: the panels' and the inverter's facts stay on larger screens. The
+     row is as tall as its tallest card, so the pager under it never moves. */
+  .details {
+    align-items: flex-start;
+  }
+  .details > .detail .specs {
+    display: none;
   }
   .detail .mini {
     display: block;
@@ -468,15 +484,22 @@
   line-height: 1.35;
   white-space: nowrap;
 }
+/* The picture of the rays is 1440 wide by design. The stylesheet keeps pictures inside their box
+   (max-width: 100%), which squeezed it on every screen narrower than 1440: it keeps its full size, and the
+   hero clips what leaves it. */
+.hero .rays {
+  max-width: none;
+}
 @media (max-width: 767px) {
   /* The rays of the phone's sun: the drawing is made for a sun of radius 380 with its middle at 720, 718 of
      1440 by 900. Here it is shown at 215 / 380 of that size, with that point on the middle of the phone's
-     sun (50% and 545px). The hero clips what leaves it. */
+     sun (50% less 1px, and 545px). The hero clips what leaves it. */
   .hero .rays {
     display: block;
     width: calc(1440px * 215 / 380);
     height: calc(900px * 215 / 380);
-    margin-left: calc(-720px * 215 / 380);
+    /* The phone's sun sits 1px left of the middle (its margin is -216px for a width of 430px). */
+    margin-left: calc(-720px * 215 / 380 - 1px);
     top: calc(545px - 718px * 215 / 380);
   }
 }

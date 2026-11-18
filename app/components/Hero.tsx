@@ -23,7 +23,8 @@ const RIGHT_POINTS: Point[] = [
 /* Under the price on a phone: the rating and these two. */
 const PHONE_POINTS: Point[] = [
   { b: "5-year", s: "insurance", guB: "5 વર્ષનો", guS: "વીમો" },
-  { b: "100%* subsidy", s: "in return", guB: "100%* સબસિડી", guS: "(યોજનાના નિયમો મુજબ)" },
+  // The column is narrow on a phone: the figure alone is the bold line, so the point keeps two lines.
+  { b: "100%*", s: "subsidy in return", guB: "100%*", guS: "સબસિડી પાછી" },
 ];
 
 /* Seven rays, as in the logo, 26 degrees apart. */
