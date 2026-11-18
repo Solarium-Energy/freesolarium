@@ -307,7 +307,8 @@ export function DocHeader(doc: Doc, content: DocHeaderContent) {
   doc.y = y + height + 1;
 }
 
-export type Field = { label: string; value: string; span?: number };
+/** A label and a value written on a line. `plain` writes the label alone, as text, with no line. */
+export type Field = { label: string; value: string; span?: number; plain?: boolean };
 
 /** Rows of a label and a written value on a line, one or more fields per row. */
 export function FieldRows(doc: Doc, rows: Field[][], options: { rowHeight?: number; space?: number } = {}) {
@@ -320,7 +321,8 @@ export function FieldRows(doc: Doc, rows: Field[][], options: { rowHeight?: numb
     let fx = x;
     for (const field of row) {
       const fieldWidth = (available * (field.span ?? 1)) / spans;
-      fieldLine(ctx, field.label, field.value, fx, fieldWidth, doc.y + 16);
+      if (field.plain) drawText(ctx, field.label, fx, doc.y + 16, "label", "muted-foreground");
+      else fieldLine(ctx, field.label, field.value, fx, fieldWidth, doc.y + 16);
       fx += fieldWidth + space;
     }
     doc.y += rowHeight;
@@ -603,4 +605,209 @@ export function StatBand(doc: Doc, content: { stats: { value: string; caption: s
     drawText(ctx, stat.caption, sx + statWidth / 2, top + 43, "small", "on-dark-muted", "center");
   });
   doc.y = top + height;
+}
+
+/* ---------- Parts of a generated document: made for a screen, nothing to fill in by hand ---------- */
+
+export type AmountRow = { label: string; note?: string; amount: string; tone?: "plain" | "less" | "strong" };
+
+const amountRowHeight = (row: AmountRow) => (row.note ? 34 : 24);
+
+/** Rows of a label, with a fine note under it, and an amount on the right. Returns the height drawn. */
+function amountRows(doc: Doc, rows: AmountRow[], top: number, ink: PdfColor, soft: PdfColor) {
+  const { ctx, x, width } = doc;
+  let y = top;
+  rows.forEach((row, index) => {
+    if (index > 0) hline(ctx, x + 10, x + width - 10, y, "border");
+    const strong = row.tone === "strong";
+    const amountWidth = measure(ctx, row.amount, "value") + 16;
+    drawText(ctx, fitText(ctx, row.label, strong ? "labelStrong" : "body", width - 20 - amountWidth), x + 10, y + 16, strong ? "labelStrong" : "body", ink);
+    if (row.note) drawText(ctx, row.note, x + 10, y + 28, "small", soft);
+    const tone: PdfColor = row.tone === "less" ? "status-positive-fg" : ink;
+    drawText(ctx, row.amount, x + width - 10, y + 16, "value", tone, "right");
+    y += amountRowHeight(row);
+  });
+  return y - top;
+}
+
+/**
+ * A titled block of amounts. `positive` draws it on the positive ground (`status-positive-bg`, text in
+ * `status-positive-fg`), for money that comes back: its title says what it is, the colour only supports it.
+ * A footnote stands under the rows, inside the block.
+ */
+export function AmountBlock(doc: Doc, content: { title: string; rows: AmountRow[]; footnote?: string; positive?: boolean }) {
+  const { ctx, x, width } = doc;
+  const top = doc.y;
+  const positive = Boolean(content.positive);
+  const ink: PdfColor = positive ? "status-positive-fg" : "foreground";
+  const soft: PdfColor = positive ? "status-positive-fg" : "muted-foreground";
+  const rowsHeight = content.rows.reduce((sum, row) => sum + amountRowHeight(row), 0);
+  const footHeight = content.footnote ? 22 : 0;
+  const height = 26 + rowsHeight + footHeight + 4;
+  if (positive) roundedBox(ctx, x, top, width, height, { fill: "status-positive-bg" });
+  titleBar(doc, content.title, undefined, positive ? "status-positive-bg" : "muted", ink, soft);
+  hline(ctx, x, x + width, top + 26, positive ? "status-positive-fg" : "border", positive ? 0.6 : 1);
+  amountRows(doc, content.rows, top + 26, ink, soft);
+  if (content.footnote) {
+    drawText(ctx, fitText(ctx, content.footnote, "small", width - 20), x + 10, top + 26 + rowsHeight + 15, "small", soft);
+  }
+  roundedBox(ctx, x, top, width, height, { stroke: positive ? "status-positive-bg" : "border" });
+  doc.y = top + height;
+}
+
+/** One total row: a label with its note, and the amount in the display face, on `muted` under a strong rule. */
+export function TotalRow(doc: Doc, content: { label: string; note?: string; amount: string }) {
+  const { ctx, x, width } = doc;
+  const top = doc.y;
+  const height = 44;
+  const r = PDF_CORNERS["corner-xs"];
+  roundedBox(ctx, x, top, width, height, { fill: "muted", radii: [0, 0, r, r] });
+  hline(ctx, x, x + width, top, "foreground");
+  drawText(ctx, content.label, x + 10, top + 19, "labelStrong", "foreground");
+  if (content.note) drawText(ctx, content.note, x + 10, top + 33, "small", "muted-foreground");
+  drawText(ctx, content.amount, x + width - 10, top + 30, "figure", "foreground", "right");
+  doc.y = top + height;
+}
+
+/**
+ * The payment terms of the chosen mode: its name on the `selected` ground with a sun bar and a tick, its rows,
+ * the net cost as a total row, and a footnote.
+ */
+export function TermsBlock(
+  doc: Doc,
+  content: { title: string; mode: string; rows: AmountRow[]; total: { label: string; note?: string; amount: string }; footnote: string }
+) {
+  const { ctx, x, width } = doc;
+  const top = doc.y;
+  titleBar(doc, content.title, undefined, "muted", "foreground", "muted-foreground");
+  const modeTop = top + 26;
+  const modeHeight = 28;
+  ctx.fillStyle = PDF_COLORS.selected;
+  ctx.fillRect(x, modeTop, width, modeHeight);
+  ctx.fillStyle = PDF_COLORS.sun;
+  ctx.fillRect(x, modeTop, 3, modeHeight);
+  tickBox(ctx, x + 10, modeTop + 7.5, true);
+  drawText(ctx, fitText(ctx, content.mode, "heading", width - 40), x + 30, modeTop + 18, "heading", "foreground");
+  hline(ctx, x, x + width, modeTop, "border");
+  hline(ctx, x, x + width, modeTop + modeHeight, "border");
+  const rowsHeight = amountRows(doc, content.rows, modeTop + modeHeight, "foreground", "muted-foreground");
+  const totalTop = modeTop + modeHeight + rowsHeight;
+  const sub = area(doc, x, width);
+  sub.y = totalTop;
+  TotalRow(sub, content.total);
+  drawText(ctx, fitText(ctx, content.footnote, "small", width - 20), x + 10, sub.y + 15, "small", "muted-foreground");
+  const height = sub.y + 22 - top;
+  roundedBox(ctx, x, top, width, height, { stroke: "border" });
+  doc.y = top + height;
+}
+
+/**
+ * The payment QR on the left, on a white square with a white margin and its caption under it, the company's
+ * bank details in a table on the right, and a note under both. The QR keeps its own proportions.
+ */
+export function PaymentDetails(
+  doc: Doc,
+  content: { qr: LogoImage | null; qrCaption: string; title: string; rows: readonly { label: string; value: string }[]; note: string }
+) {
+  const { ctx, x, width } = doc;
+  const top = doc.y;
+  const qrSize = 120;
+  const margin = 8;
+  const square = qrSize + 2 * margin;
+  roundedBox(ctx, x, top, square, square, { fill: "card", stroke: "border" });
+  if (content.qr) {
+    const scale = Math.min(qrSize / content.qr.width, qrSize / content.qr.height);
+    const w = content.qr.width * scale;
+    const h = content.qr.height * scale;
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = "high";
+    ctx.drawImage(content.qr.image, x + margin + (qrSize - w) / 2, top + margin + (qrSize - h) / 2, w, h);
+  }
+  drawText(ctx, content.qrCaption, x + square / 2, top + square + 15, "label", "muted-foreground", "center");
+
+  const tx = x + square + 20;
+  const tw = width - square - 20;
+  const table = area(doc, tx, tw);
+  table.y = top;
+  titleBar(table, content.title, undefined, "muted", "foreground", "muted-foreground");
+  const rowHeight = 22;
+  content.rows.forEach((row, index) => {
+    const ry = top + 26 + index * rowHeight;
+    hline(ctx, tx, tx + tw, ry, "border");
+    drawText(ctx, row.label, tx + 10, ry + 15, "label", "muted-foreground");
+    drawText(ctx, fitText(ctx, row.value, "value", tw - 140), tx + 130, ry + 15, "value", "foreground");
+  });
+  const tableHeight = 26 + content.rows.length * rowHeight;
+  roundedBox(ctx, tx, top, tw, tableHeight, { stroke: "border" });
+
+  const blockBottom = Math.max(top + square + 20, top + tableHeight);
+  drawText(ctx, content.note, x, blockBottom + 16, "labelStrong", "foreground");
+  doc.y = blockBottom + 22;
+}
+
+/** A table with a header row and rows whose cells wrap inside their column. Columns take widths by weight. */
+export function DataTable(doc: Doc, content: { columns: { label: string; weight: number }[]; rows: string[][] }) {
+  const { ctx, x, width } = doc;
+  const top = doc.y;
+  const total = content.columns.reduce((sum, column) => sum + column.weight, 0);
+  const widths = content.columns.map((column) => (width * column.weight) / total);
+  const lefts = widths.map((_, index) => x + widths.slice(0, index).reduce((sum, w) => sum + w, 0));
+  const lineHeight = 12;
+  const headHeight = 26;
+  const r = PDF_CORNERS["corner-xs"];
+  roundedBox(ctx, x, top, width, headHeight, { fill: "muted", radii: [r, r, 0, 0] });
+  content.columns.forEach((column, index) => {
+    drawText(ctx, fitText(ctx, column.label, "heading", widths[index] - 16), lefts[index] + 8, top + 17, "heading", "foreground");
+  });
+  let y = top + headHeight;
+  for (const row of content.rows) {
+    const cells = row.map((cell, index) => wrapText(ctx, cell, index === 0 ? "label" : "body", widths[index] - 16));
+    const height = Math.max(24, Math.max(...cells.map((lines) => lines.length)) * lineHeight + 12);
+    hline(ctx, x, x + width, y, "border");
+    cells.forEach((lines, index) => {
+      lines.forEach((line, n) => {
+        drawText(ctx, line, lefts[index] + 8, y + 15.5 + n * lineHeight, index === 0 ? "label" : "body", "foreground");
+      });
+    });
+    y += height;
+  }
+  for (let index = 1; index < content.columns.length; index += 1) vline(ctx, lefts[index], top, y, "border");
+  roundedBox(ctx, x, top, width, y - top, { stroke: "border" });
+  doc.y = y;
+}
+
+/** A small head for a following page: the logo, a title, and reference values on the right. */
+export function PageHeader(doc: Doc, content: { logo: LogoImage | null; fallbackName: string; title: string; refs: { label: string; value: string }[] }) {
+  const { ctx, x, width, y } = doc;
+  const logoHeight = 26;
+  let cursor = x;
+  if (content.logo) {
+    const logoWidth = (content.logo.width / content.logo.height) * logoHeight;
+    ctx.drawImage(content.logo.image, x, y, logoWidth, logoHeight);
+    cursor += logoWidth;
+  } else {
+    drawText(ctx, content.fallbackName, x, y + 20, "figure", "foreground");
+    cursor += measure(ctx, content.fallbackName, "figure");
+  }
+  cursor += 14;
+  vline(ctx, cursor, y + 2, y + logoHeight - 2, "border");
+  cursor += 14;
+  drawText(ctx, content.title, cursor, y + 19, "figure", "foreground");
+  let right = x + width;
+  for (const ref of [...content.refs].reverse()) {
+    drawText(ctx, ref.value, right, y + 17, "value", "brand", "right");
+    right -= measure(ctx, ref.value, "value") + 6;
+    drawText(ctx, ref.label, right, y + 17, "label", "muted-foreground", "right");
+    right -= measure(ctx, ref.label, "label") + 16;
+  }
+  const height = 36;
+  hline(ctx, x, x + width, y + height, "border");
+  doc.y = y + height + 1;
+}
+
+/** A line at the foot of the page, under everything else. */
+export function FootLine(doc: Doc, text: string) {
+  drawText(doc.ctx, text, doc.x + doc.width / 2, doc.bottom, "small", "muted-foreground", "center");
+  // Nothing may be drawn below the line above it.
+  doc.bottom -= 18;
 }

@@ -32,14 +32,15 @@ app/
     site.css                  The site's own rules, tokens only
     motion.css                All motion: the hero's sunrise, rise into view, scroll and touch
   lib/
-    content.ts                All copy, pricing, contact details, FAQs
+    content.ts                All copy, contact details, FAQs
     language.tsx              English and Gujarati switch
     quotation.ts              Quotation prices, options and calculation
-    quotationPdf.ts           Quotation PDF, browser side (fonts, logo, canvas, PDF)
+    quotationPdf.ts           Quotation PDF, browser side (fonts, logo, QR, a canvas per page, PDF)
+    payment.ts                Solarium's payment QR and bank details, shown on the quotation PDF
     pdf/
       pdfTheme.ts             PDF colours, type and sizes, copied from the tokens
       pdfParts.ts             Document parts of the PDF
-      quotation218.ts         What the 2.18 kW quotation contains
+      quotation218.ts         What the 2.18 kW quotation contains, page by page
     leadClient.ts             Sends the forms to the site's server routes
     legal.ts                  Privacy policy and terms of service text
   components/
@@ -69,7 +70,7 @@ app/
   api/order/upload-links/     One-time upload links for the booking form's documents
   api/_lib/                   Request checks and the CRM call, shared by the endpoints
 public/
-  images/                     Hero / product imagery
+  images/                     Hero / product imagery, the payment QR
   clients/                    Client marks for the logo wall
 scripts/
   solarium_check.mjs          Design rule checker (npm run check:design)

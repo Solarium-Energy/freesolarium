@@ -19,6 +19,7 @@ import {
   SYSTEM_PRICE,
   TOTAL_SUBSIDY,
   fmtNum,
+  optionCharge,
   type PaymentMode,
 } from "../../lib/quotation";
 import { generateQuotationPdfBlob } from "../../lib/quotationPdf";
@@ -40,13 +41,6 @@ const MODES: { mode: PaymentMode; title: string }[] = [
 /** Today's date as the quotation shows it. */
 function quoteDate() {
   return new Date().toLocaleDateString("en-IN", { day: "2-digit", month: "2-digit", year: "numeric" });
-}
-
-/** An option's price as today's lists show it: "Included", or the charge that is added. */
-function optionCharge(option: { displayPrice: string; extra: number; isIncluded?: boolean } | undefined) {
-  if (!option) return "-";
-  if (option.isIncluded) return option.displayPrice;
-  return option.extra > 0 ? `+ ${option.displayPrice}` : option.displayPrice;
 }
 
 /** The three steps of the quotation: the bar (done), the details, the quotation. */

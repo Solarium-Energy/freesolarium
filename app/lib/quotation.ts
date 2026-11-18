@@ -58,6 +58,13 @@ export const DISCOM_SHEET_OPTIONS = [
 
 export const fmtNum = (n: number) => Math.round(n).toLocaleString("en-IN");
 
+/** An option's price as the sheet and the PDF show it: "Included", or the charge that is added. */
+export function optionCharge(option: { displayPrice: string; extra: number; isIncluded?: boolean } | undefined) {
+  if (!option) return "-";
+  if (option.isIncluded) return option.displayPrice;
+  return option.extra > 0 ? `+ ${option.displayPrice}` : option.displayPrice;
+}
+
 export function computeQuotationNumbers(floor: string, structureHeight: string, discom: string) {
   const floorCost = FLOOR_SHEET_OPTIONS.find((o) => o.label === floor)?.extra ?? 0;
   const heightCost = HEIGHT_SHEET_OPTIONS.find((o) => o.label === structureHeight)?.extra ?? 0;

@@ -1,30 +1,34 @@
 # Quotation PDF
 
-The quotation a customer downloads from the quotation sheet. It is one A4 page in English, in the Solarium design system, First Light (version 2).
+The quotation a customer downloads from the quotation sheet. It is two A4 pages in English, in the Solarium design system, First Light (version 2). It is generated: nothing on it is filled in by hand and it needs no signature.
+
+- Page 1, the quotation: the header, the customer's fields (name, mobile, PIN code, category, DISCOM, the quote number when the CRM gave one, the date and "Valid for 15 days"), the three option tables, the price in three blocks (what you pay, what comes back to your bank account, the effective cost), the terms of the chosen payment mode, the payment details (Solarium's payment QR and its bank account), and a line at the foot.
+- Page 2, what you get: a small header, the table of what the system includes, the notes, the documents required and the band of four figures.
 
 ## How it is made
 
 Everything happens in the browser, without a PDF library:
 
-1. `app/lib/quotationPdf.ts` waits for the fonts (4 seconds at most) and loads the logo.
-2. It makes a canvas of 794 by 1123 units (A4 at 96 units per inch), drawn at 2.25 times that size.
-3. The quotation is drawn on it from parts, saved as a JPEG, and wrapped into a one-page PDF.
+1. `app/lib/quotationPdf.ts` waits for the fonts (4 seconds at most) and loads the logo and the payment QR.
+2. For each page it makes a canvas of 794 by 1123 units (A4 at 96 units per inch), drawn at 2.25 times that size.
+3. Each page is drawn on its canvas from parts, saved as a JPEG, and the pictures are wrapped into one PDF, a page each.
 
-The entry point is `generateQuotationPdfBlob(data, paymentMode, quoteNo, quoteDate)`.
+The entry point is `generateQuotationPdfBlob(data, paymentMode, quoteNo, quoteDate)`. `quoteNo` is the number the CRM issued, or null: then it is left out. The website never makes one.
 
 | File | What it holds |
 | --- | --- |
 | `app/lib/pdf/pdfTheme.ts` | The only file with raw values: the colours under their token names, the two font stacks, the type styles, corners, page size and margins |
 | `app/lib/pdf/pdfParts.ts` | The document parts and the helpers under them |
-| `app/lib/pdf/quotation218.ts` | What the quotation for the 2.18 kW system contains: the parts in order, with their words and figures |
-| `app/lib/quotationPdf.ts` | The browser side: fonts, logo, canvas, JPEG, PDF |
+| `app/lib/pdf/quotation218.ts` | What the quotation for the 2.18 kW system contains: its two pages, the parts of each in order, with their words and figures |
+| `app/lib/payment.ts` | Solarium's payment QR (`public/images/payment-qr.png`) and its bank details. They are kept there only |
+| `app/lib/quotationPdf.ts` | The browser side: fonts, logo and QR, a canvas per page, JPEG, PDF |
 | `scripts/check_pdf_theme.mjs` | Compares the theme's colours with `app/styles/tokens_v2.css` |
 
 A canvas cannot read CSS variables, so the theme copies the light values of the tokens. `npm run check:design` (and so every build) fails when a colour in the theme differs from its token, or names a token that does not exist.
 
 ## Parts
 
-A part draws at the current position of the document and moves it on by its own height. It takes a document (the context, the left edge, the width, the current `y`) and its own content, and holds no words of its own. The composition is a list of parts with a fixed gap between blocks. After the last part the page is checked: in development a page that runs past the bottom margin throws, and in production it is drawn anyway.
+A part draws at the current position of the document and moves it on by its own height. It takes a document (the context, the left edge, the width, the current `y`) and its own content, and holds no words of its own. The composition is a list of parts with a fixed gap between blocks. After the last part of a page the page is checked: in development a page that runs past the bottom margin throws, and in production it is drawn anyway.
 
 | Part | What it takes |
 | --- | --- |
@@ -38,6 +42,15 @@ A part draws at the current position of the document and moves it on by its own 
 | `CheckList` | A title and tick items, in a row that wraps |
 | `SignatureLines` | Lines to sign on, each with a caption |
 | `StatBand` | A few figures with their captions on a dark band |
+| `AmountBlock` | A title and rows of a label (with a fine note) and an amount. `positive` puts it on the positive ground, for money that comes back |
+| `TotalRow` | One total: a label, a note and the amount in the display face |
+| `TermsBlock` | The terms of the chosen payment mode: its name, its rows, the net cost and a footnote |
+| `PaymentDetails` | The payment QR on a white square with its caption, a table of bank details beside it, and a note under both |
+| `DataTable` | Columns by weight and rows whose cells wrap inside their column |
+| `PageHeader` | A small head for a following page: logo, title, reference values |
+| `FootLine` | A line at the foot of the page |
+
+The parts of the earlier one-page form (`PriceBlock`, `PaymentColumns`, `SignatureLines`) stay in the kit for documents that are filled in by hand.
 
 ## Type
 
@@ -77,6 +90,8 @@ Every colour is the light value of a token.
 | The total row and the net cost row | `muted`, with a 1-unit `foreground` rule above |
 | The eyebrow | text `brand`, with a 5-unit `sun` dot in front |
 | The stat band | `sky-top`, values `on-dark`, captions `on-dark-muted`, dividers `glass-line` |
+| What comes back to the bank account | `status-positive-bg`, text `status-positive-fg` |
+| The square behind the payment QR | `card` with a `border` hairline |
 
 ## Rules of the page
 
@@ -85,8 +100,9 @@ Every colour is the light value of a token.
 - Nothing is smaller than 9 units. A printed page that holds a whole quotation has its own floor. The screen rule of 12 pixels does not fit one page.
 - Sentence case. Names such as DISCOM, UGVCL and BSE keep their capitals. No dash and no exclamation mark.
 - Boxes and blocks have corners of `corner-xs` (8) and a hairline in `border`. A tick box has corners of `corner-3xs` (2).
-- Rows that someone ticks or writes in are at least 24 units high, so the form can be filled in by hand.
-- Margins of 32 on both sides, 12 between blocks, 40 free above the signature lines, at least 28 free under the stat band.
+- Exactly two pages. Nothing is cut short and nothing overlaps.
+- Margins of 32 on both sides, 12 between blocks, at least 28 free under the stat band and the foot line.
+- The payment QR is drawn at 120 units on a white square with a white margin, in its own proportions. It must still scan from the stored page.
 - The logo is used unchanged, with clear space around it.
 
 ## A new quotation

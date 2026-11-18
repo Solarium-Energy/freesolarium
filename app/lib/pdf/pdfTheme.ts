@@ -12,6 +12,7 @@ export const PDF_COLORS = {
   "muted-foreground": "#4A6076",
   "brand": "#034982",
   "status-positive-fg": "#0C5E4E",
+  "status-positive-bg": "#D8F1EA",
   "border": "#D5E1ED",
   "input": "#5B7086",
   "primary": "#022B4E",
