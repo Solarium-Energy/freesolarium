@@ -479,6 +479,22 @@ html.mo .stats .bracket[data-in=""]::before {
 .details[data-moved] > .detail.is-on > :nth-child(5) {
   animation-delay: 240ms;
 }
+/* The chosen photo settles in. All ten are loaded already, so it starts at once. */
+@keyframes mo-photo-in {
+  from {
+    opacity: 0.35;
+    scale: 1.05;
+  }
+}
+html.mo .disc[data-moved] .ph.is-on {
+  animation: mo-photo-in 650ms var(--mo-ease);
+}
+/* On a phone the cards move with the finger: their lines do not come in again as each card passes. */
+@media (max-width: 767px) {
+  .details[data-moved] > .detail.is-on > * {
+    animation: none;
+  }
+}
 
 /* ---------- The quotation bar's menus ---------- */
 /* A menu opens from its cell: it fades in and comes 6px towards its place, up from below or down from above.

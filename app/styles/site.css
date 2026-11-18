@@ -121,6 +121,77 @@
 .disc img {
   object-position: 50% 50%;
 }
+/* The index in two groups: the panels and the inverter, then a note above the other eight. The note is text,
+   not a choice. In the list on a desktop it stands between the groups; where the list is a row of pills, above
+   the row. */
+.index-note {
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--muted-foreground);
+}
+.index-note b {
+  font-weight: 600;
+  color: var(--foreground);
+}
+.index-list li.index-note,
+.index-list li.index-note:hover {
+  display: block;
+  height: auto;
+  padding: 18px 0 10px;
+  border-top: 0;
+  font-size: 13px;
+  color: var(--muted-foreground);
+  cursor: default;
+}
+.index-note.is-above {
+  display: none;
+}
+@media (max-width: 1119px) {
+  .index-note.is-above {
+    display: block;
+    margin-bottom: 10px;
+  }
+  .index-list li.index-note {
+    display: none;
+  }
+}
+/* All ten photos are stacked in the disc. Only the chosen one is seen. */
+.disc .ph {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 50%;
+}
+.disc .ph:not(.is-on) {
+  opacity: 0;
+  pointer-events: none;
+}
+.ph img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: 50% 50%;
+}
+/* A photo of several parts side by side is shown whole: fitted by its width to 89% of the circle (a 2 to 1
+   picture just fits it there) and in the middle. Behind it the same photo fills the circle, enlarged and
+   blurred, so there are no empty bands and no new colour. Its upper and lower edge fade out. */
+.ph.is-whole .bg {
+  filter: blur(14px);
+  transform: scale(1.4);
+}
+.ph.is-whole .fg {
+  position: absolute;
+  left: 5.5%;
+  top: 50%;
+  width: 89%;
+  height: auto;
+  border-radius: 0;
+  object-fit: contain;
+  transform: translateY(-50%);
+  /* solarium-allow C11: an alpha mask that fades the top and bottom edge of a photo; it draws no colour */
+  mask-image: linear-gradient(to bottom, transparent, black 12%, black 88%, transparent);
+}
 /* The ten panels share one place, as tall as the tallest of them, so the pager under them never moves. */
 .details {
   display: grid;
@@ -130,6 +201,51 @@
 }
 .details > .detail:not(.is-on) {
   visibility: hidden;
+}
+/* Each panel's own photo is for the cards of a phone only. */
+.detail .mini {
+  display: none;
+}
+@media (max-width: 767px) {
+  /* On a phone the ten components are a row of cards that moves sideways with the finger, and the shared
+     disc is not shown. A card is as wide as the page less 28px, so the edge of the next one shows. */
+  .index-detail .disc {
+    display: none;
+  }
+  .details {
+    position: relative;
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+  .details > .detail {
+    flex: 0 0 calc(100% - 28px);
+    grid-area: auto;
+    scroll-snap-align: start;
+    padding: 18px;
+    border: 1px solid var(--border);
+    border-radius: var(--corner-lg);
+    background: var(--card);
+  }
+  .details > .detail:not(.is-on) {
+    visibility: visible;
+  }
+  .detail .mini {
+    display: block;
+    position: relative;
+    width: 200px;
+    height: 200px;
+    margin: 0 auto 18px;
+  }
+  .detail .mini .ph {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    border-radius: 50%;
+  }
 }
 
 /* ---------- Logo wall ---------- */

@@ -45,6 +45,9 @@ export const TRUST_STATS = [
   { value: "#1 in Gujarat*", guValue: "ગુજરાતમાં #1*", label: "Home rooftop solar", guLabel: "ઘરની છત પર સોલર (Home rooftop solar)" },
 ] as const;
 
+/* The ten components of "What you get". `full`: the explorer shows the italic line and the facts too (the
+   panels and the inverter); the other eight show their tag, name and one sentence. `whole`: the photo shows
+   several parts side by side, so the disc shows it whole, over a blurred copy of itself. */
 export const INCLUDED = [
   {
     title: "Solar Panels",
@@ -70,6 +73,8 @@ export const INCLUDED = [
     imageAlt: "Solarium high-efficiency N-Type solar panels",
     guImageAlt: "Solarium હાઈ-એફિશિયન્સી N-Type સોલર પેનલ્સ",
     icon: "panels",
+    full: true,
+    whole: false,
   },
   {
     title: "Solar Inverter",
@@ -97,6 +102,8 @@ export const INCLUDED = [
     imageAlt: "Solarium on-grid solar inverter",
     guImageAlt: "Solarium ઓન-ગ્રીડ સોલર ઇન્વર્ટર",
     icon: "inverter",
+    full: true,
+    whole: false,
   },
   {
     title: "Mounting Structure",
@@ -122,6 +129,8 @@ export const INCLUDED = [
     imageAlt: "HDGI solar mounting structure",
     guImageAlt: "HDGI સોલર માઉન્ટિંગ સ્ટ્રક્ચર",
     icon: "structure",
+    full: false,
+    whole: false,
   },
   {
     title: "Base Plate",
@@ -149,6 +158,8 @@ export const INCLUDED = [
     imageAlt: "Solarium heavy-duty base plate",
     guImageAlt: "Solarium હેવી-ડ્યુટી બેઝ પ્લેટ",
     icon: "baseplate",
+    full: false,
+    whole: false,
   },
   {
     title: "SS Fasteners & Hardware",
@@ -176,6 +187,8 @@ export const INCLUDED = [
     imageAlt: "S.S304 stainless steel fasteners and anchor bolts",
     guImageAlt: "S.S304 સ્ટેનલેસ સ્ટીલ ફાસ્ટનર્સ અને એન્કર બોલ્ટ્સ",
     icon: "fasteners",
+    full: false,
+    whole: false,
   },
   {
     title: "ACDB / DCDB / Switch",
@@ -203,6 +216,8 @@ export const INCLUDED = [
     imageAlt: "ACDB DCDB solar distribution and isolation boxes",
     guImageAlt: "ACDB DCDB સોલર ડિસ્ટ્રિબ્યુશન અને આઈસોલેશન બોક્સ",
     icon: "bos",
+    full: false,
+    whole: true,
   },
   {
     title: "Pipes and Fittings",
@@ -232,6 +247,8 @@ export const INCLUDED = [
     imageAlt: "Heavy-duty RPVC conduit pipes and fittings",
     guImageAlt: "હેવી-ડ્યુટી RPVC કોન્ડ્યુટ પાઈપ્સ અને ફિટિંગ્સ",
     icon: "pipes",
+    full: false,
+    whole: true,
   },
   {
     title: "Solar & Earthing Cables",
@@ -259,6 +276,8 @@ export const INCLUDED = [
     imageAlt: "Polycab/Johanson solar DC and AC copper cables",
     guImageAlt: "Polycab/Johanson સોલર DC અને AC કોપર કેબલ્સ",
     icon: "cables",
+    full: false,
+    whole: true,
   },
   {
     title: "Earthing Components",
@@ -286,6 +305,8 @@ export const INCLUDED = [
     imageAlt: "Earthing chemical bag rod and FRP pit",
     guImageAlt: "અર્થિંગ કેમિકલ, રોડ અને FRP પિટ",
     icon: "earthing",
+    full: false,
+    whole: true,
   },
   {
     title: "Accessories & Connectors",
@@ -313,6 +334,8 @@ export const INCLUDED = [
     imageAlt: "Dash PV MC4 connectors and solar accessories",
     guImageAlt: "Dash PV MC4 કનેક્ટર્સ અને સોલર એસેસરીઝ",
     icon: "accessories",
+    full: false,
+    whole: true,
   },
 ] as const;
 
