@@ -11,18 +11,24 @@ export default function ClosingCta() {
   const { isGu } = useLanguage();
   const subsidy = TOTAL_SUBSIDY;
   const pills = isGu
-    ? ["2.18 kW", `સિસ્ટમનું મૂલ્ય ${inr(STANDARD_PRICE)}`, `પાત્ર સબસિડી* ${inr(subsidy)}`, "5 વર્ષનો વીમો"]
-    : ["2.18 kW", `${inr(STANDARD_PRICE)} system value`, `${inr(subsidy)} eligible subsidy*`, "5-year insurance"];
+    ? ["2.18 kW", `સિસ્ટમનું મૂલ્ય ${inr(STANDARD_PRICE)}`, `પાત્ર સબસિડી* ${inr(subsidy)}`]
+    : ["2.18 kW", `${inr(STANDARD_PRICE)} system value`, `${inr(subsidy)} eligible subsidy*`];
   const ticks = isGu
-    ? ["ચુકવણી કરો અને બદલામાં 100% સબસિડી મેળવો", "5 વર્ષનો વીમો મફત", "અમારી પોતાની ટીમ દ્વારા ઇન્સ્ટોલેશન"]
-    : ["Pay & get 100% subsidy in return", "5-year insurance free", "Installed by our own team"];
+    ? ["ચુકવણી કરો અને બદલામાં 100%* સબસિડી મેળવો", "5 વર્ષનો વીમો મફત", "પેનલ ઉત્પાદક દ્વારા સીધું ઇન્સ્ટોલેશન"]
+    : ["Pay & get 100%* subsidy in return", "5-year insurance free", "Directly installed by panel manufacturer"];
 
   return (
     <section className="closing on-dark">
       <div className="halo" aria-hidden="true" data-mo="bloom" data-mo-late="" />
       <div className="glow" aria-hidden="true" data-mo="bloom" data-mo-late="" />
       <div className="in" data-mo-group="">
-        <div className="eyebrow">{isGu ? "PM સૂર્ય ઘર · ગુજરાતના ઘરો" : "PM Surya Ghar · Gujarat homes"}</div>
+        {/* Each phrase stays whole: where the line does not fit, it breaks after the dot. */}
+        <div className="eyebrow">
+          <span>
+            <span className="keep">{isGu ? "PM સૂર્ય ઘર: મફત વીજળી યોજના ·" : "PM Surya Ghar: Muft Bijli Yojana ·"}</span>{" "}
+            <span className="keep">{isGu ? "ગુજરાતના ઘરો" : "Gujarat homes"}</span>
+          </span>
+        </div>
         {isGu ? (
           <h2>
             તમારી છત તૈયાર છે.

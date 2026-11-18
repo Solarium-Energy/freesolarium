@@ -229,6 +229,12 @@
   }
 }
 
+/* ---------- Closing section ---------- */
+/* The line above the headline keeps each of its two phrases whole, so on a narrow phone it breaks after the dot. */
+.closing .eyebrow .keep {
+  white-space: nowrap;
+}
+
 /* ---------- Footer ---------- */
 .site-footer .logo {
   width: auto;

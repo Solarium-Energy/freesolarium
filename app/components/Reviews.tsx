@@ -35,7 +35,7 @@ export default function Reviews() {
         <div data-mo-group="">
           <div className="eyebrow">{isGu ? "ગ્રાહકોના અનુભવો" : "Customer stories"}</div>
           <div className="rating">
-            <div className="big" data-mo-count="">{CUSTOMER_SAVINGS.googleRating}</div>
+            <div className="big">{CUSTOMER_SAVINGS.googleRating}</div>
             <div className="st" aria-hidden="true">
               ★★★★★
             </div>

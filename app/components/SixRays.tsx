@@ -44,8 +44,8 @@ const PILLARS = [
     n: "06",
     title: "Speed of\nExecution",
     guTitle: "અમલીકરણની\nઝડપ",
-    body: "Fastest in the current market. 15 days installation promise.",
-    guBody: "વર્તમાન બજારમાં સૌથી ઝડપી. 15 દિવસમાં ઇન્સ્ટોલેશનનું વચન.",
+    body: "Fastest in the current market. 15 days installation.",
+    guBody: "વર્તમાન બજારમાં સૌથી ઝડપી. 15 દિવસમાં ઇન્સ્ટોલેશન.",
   },
 ] as const;
 

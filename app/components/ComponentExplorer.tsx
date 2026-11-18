@@ -58,8 +58,8 @@ export default function ComponentExplorer() {
           <div data-mo-group="" data-mo-delay="2">
             <p className="lead">
               {isGu
-                ? "₹0 ખર્ચનો અર્થ એ નથી કે તમને કોઈ અધૂરી કે મર્યાદિત સુવિધાઓવાળી કિટ મળશે. આ એ જ સિસ્ટમ છે જે અમે પેઇડ ઓર્ડર (જેના માટે ચૂકવણી કરવામાં આવી છે) હેઠળ ઇન્સ્ટોલ કરીએ છીએ, જે એક જ કંપની દ્વારા ડિઝાઇન કરવામાં આવી છે, પૂરી પાડવામાં આવી છે અને કાર્યરત (commissioned) કરવામાં આવી છે."
-                : "Effective ₹0 does not mean a stripped-down kit. This is the same system we install on paid orders, designed, supplied and commissioned by one company."}
+                ? "₹0 ખર્ચનો અર્થ એ નથી કે તમને કોઈ અધૂરી કે મર્યાદિત સુવિધાઓવાળી કિટ મળશે. આ એ જ સિસ્ટમ છે જે અમે તમામ ઓર્ડરમાં ઇન્સ્ટોલ કરીએ છીએ, જે એક જ કંપની દ્વારા ડિઝાઇન કરવામાં આવી છે, પૂરી પાડવામાં આવી છે અને કાર્યરત (commissioned) કરવામાં આવી છે."
+                : "Effective ₹0 does not mean a stripped-down kit. This is the same system we install on all orders, designed, supplied and commissioned by one company."}
             </p>
             <div className="note-pill">
               <svg className="ico" viewBox="0 0 24 24" aria-hidden="true">
@@ -69,8 +69,8 @@ export default function ComponentExplorer() {
               <div>
                 <b>{isGu ? "૫ વર્ષનો વીમો મફત" : "5-year insurance included free"}</b>
                 {isGu
-                  ? "કોઈ વધારાના ખર્ચ વિના સંપૂર્ણ સુરક્ષા, માત્ર સોલેરિયમ સાથે."
-                  : "Complete protection at ₹0 extra cost, exclusively from Solarium."}
+                  ? "શૂન્ય વધારાના ખર્ચે વીમાથી સુરક્ષિત, માત્ર સોલેરિયમ તરફથી."
+                  : "Insured at zero extra cost, exclusively from Solarium."}
               </div>
             </div>
           </div>
