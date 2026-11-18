@@ -1,5 +1,5 @@
-/* The quotation's numbers: pricing constants, option lists and the calculation.
-   Moved unchanged from the old quotation card and sheet. The bar, the sheet and the PDF all read them from here. */
+/* The quotation's numbers: the figures of each category, the option lists and the calculation. The bar, the
+   sheet, the PDF and the request to the CRM all read them from here, and no figure is typed anywhere else. */
 
 /** The two payment modes of the quotation: cheque, NEFT, IMPS, UPI or RTGS (`cash`), or an NBFC loan. */
 export type PaymentMode = "cash" | "nbfc";
@@ -21,18 +21,52 @@ export const PINCODE_PATTERN = /^[1-9]\d{5}$/;
 /** A quote number as the CRM issues it. Anything else from its answer is dropped. The server route checks the same. */
 export const QUOTE_NO_PATTERN = /^[A-Za-z0-9/_-]{1,24}$/;
 
-/* ─── Pricing Constants (exact match to offline sheet) ─── */
-export const SYSTEM_PRICE = 108_100;
-export const SPECIAL_DISCOUNT = 10_810;
-export const STANDARD_PRICE = 97_290;
-export const CENTRAL_SUBSIDY = 63_240;
-export const GUJARAT_SUBSIDY = 34_050;
-/** The two subsidies together, and what the standard system costs after them. Every page that shows one
-    of these figures reads it from here. */
-export const TOTAL_SUBSIDY = CENTRAL_SUBSIDY + GUJARAT_SUBSIDY;
-export const EFFECTIVE_COST = Math.max(0, STANDARD_PRICE - TOTAL_SUBSIDY);
-export const BOOKING_AMOUNT = 10_000;
+/* ─── Pricing, by category ───
+   Each category has its own standard price and its own Gujarat subsidy. The central subsidy is the same.
+   For SC / ST, Solarium has given the standard price but not the system price and the discount behind it:
+   those are null, and nothing shows them or works them out. */
+export type CategoryFigures = {
+  systemPrice: number | null;
+  specialDiscount: number | null;
+  standardPrice: number;
+  centralSubsidy: number;
+  gujaratSubsidy: number;
+};
 
+export const GENERAL_FIGURES: CategoryFigures = {
+  systemPrice: 108_100,
+  specialDiscount: 10_810,
+  standardPrice: 97_290,
+  centralSubsidy: 63_240,
+  gujaratSubsidy: 34_050,
+};
+
+export const SC_ST_FIGURES: CategoryFigures = {
+  systemPrice: null,
+  specialDiscount: null,
+  standardPrice: 102_695,
+  centralSubsidy: 63_240,
+  gujaratSubsidy: 39_455,
+};
+
+/** The figures of a category. No category counts as General. */
+export function categoryFigures(category: Category) {
+  return category === "sc-st" ? SC_ST_FIGURES : GENERAL_FIGURES;
+}
+
+/** The two subsidies of a category together. */
+export const totalSubsidyOf = (figures: CategoryFigures) => figures.centralSubsidy + figures.gujaratSubsidy;
+
+/* The General figures, for the parts of the page that stand outside the quotation (the closing section, the
+   phone bar, the FAQ) and show the standard offer. */
+export const STANDARD_PRICE = GENERAL_FIGURES.standardPrice;
+export const CENTRAL_SUBSIDY = GENERAL_FIGURES.centralSubsidy;
+export const GUJARAT_SUBSIDY = GENERAL_FIGURES.gujaratSubsidy;
+export const TOTAL_SUBSIDY = totalSubsidyOf(GENERAL_FIGURES);
+export const EFFECTIVE_COST = Math.max(0, STANDARD_PRICE - TOTAL_SUBSIDY);
+
+/* The NBFC loan: the EMI and the interest of the first three EMIs are in proportion to the loan, from these
+   figures for a loan of 97,290. Solarium will send a loan table later. */
 export const NBFC_BASE_LOAN = 97_290;
 export const NBFC_BASE_EMI = 2_351;
 export const NBFC_BASE_INTEREST = 3_780;
@@ -53,6 +87,9 @@ export const HEIGHT_SHEET_OPTIONS = [
 
 export const DISCOM_SHEET_OPTIONS = [
   { label: "UGVCL", displayPrice: "₹0", extra: 0 },
+  { label: "MGVCL", displayPrice: "₹0", extra: 0 },
+  { label: "DGVCL", displayPrice: "₹0", extra: 0 },
+  { label: "PGVCL", displayPrice: "₹0", extra: 0 },
   { label: "Torrent Power", displayPrice: "₹5,409", extra: 5_409 },
 ] as const;
 
@@ -65,39 +102,58 @@ export function optionCharge(option: { displayPrice: string; extra: number; isIn
   return option.extra > 0 ? `+ ${option.displayPrice}` : option.displayPrice;
 }
 
-export function computeQuotationNumbers(floor: string, structureHeight: string, discom: string) {
+/**
+ * Everything the quotation shows, for a category and three choices: the category's figures, the add-ons, the
+ * upfront payment (standard price plus add-ons), the effective cost (upfront payment less the total subsidy)
+ * and the two payment modes. No consumer does this arithmetic itself.
+ */
+export function computeQuotationNumbers(floor: string, structureHeight: string, discom: string, category: Category = null) {
+  const figures = categoryFigures(category);
+  const totalSubsidy = totalSubsidyOf(figures);
   const floorCost = FLOOR_SHEET_OPTIONS.find((o) => o.label === floor)?.extra ?? 0;
   const heightCost = HEIGHT_SHEET_OPTIONS.find((o) => o.label === structureHeight)?.extra ?? 0;
   const meterCost = DISCOM_SHEET_OPTIONS.find((o) => o.label === discom)?.extra ?? 0;
 
   const addOns = floorCost + heightCost + meterCost;
-  const finalPrice = STANDARD_PRICE + addOns;
+  const finalPrice = figures.standardPrice + addOns;
+  const effectiveCost = finalPrice - totalSubsidy;
 
-  // 1. Cheque, NEFT, IMPS, UPI or RTGS
-  const cashBeforeDispatch = finalPrice - BOOKING_AMOUNT;
-  const cashNetAfterSubsidy = addOns;
+  // 1. Cheque, NEFT, IMPS, UPI or RTGS: 100% of the upfront payment before dispatch, nothing earlier.
+  const cashBeforeDispatch = finalPrice;
 
-  // 2. NBFC loan (0% down, 100% loan)
+  // 2. NBFC loan (0% down, 100% loan). The row notes show the same rule applied to the standard price.
   const nbfcLoanAmount = finalPrice;
   const nbfcEmi = Math.round((NBFC_BASE_EMI * nbfcLoanAmount) / NBFC_BASE_LOAN);
   const nbfcInterest = Math.round((NBFC_BASE_INTEREST * nbfcLoanAmount) / NBFC_BASE_LOAN);
-  const nbfcNetAfterSubsidy = addOns + nbfcInterest;
 
   return {
+    systemPrice: figures.systemPrice,
+    specialDiscount: figures.specialDiscount,
+    standardPrice: figures.standardPrice,
+    centralSubsidy: figures.centralSubsidy,
+    gujaratSubsidy: figures.gujaratSubsidy,
+    totalSubsidy,
     floorCost,
     heightCost,
     meterCost,
     addOns,
+    /** The upfront payment. */
     finalPrice,
+    effectiveCost,
     cash: {
       beforeDispatch: cashBeforeDispatch,
-      netAfterSubsidy: cashNetAfterSubsidy,
+      netAfterSubsidy: effectiveCost,
     },
     nbfc: {
       loanAmount: nbfcLoanAmount,
       emi: nbfcEmi,
       interest: nbfcInterest,
-      netAfterSubsidy: nbfcNetAfterSubsidy,
+      netAfterSubsidy: effectiveCost + nbfcInterest,
+      base: {
+        loan: figures.standardPrice,
+        emi: Math.round((NBFC_BASE_EMI * figures.standardPrice) / NBFC_BASE_LOAN),
+        interest: Math.round((NBFC_BASE_INTEREST * figures.standardPrice) / NBFC_BASE_LOAN),
+      },
     },
   };
 }
@@ -121,8 +177,10 @@ export const STRUCTURE_HEIGHT_OPTIONS = [
 
 export const DISCOM_OPTIONS = [
   { label: "UGVCL", crm: "UGVCL", guLabel: "UGVCL", sub: "₹0", guSub: "₹0", extra: 0 },
+  { label: "MGVCL", crm: "MGVCL", guLabel: "MGVCL", sub: "₹0", guSub: "₹0", extra: 0 },
+  { label: "DGVCL", crm: "DGVCL", guLabel: "DGVCL", sub: "₹0", guSub: "₹0", extra: 0 },
+  { label: "PGVCL", crm: "PGVCL", guLabel: "PGVCL", sub: "₹0", guSub: "₹0", extra: 0 },
   { label: "Torrent Power", crm: "Torrent", guLabel: "Torrent Power", sub: "+₹5,409", guSub: "+₹5,409", extra: 5409 },
-  { label: "Other", crm: "Other", guLabel: "અન્ય (Other)", sub: "Our team will contact you", guSub: "અમારી ટીમ તમારો સંપર્ક કરશે", extra: 0, custom: true },
 ] as const;
 
 /* The sheet's payment modes in the CRM's values, and the loan figures shown for the loan. */

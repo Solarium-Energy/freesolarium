@@ -5,19 +5,9 @@ import { useState, type ReactNode } from "react";
 import { inr, site } from "../../lib/content";
 import { useLanguage } from "../../lib/language";
 import {
-  BOOKING_AMOUNT,
-  CENTRAL_SUBSIDY,
   DISCOM_SHEET_OPTIONS,
   FLOOR_SHEET_OPTIONS,
-  GUJARAT_SUBSIDY,
   HEIGHT_SHEET_OPTIONS,
-  NBFC_BASE_EMI,
-  NBFC_BASE_INTEREST,
-  NBFC_BASE_LOAN,
-  SPECIAL_DISCOUNT,
-  STANDARD_PRICE,
-  SYSTEM_PRICE,
-  TOTAL_SUBSIDY,
   fmtNum,
   optionCharge,
   type PaymentMode,
@@ -246,11 +236,19 @@ function QuotationStep() {
   const calc = q.calc;
   const rupees = (amount: number) => `₹${fmtNum(amount)}`;
 
-  // What the visitor pays: the system, the discount, the three extras, and the upfront sum.
+  // What the visitor pays: the system, the discount, the three extras, and the upfront sum. The figures are
+  // the chosen category's. SC / ST has no system price and discount yet, so its block starts with the standard
+  // system.
+  const breakdown: PriceRow[] =
+    calc.systemPrice !== null && calc.specialDiscount !== null
+      ? [
+          { label: "System price 2.18 kW", value: inr(calc.systemPrice) },
+          { label: "Special discount", value: `− ${inr(calc.specialDiscount)}`, kind: "less" },
+        ]
+      : [];
   const payRows: PriceRow[] = [
-    { label: "System price 2.18 kW", value: inr(SYSTEM_PRICE) },
-    { label: "Special discount", value: `− ${inr(SPECIAL_DISCOUNT)}`, kind: "less" },
-    { label: "Standard system", value: inr(STANDARD_PRICE), kind: "sum" },
+    ...breakdown,
+    { label: "Standard system", value: inr(calc.standardPrice), kind: "sum" },
     { label: `(1) Floor, ${q.floor}`, value: optionCharge(FLOOR_SHEET_OPTIONS.find((o) => o.label === q.floor)) },
     {
       label: `(2) Structure height, ${q.structureHeight}`,
@@ -259,7 +257,7 @@ function QuotationStep() {
     { label: `(3) Meter charges, ${q.discom}`, value: optionCharge(DISCOM_SHEET_OPTIONS.find((o) => o.label === q.discom)) },
     {
       label: "Upfront payment (including 5-year solar system insurance)",
-      note: `${inr(STANDARD_PRICE)} + (1) + (2) + (3)`,
+      note: `${inr(calc.standardPrice)} + (1) + (2) + (3)`,
       value: rupees(calc.finalPrice),
       kind: "sum",
     },
@@ -267,23 +265,22 @@ function QuotationStep() {
 
   // What comes back: the two subsidies and their total.
   const backRows: PriceRow[] = [
-    { label: "Central Govt subsidy (credited later)", value: inr(CENTRAL_SUBSIDY) },
-    { label: "Gujarat Govt subsidy (credited later)", value: inr(GUJARAT_SUBSIDY) },
-    { label: "Total subsidy", value: inr(TOTAL_SUBSIDY), kind: "sum" },
+    { label: "Central Govt subsidy (credited later)", value: inr(calc.centralSubsidy) },
+    { label: "Gujarat Govt subsidy (credited later)", value: inr(calc.gujaratSubsidy) },
+    { label: "Total subsidy", value: inr(calc.totalSubsidy), kind: "sum" },
   ];
 
   const termRows: Record<PaymentMode, PriceRow[]> = {
     cash: [
-      { label: "Booking amount", value: inr(BOOKING_AMOUNT) },
-      { label: "Before dispatch", note: `Upfront payment − ${inr(BOOKING_AMOUNT)}`, value: rupees(calc.cash.beforeDispatch) },
+      { label: "Before dispatch", note: "100% of the upfront payment", value: rupees(calc.cash.beforeDispatch) },
       { label: "Net cost after subsidy*", note: "(1)+(2)+(3)", value: rupees(calc.cash.netAfterSubsidy), kind: "total" },
     ],
     nbfc: [
       { label: "Down payment 0%", value: "₹0" },
-      { label: `Loan amount 100% (base ${rupees(NBFC_BASE_LOAN)})`, note: "100% of final price", value: rupees(calc.nbfc.loanAmount) },
+      { label: `Loan amount 100% (base ${rupees(calc.nbfc.base.loan)})`, note: "100% of final price", value: rupees(calc.nbfc.loanAmount) },
       { label: "Loan tenure", value: "5 years (60 months)" },
-      { label: "Estimated monthly EMI", note: `${rupees(NBFC_BASE_EMI)} + on add-ons`, value: rupees(calc.nbfc.emi) },
-      { label: "Total estimated interest in 3 EMIs", note: `${rupees(NBFC_BASE_INTEREST)} + on add-ons`, value: rupees(calc.nbfc.interest) },
+      { label: "Estimated monthly EMI", note: `${rupees(calc.nbfc.base.emi)} + on add-ons`, value: rupees(calc.nbfc.emi) },
+      { label: "Total estimated interest in 3 EMIs", note: `${rupees(calc.nbfc.base.interest)} + on add-ons`, value: rupees(calc.nbfc.interest) },
       {
         label: "Net cost after subsidy*",
         note: "(1)+(2)+(3)+interest",
@@ -347,7 +344,7 @@ function QuotationStep() {
           {
             label: "Effective cost after subsidy*",
             note: "(1) + (2) + (3)",
-            value: rupees(calc.cash.netAfterSubsidy),
+            value: rupees(calc.effectiveCost),
             kind: "total",
           },
         ]}

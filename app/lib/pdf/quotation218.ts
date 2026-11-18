@@ -8,19 +8,9 @@
 
 import { COMPANY_BANK_DETAILS } from "../payment";
 import {
-  BOOKING_AMOUNT,
-  CENTRAL_SUBSIDY,
   DISCOM_SHEET_OPTIONS,
   FLOOR_SHEET_OPTIONS,
-  GUJARAT_SUBSIDY,
   HEIGHT_SHEET_OPTIONS,
-  NBFC_BASE_EMI,
-  NBFC_BASE_INTEREST,
-  NBFC_BASE_LOAN,
-  SPECIAL_DISCOUNT,
-  STANDARD_PRICE,
-  SYSTEM_PRICE,
-  TOTAL_SUBSIDY,
   computeQuotationNumbers,
   fmtNum,
   optionCharge,
@@ -72,7 +62,8 @@ function structureQty(height: string) {
 /** Page 1: the quotation. */
 function drawPage1(ctx: CanvasRenderingContext2D, input: Quotation218Input) {
   const { data, quoteNo, quoteDate, logo, qr } = input;
-  const calc = computeQuotationNumbers(data.floor, data.structureHeight, data.discom);
+  // The figures of the chosen category (General when none is chosen).
+  const calc = computeQuotationNumbers(data.floor, data.structureHeight, data.discom, data.category);
   const mode: PaymentMode = input.paymentMode ?? "cash";
   const doc = newDoc(ctx);
 
@@ -159,9 +150,14 @@ function drawPage1(ctx: CanvasRenderingContext2D, input: Quotation218Input) {
         AmountBlock(part, {
           title: "What you pay",
           rows: [
-            { label: "System price 2.18 kW", amount: rupees(SYSTEM_PRICE) },
-            { label: "Special discount", amount: `− ${rupees(SPECIAL_DISCOUNT)}`, tone: "less" },
-            { label: "Standard system", amount: rupees(STANDARD_PRICE), tone: "strong" },
+            // SC / ST has no system price and discount yet: its block starts with the standard system.
+            ...(calc.systemPrice !== null && calc.specialDiscount !== null
+              ? [
+                  { label: "System price 2.18 kW", amount: rupees(calc.systemPrice) },
+                  { label: "Special discount", amount: `− ${rupees(calc.specialDiscount)}`, tone: "less" as const },
+                ]
+              : []),
+            { label: "Standard system", amount: rupees(calc.standardPrice), tone: "strong" },
             { label: `(1) Floor, ${data.floor}`, amount: optionCharge(FLOOR_SHEET_OPTIONS.find((o) => o.label === data.floor)) },
             {
               label: `(2) Structure height, ${data.structureHeight}`,
@@ -170,7 +166,7 @@ function drawPage1(ctx: CanvasRenderingContext2D, input: Quotation218Input) {
             { label: `(3) Meter charges, ${data.discom}`, amount: optionCharge(DISCOM_SHEET_OPTIONS.find((o) => o.label === data.discom)) },
             {
               label: "Upfront payment (including 5-year solar system insurance)",
-              note: `${rupees(STANDARD_PRICE)} + (1) + (2) + (3)`,
+              note: `${rupees(calc.standardPrice)} + (1) + (2) + (3)`,
               amount: rupees(calc.finalPrice),
               tone: "strong",
             },
@@ -184,14 +180,14 @@ function drawPage1(ctx: CanvasRenderingContext2D, input: Quotation218Input) {
           title: "What comes back to your bank account",
           positive: true,
           rows: [
-            { label: "Central Govt subsidy (credited later)", amount: rupees(CENTRAL_SUBSIDY) },
-            { label: "Gujarat Govt subsidy (credited later)", amount: rupees(GUJARAT_SUBSIDY) },
-            { label: "Total subsidy", amount: rupees(TOTAL_SUBSIDY), tone: "strong" },
+            { label: "Central Govt subsidy (credited later)", amount: rupees(calc.centralSubsidy) },
+            { label: "Gujarat Govt subsidy (credited later)", amount: rupees(calc.gujaratSubsidy) },
+            { label: "Total subsidy", amount: rupees(calc.totalSubsidy), tone: "strong" },
           ],
           footnote: "100% subsidy credited to bank *First 3 lakh households",
         });
         gap(part);
-        TotalRow(part, { label: "Effective cost after subsidy*", note: "(1) + (2) + (3)", amount: rupees(calc.cash.netAfterSubsidy) });
+        TotalRow(part, { label: "Effective cost after subsidy*", note: "(1) + (2) + (3)", amount: rupees(calc.effectiveCost) });
       },
     },
   ]);
@@ -201,8 +197,7 @@ function drawPage1(ctx: CanvasRenderingContext2D, input: Quotation218Input) {
     cash: {
       mode: "Cheque / NEFT / IMPS / UPI / RTGS",
       rows: [
-        { label: "Booking amount", amount: rupees(BOOKING_AMOUNT) },
-        { label: "Before dispatch", note: `Upfront payment − ${rupees(BOOKING_AMOUNT)}`, amount: rupees(calc.cash.beforeDispatch) },
+        { label: "Before dispatch", note: "100% of the upfront payment", amount: rupees(calc.cash.beforeDispatch) },
       ],
       total: { label: "Net cost after subsidy*", note: "(1)+(2)+(3)", amount: rupees(calc.cash.netAfterSubsidy) },
     },
@@ -210,10 +205,10 @@ function drawPage1(ctx: CanvasRenderingContext2D, input: Quotation218Input) {
       mode: "NBFC loan",
       rows: [
         { label: "Down payment 0%", amount: "₹0" },
-        { label: `Loan amount 100% (base ${rupees(NBFC_BASE_LOAN)})`, note: "100% of final price", amount: rupees(calc.nbfc.loanAmount) },
+        { label: `Loan amount 100% (base ${rupees(calc.nbfc.base.loan)})`, note: "100% of final price", amount: rupees(calc.nbfc.loanAmount) },
         { label: "Loan tenure", amount: "5 years (60 months)" },
-        { label: "Estimated monthly EMI", note: `${rupees(NBFC_BASE_EMI)} + on add-ons`, amount: rupees(calc.nbfc.emi) },
-        { label: "Total estimated interest in 3 EMIs", note: `${rupees(NBFC_BASE_INTEREST)} + on add-ons`, amount: rupees(calc.nbfc.interest) },
+        { label: "Estimated monthly EMI", note: `${rupees(calc.nbfc.base.emi)} + on add-ons`, amount: rupees(calc.nbfc.emi) },
+        { label: "Total estimated interest in 3 EMIs", note: `${rupees(calc.nbfc.base.interest)} + on add-ons`, amount: rupees(calc.nbfc.interest) },
       ],
       total: { label: "Net cost after subsidy*", note: "(1)+(2)+(3)+interest", amount: rupees(calc.nbfc.netAfterSubsidy) },
     },
@@ -270,7 +265,7 @@ function drawPage2(ctx: CanvasRenderingContext2D, input: Quotation218Input) {
         "Solarium Trusted Technology",
         "",
       ],
-      ["MC4 Connector", "As per MNRE Guidelines", "2 Set", "Dhash PV", ""],
+      ["MC4 Connector", "As per MNRE Guidelines", "2 Set", "DhaSh PV", ""],
       ["Earthing Rod/Bag/Lightning Arrestor", "Copper Coated 14 mm (01 mtr)", "1 Set", "iTorrent", ""],
       ["PVC Pipe and Fittings", "25 mm", "50 mtr", "Solarium Trusted Technology", ""],
       ["Red & Black DC Cables", "CU 1 Core 4 SQ MM", "20 mtr", "Polycab/Johnson", ""],
@@ -288,7 +283,7 @@ function drawPage2(ctx: CanvasRenderingContext2D, input: Quotation218Input) {
       "Standard system includes 2.18 kW solar panels (545 Wp Solarium brand × 4 panels) and inverter, 0.5 m front-leg structure, G+1 cabling, installation and commissioning, subsidy support and 5 years solar insurance.",
       "Subsidy is subject to eligibility and government approval. Add-ons (1)+(2)+(3) are included in the loan.",
       "Subsidy is estimated to be repaid in the 4th month of installation; estimated interest covers the 3 EMIs before that.",
-      "Any change in DISCOM (UGVCL / Torrent) or government charges will apply at actuals.",
+      "Any change in DISCOM or government charges will apply at actuals.",
       "If the name on the electricity bill and the bank account is different, a name change is required.",
     ],
   });

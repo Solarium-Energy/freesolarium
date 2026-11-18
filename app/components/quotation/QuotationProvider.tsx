@@ -3,15 +3,11 @@
 import { createContext, useContext, useEffect, useEffectEvent, useRef, useState, type ReactNode } from "react";
 import { buildMeta, isConfirmed, newSubmissionId, postJson, type PostResult } from "../../lib/leadClient";
 import {
-  BOOKING_AMOUNT,
-  CENTRAL_SUBSIDY,
   DISCOM_OPTIONS,
   FLOOR_OPTIONS,
-  GUJARAT_SUBSIDY,
   PAYMENT_MODE_VALUES,
   PINCODE_PATTERN,
   QUOTE_NO_PATTERN,
-  STANDARD_PRICE,
   STRUCTURE_HEIGHT_OPTIONS,
   computeQuotationNumbers,
   loanFigures,
@@ -68,9 +64,10 @@ function useQuotationState() {
   const validMobile  = /^\d{10}$/.test(mobile);
 
   const selectionsComplete = Boolean(category && floor && structureHeight && discom);
-  const needsCallback = floor === "G+5 and above" || structureHeight === "3.0 m and above" || discom === "Other";
+  const needsCallback = floor === "G+5 and above" || structureHeight === "3.0 m and above";
   const allReady = selectionsComplete && validName && validPincode && validMobile;
-  const calc = computeQuotationNumbers(floor, structureHeight, discom);
+  // The figures follow the category: its standard price and its subsidies.
+  const calc = computeQuotationNumbers(floor, structureHeight, discom, category);
 
   function reset() {
     setCategory(START.category);
@@ -92,7 +89,7 @@ function useQuotationState() {
     const floorOpt = FLOOR_OPTIONS.find((o) => o.label === floor);
     const heightOpt = STRUCTURE_HEIGHT_OPTIONS.find((o) => o.label === structureHeight);
     const discomOpt = DISCOM_OPTIONS.find((o) => o.label === discom);
-    const calc = computeQuotationNumbers(floor, structureHeight, discom);
+    const calc = computeQuotationNumbers(floor, structureHeight, discom, category);
     // A callback shows no price: only the charges of options that have one are sent.
     const priced = !needsCallback;
     return {
@@ -106,16 +103,17 @@ function useQuotationState() {
         discom: discomOpt?.crm,
         floor: floorOpt?.crm,
         structure_height: heightOpt?.crm,
-        base_price: STANDARD_PRICE,
+        base_price: calc.standardPrice,
         floor_charge: floorOpt && !("custom" in floorOpt) ? calc.floorCost : undefined,
         height_charge: heightOpt && !("custom" in heightOpt) ? calc.heightCost : undefined,
         discom_charge: discomOpt && !("custom" in discomOpt) ? calc.meterCost : undefined,
         total: priced ? calc.finalPrice : undefined,
-        subsidy_amount: CENTRAL_SUBSIDY + GUJARAT_SUBSIDY,
-        customer_pays: priced ? calc.cash.netAfterSubsidy : undefined,
+        subsidy_amount: calc.totalSubsidy,
+        customer_pays: priced ? calc.effectiveCost : undefined,
         needs_callback: needsCallback,
         // Only the priced quotation has a sheet, so only it has a payment mode.
-        booking_amount: priced ? BOOKING_AMOUNT : undefined,
+        // The key stays in the request as the contract has it: 0 in every priced quotation, as nothing is paid at booking.
+        booking_amount: priced ? 0 : undefined,
         payment_mode: priced && mode ? PAYMENT_MODE_VALUES[mode] : undefined,
         loan: priced ? loanFigures(mode, calc) : undefined,
       },

@@ -3,8 +3,9 @@
 import { ArrowRight } from "lucide-react";
 import { CUSTOMER_SAVINGS, inr } from "../lib/content";
 import { useLanguage } from "../lib/language";
-import { CENTRAL_SUBSIDY, EFFECTIVE_COST, GUJARAT_SUBSIDY } from "../lib/quotation";
+import { EFFECTIVE_COST } from "../lib/quotation";
 import QuotationBar from "./quotation/QuotationBar";
+import { useQuotation } from "./quotation/QuotationProvider";
 import Button from "./ui/Button";
 
 type Point = { b: string; s: string; guB: string; guS: string };
@@ -35,9 +36,11 @@ const RAY_STEP = 26;
 /** The hero's footnote: the price never stands without it. */
 export function useHeroFootnote() {
   const { isGu } = useLanguage();
+  // The subsidies of the chosen category: Gujarat's differs for SC / ST.
+  const { centralSubsidy, gujaratSubsidy } = useQuotation().calc;
   return isGu
-    ? `*કેન્દ્ર સરકાર (${inr(CENTRAL_SUBSIDY)}) અને ગુજરાત રાજ્ય સરકાર (${inr(GUJARAT_SUBSIDY)}) ની સબસિડી બાદ. પાત્રતા અને યોજનાની શરતો લાગુ.`
-    : `*After central (${inr(CENTRAL_SUBSIDY)}) and Gujarat state (${inr(GUJARAT_SUBSIDY)}) subsidy. Subject to eligibility and scheme terms.`;
+    ? `*કેન્દ્ર સરકાર (${inr(centralSubsidy)}) અને ગુજરાત રાજ્ય સરકાર (${inr(gujaratSubsidy)}) ની સબસિડી બાદ. પાત્રતા અને યોજનાની શરતો લાગુ.`
+    : `*After central (${inr(centralSubsidy)}) and Gujarat state (${inr(gujaratSubsidy)}) subsidy. Subject to eligibility and scheme terms.`;
 }
 
 /** The first screen: the sky, the sun with the price and the main action, and the quotation bar. */

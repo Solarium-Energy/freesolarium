@@ -7,7 +7,6 @@ import {
   DISCOM_OPTIONS,
   FLOOR_OPTIONS,
   STRUCTURE_HEIGHT_OPTIONS,
-  TOTAL_SUBSIDY,
   type DiscomOption,
   type FloorOption,
   type StructureHeight,
@@ -94,7 +93,7 @@ export default function QuotationBar({ copy }: { copy: "hero" | "phone" }) {
             </div>
             <div>
               <span>{isGu ? "બેંક ખાતામાં સબસિડી" : "Subsidy to your bank"}</span>
-              <span>− {inr(TOTAL_SUBSIDY)}</span>
+              <span>− {inr(q.calc.totalSubsidy)}</span>
             </div>
           </div>
         )}
@@ -104,7 +103,7 @@ export default function QuotationBar({ copy }: { copy: "hero" | "phone" }) {
             <span className="pay-note">{isGu ? callbackOption.guSub : callbackOption.sub}</span>
           ) : (
             <>
-              <TweenNumber value={q.calc.cash.netAfterSubsidy} format={inr} />
+              <TweenNumber value={q.calc.effectiveCost} format={inr} />
               <sup className="star">*</sup>
             </>
           )}
