@@ -26,6 +26,8 @@
    - A drawn shape that carries its own position (an SVG part with a transform attribute) is never
      given a transform-origin, a translate, a scale or a rotate: that moves the shape off its place.
      Such shapes only fade. What has to turn or grow sits in a group that carries no position.
+   - Parts that have to move together are driven by one value, never by separate animations that
+     are only timed alike (see "mo-sun-turn").
    - "Reduce motion" stops all of it: the stylesheet's own rule turns every animation and
      transition off, and the head script never sets html.mo. */
 
@@ -42,6 +44,8 @@
   --mo-dy: 0px;
   /* How long a sun's rays take to turn by the angle between two rays. The turn never stops. */
   --mo-turn-time: 3200ms;
+  /* How far that turn has come, from 0 to 1 (see "mo-sun-turn"). */
+  --mo-a: 0;
 }
 
 /* ---------- The shared movements ---------- */
@@ -132,49 +136,25 @@
 /* The rays of a sun turn clockwise without a stop. The turn runs at one steady speed through the
    angle between two rays and starts again from where the rays were drawn: because every ray is the
    same, it never seems to start again. While it turns, the last ray on the right fades out and a new
-   one comes in on the left, so the rays always point upwards. */
-@keyframes mo-fan {
-  from {
-    rotate: 0deg;
-  }
-  to {
-    rotate: 26deg;
-  }
+   one comes in on the left, so the rays always point upwards.
+
+   One value drives all of it: --mo-a runs from 0 to 1, and the turn of the fan and the fading of
+   its two end rays are worked out from it in the same step. They must never be separate animations
+   that are only timed alike: at the moment such animations start again they can be a frame or two
+   apart, and for those frames a ray is missing on one side and an extra one shows on the other.
+   Where the browser cannot count --mo-a up smoothly, it jumps from 0 to 1 half way, which moves
+   every ray exactly onto the place of the next one: the fan then simply stands still. */
+@property --mo-a {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
 }
-@keyframes mo-ray-out {
+@keyframes mo-sun-turn {
   from {
-    opacity: 1;
+    --mo-a: 0;
   }
   to {
-    opacity: 0;
-  }
-}
-@keyframes mo-ray-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-/* The same for a sun whose outer rays already point a little below the horizon: the ray that leaves is
-   gone, and the ray that comes in appears, while they are still close to it. */
-@keyframes mo-ray-out-soon {
-  from {
-    opacity: 1;
-  }
-  60%,
-  to {
-    opacity: 0;
-  }
-}
-@keyframes mo-ray-in-late {
-  from,
-  40% {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
+    --mo-a: 1;
   }
 }
 
@@ -321,25 +301,24 @@ html.mo .eyebrow[data-in=""]::before {
 
 /* The rays turn clockwise, steadily and without a stop, from the moment the page opens: they come
    up as one picture that is already turning. The whole picture of the rays turns round the middle
-   of the sun, which the compositor does without redrawing it. Each ray carries its own position
-   and is never moved by itself: the two at the ends only fade. The picture is allowed to draw past
-   its own edges while it turns, or the edges would turn with it and cut the rays. */
+   of the sun. Each ray carries its own position and is never moved by itself: the two at the ends
+   only fade, by the same value that turns the picture (--mo-a). The picture is allowed to draw
+   past its own edges while it turns, or the edges would turn with it and cut the rays. */
+.hero .rays .is-out {
+  opacity: calc(1 - var(--mo-a));
+}
 .hero .rays .is-in {
-  opacity: 0;
+  opacity: var(--mo-a);
 }
 @media (prefers-reduced-motion: no-preference) {
   .hero .rays {
     overflow: visible;
     transform-origin: 720px 718px;
+    rotate: calc(var(--mo-a) * 26deg);
+    will-change: transform;
     animation:
       mo-fade 1400ms var(--ease-out) 560ms backwards,
-      mo-fan var(--mo-turn-time) linear infinite;
-  }
-  .hero .rays .is-out {
-    animation: mo-ray-out var(--mo-turn-time) linear infinite;
-  }
-  .hero .rays .is-in {
-    animation: mo-ray-in var(--mo-turn-time) linear infinite;
+      mo-sun-turn var(--mo-turn-time) linear infinite;
   }
 }
 
@@ -656,20 +635,24 @@ html.mo .rise .drop[data-in=""] {
 html.mo .rise .sun-end[data-in=""] {
   animation: mo-node 800ms var(--mo-spring) backwards;
 }
-/* The sun at the end of the curve. Its parts sit in a group placed on the sun's middle, so they turn and grow round it. */
-.rise .fan .is-in,
+/* The sun at the end of the curve. Its parts sit in a group placed on the sun's middle, so they turn and grow round it.
+   Its outer rays already point a little below the horizon, so the ray that leaves is gone, and the ray that
+   comes in appears, while they are still close to it. Both follow the value that turns the fan (--mo-a). */
+.rise .fan {
+  rotate: calc(var(--mo-a) * 26deg);
+}
+.rise .fan .is-out {
+  opacity: calc(1 - var(--mo-a) / 0.6);
+}
+.rise .fan .is-in {
+  opacity: calc((var(--mo-a) - 0.4) / 0.6);
+}
 .rise .sun-glow {
   opacity: 0;
 }
 @media (prefers-reduced-motion: no-preference) {
   .rise .fan {
-    animation: mo-fan var(--mo-turn-time) linear infinite;
-  }
-  .rise .fan .is-out {
-    animation: mo-ray-out-soon var(--mo-turn-time) linear infinite;
-  }
-  .rise .fan .is-in {
-    animation: mo-ray-in-late var(--mo-turn-time) linear infinite;
+    animation: mo-sun-turn var(--mo-turn-time) linear infinite;
   }
   .rise .sun-glow {
     animation: mo-glow 3200ms ease-in-out infinite alternate;
@@ -834,8 +817,7 @@ html.mo .rating[data-in=""] .st {
    part marked data-mo-loop. Only the endless movements are paused. An entrance never is, or a part
    that arrives while nobody is looking would wait, hidden, at its first frame. Where a part has an
    entrance and an endless movement, the two values are for those two, in that order. */
-.hero[data-mo-away] :is(.rays .is-out, .rays .is-in),
-.rise[data-mo-away] :is(.fan, .fan polygon, .sun-glow),
+.rise[data-mo-away] :is(.fan, .sun-glow),
 .section[data-mo-away] > .glass {
   animation-play-state: paused;
 }
