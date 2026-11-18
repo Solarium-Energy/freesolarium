@@ -8,9 +8,9 @@ import {
   name,
   oneOf,
   phone,
+  pincode,
   readMeta,
   readSubmissionId,
-  text,
   type Errors,
   type Out,
 } from "../_lib/fields";
@@ -41,11 +41,10 @@ export async function POST(request: Request) {
 
   const customerIn = asObject(body.customer);
   const customer: Out = {};
+  // A quotation asks for the name, the mobile number and the PIN code, and sends nothing else about the visitor.
   name(customerIn, "name", customer, errors, "customer.name");
   phone(customerIn, "phone", customer, errors, "customer.phone", true);
-  text(customerIn, "address", 300, customer, errors, "customer.address");
-  text(customerIn, "bank_account_name", 120, customer, errors, "customer.bank_account_name");
-  text(customerIn, "consumer_no", 40, customer, errors, "customer.consumer_no");
+  pincode(customerIn, "pincode", customer, errors, "customer.pincode", true);
 
   const quotationIn = asObject(body.quotation);
   const quotation: Out = {};
@@ -90,5 +89,6 @@ export async function POST(request: Request) {
   if (body.test === true) payload.test = true;
 
   const result = await callCrm("submit", payload, { channel: "website-quote", submissionId });
-  return submitResponse(result);
+  // The CRM may issue a quote number in its answer: it is passed on to the browser.
+  return submitResponse(result, { passQuoteNo: true });
 }

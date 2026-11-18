@@ -109,7 +109,7 @@ export function jpegDataUrlToPdfBlob(jpegDataUrl: string, imgW: number, imgH: nu
 export async function generateQuotationPdfBlob(
   data: QuotationFormData,
   paymentMode: PaymentMode | null,
-  quoteNo: string,
+  quoteNo: string | null,
   quoteDate: string
 ): Promise<Blob> {
   await loadPdfFonts();

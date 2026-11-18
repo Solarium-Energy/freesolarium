@@ -115,14 +115,24 @@ export function crmResponse(result: CrmResult, onOk: (data: Record<string, unkno
   }
 }
 
-/** The answer for a `submit` call. */
-export function submitResponse(result: CrmResult) {
+/** A quote number as the CRM issues it: 1 to 24 letters, digits, "-", "/" or "_". */
+const QUOTE_NO_PATTERN = /^[A-Za-z0-9/_-]{1,24}$/;
+
+/**
+ * The answer for a `submit` call. With `passQuoteNo`, a quote number in the CRM's answer is passed on when it
+ * has that form, and dropped without an error otherwise. It is never logged.
+ */
+export function submitResponse(result: CrmResult, options: { passQuoteNo?: boolean } = {}) {
   return crmResponse(
     result,
     (data) => {
       if (typeof data.status !== "string") {
         console.error("[crm] submit: answer without status");
         return NextResponse.json({ ok: false, code: "unavailable" }, { status: 502 });
+      }
+      const quoteNo = data.quote_no;
+      if (options.passQuoteNo && typeof quoteNo === "string" && QUOTE_NO_PATTERN.test(quoteNo)) {
+        return NextResponse.json({ ok: true, status: data.status, quote_no: quoteNo });
       }
       return NextResponse.json({ ok: true, status: data.status });
     },

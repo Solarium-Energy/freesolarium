@@ -1057,6 +1057,30 @@ html:lang(gu) .qbar .seg button {
 .sheet .bd > .result {
   align-content: center;
 }
+/* The price in three blocks. What comes back to the bank account is on the positive ground: its heading says
+   what it is, the colour only supports it. No red anywhere: red means an error. */
+.pt-block h4 {
+  font: 600 15px/1.3 var(--font-sans);
+}
+.pt-block.is-positive {
+  padding: 2px 14px 12px;
+  border-radius: var(--corner-md);
+  background: var(--status-positive-bg);
+  color: var(--status-positive-fg);
+}
+.pt-block.is-positive h4 {
+  margin-top: 10px;
+}
+.pt-block.is-positive .price-table td,
+.pt-block.is-positive .price-table td:last-child {
+  color: var(--status-positive-fg);
+}
+.pt-block-note {
+  display: block;
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--status-positive-fg);
+}
 
 /* ---------- Phones: stat values and the dock ---------- */
 @media (max-width: 767px) {

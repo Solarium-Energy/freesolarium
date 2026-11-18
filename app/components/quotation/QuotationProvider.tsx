@@ -9,6 +9,8 @@ import {
   FLOOR_OPTIONS,
   GUJARAT_SUBSIDY,
   PAYMENT_MODE_VALUES,
+  PINCODE_PATTERN,
+  QUOTE_NO_PATTERN,
   STANDARD_PRICE,
   STRUCTURE_HEIGHT_OPTIONS,
   computeQuotationNumbers,
@@ -38,15 +40,16 @@ function useQuotationState() {
   const [floor, setFloor]                     = useState<FloorOption>(START.floor);
   const [structureHeight, setStructureHeight] = useState<StructureHeight>(START.structureHeight);
   const [discom, setDiscom]                   = useState<DiscomOption>(START.discom);
-  const [customerNameBill, setCustomerNameBill] = useState("");
-  const [customerNameBank, setCustomerNameBank] = useState("");
-  const [address, setAddress]                   = useState("");
-  const [mobile, setMobile]                     = useState("");
-  const [consumerNo, setConsumerNo]             = useState("");
+  const [name, setName]                       = useState("");
+  const [pincode, setPincode]                 = useState("");
+  const [mobile, setMobile]                   = useState("");
+  // The quote number the CRM gave in its answer to the latest send. None while a send is under way,
+  // after a failed one, or while the CRM sends none. The website never makes one itself.
+  const [quoteNo, setQuoteNo]                 = useState<string | null>(null);
   const [attempted, setAttempted]             = useState(false);
   const [callbackSent, setCallbackSent]       = useState(false);
   const [step, setStep]                       = useState<SheetStep>("details");
-  // The payment mode chosen on the quotation step. It starts with "Without loan".
+  // The payment mode chosen on the quotation step. It starts with the first one (cash).
   const [paymentMode, setPaymentMode]         = useState<PaymentMode | null>("cash");
   const [sending, setSending]                 = useState(false);
   const [sendError, setSendError]             = useState<"general" | "rate" | null>(null);
@@ -56,17 +59,17 @@ function useQuotationState() {
   const lastSentRef = useRef<string | null>(null);
   const confirmedRef = useRef<string | null>(null);
   const sendingRef = useRef(false);
+  // Counts the sends, so that only the answer to the latest one sets the quote number.
+  const sendTurnRef = useRef(0);
   const sheet = useSheet();
 
-  const validNameBill   = customerNameBill.trim().length > 1;
-  const validNameBank   = customerNameBank.trim().length > 1;
-  const validAddress    = address.trim().length > 2;
-  const validMobile     = /^\d{10}$/.test(mobile);
-  const validConsumerNo = consumerNo.trim().length > 1;
+  const validName    = name.trim().length > 1;
+  const validPincode = PINCODE_PATTERN.test(pincode);
+  const validMobile  = /^\d{10}$/.test(mobile);
 
   const selectionsComplete = Boolean(category && floor && structureHeight && discom);
   const needsCallback = floor === "G+5 and above" || structureHeight === "3.0 m and above" || discom === "Other";
-  const allReady = selectionsComplete && validNameBill && validNameBank && validAddress && validMobile && validConsumerNo;
+  const allReady = selectionsComplete && validName && validPincode && validMobile;
   const calc = computeQuotationNumbers(floor, structureHeight, discom);
 
   function reset() {
@@ -74,11 +77,10 @@ function useQuotationState() {
     setFloor(START.floor);
     setStructureHeight(START.structureHeight);
     setDiscom(START.discom);
-    setCustomerNameBill("");
-    setCustomerNameBank("");
-    setAddress("");
+    setName("");
+    setPincode("");
     setMobile("");
-    setConsumerNo("");
+    setQuoteNo(null);
     setAttempted(false);
     setCallbackSent(false);
     setSendError(null);
@@ -95,11 +97,9 @@ function useQuotationState() {
     const priced = !needsCallback;
     return {
       customer: {
-        name: customerNameBill.trim(),
+        name: name.trim(),
         phone: mobile,
-        address: address.trim(),
-        bank_account_name: customerNameBank.trim(),
-        consumer_no: consumerNo.trim(),
+        pincode,
       },
       quotation: {
         subsidy_category: category ?? undefined,
@@ -131,11 +131,18 @@ function useQuotationState() {
     if (key === lastSentRef.current) return "unchanged";
     lastSentRef.current = key;
 
+    // A quote number belongs to one answer: none is shown until the answer to this send has come.
+    const turn = (sendTurnRef.current += 1);
+    setQuoteNo(null);
     const result = await postJson(
       "/api/quote",
       { submission_id: newSubmissionId(), ...quote, meta: buildMeta(), website },
       { keepalive: options.keepalive }
     );
+    if (turn === sendTurnRef.current) {
+      const issued = result.body?.quote_no;
+      setQuoteNo(isConfirmed(result) && typeof issued === "string" && QUOTE_NO_PATTERN.test(issued) ? issued : null);
+    }
     if (isConfirmed(result)) {
       confirmedRef.current = key;
     } else if (lastSentRef.current === key) {
@@ -191,7 +198,7 @@ function useQuotationState() {
     }
 
     // The quotation opens whether or not the CRM call succeeds. The server logs failures.
-    // The quotation step opens with "Without loan" chosen, so this first call carries cash.
+    // The quotation step opens with the first payment mode chosen, so this first call carries cash.
     setPaymentMode("cash");
     void sendQuote({ paymentMode: "cash" });
     setStep("quotation");
@@ -248,21 +255,16 @@ function useQuotationState() {
     changeFloor,
     changeHeight,
     changeDiscom,
-    customerNameBill,
-    setCustomerNameBill,
-    customerNameBank,
-    setCustomerNameBank,
-    address,
-    setAddress,
+    name,
+    setName,
+    pincode,
+    setPincode,
     mobile,
     setMobile,
-    consumerNo,
-    setConsumerNo,
-    validNameBill,
-    validNameBank,
-    validAddress,
+    validName,
+    validPincode,
     validMobile,
-    validConsumerNo,
+    quoteNo,
     attempted,
     allReady,
     callbackSent,

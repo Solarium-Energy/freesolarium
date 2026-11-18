@@ -5,9 +5,6 @@
    the same parts in pdfParts.ts. All figures come from app/lib/quotation.ts. */
 
 import {
-  BANK_BASE_EMI,
-  BANK_BASE_INTEREST,
-  BANK_BASE_LOAN,
   BOOKING_AMOUNT,
   CENTRAL_SUBSIDY,
   DISCOM_SHEET_OPTIONS,
@@ -45,7 +42,8 @@ import {
 export type Quotation218Input = {
   data: QuotationFormData;
   paymentMode: PaymentMode | null;
-  quoteNo: string;
+  /** The quote number the CRM issued, or null: then the line is left out. */
+  quoteNo: string | null;
   quoteDate: string;
   /** The Solarium logo, or null when it could not be loaded. */
   logo: LogoImage | null;
@@ -58,7 +56,6 @@ export function drawQuotation218(ctx: CanvasRenderingContext2D, input: Quotation
   const { data, paymentMode, quoteNo, quoteDate, logo } = input;
   const calc = computeQuotationNumbers(data.floor, data.structureHeight, data.discom);
   const isCash = paymentMode === "cash";
-  const isBank = paymentMode === "bank";
   const isNbfc = paymentMode === "nbfc";
   const doc = newDoc(ctx);
 
@@ -68,23 +65,16 @@ export function drawQuotation218(ctx: CanvasRenderingContext2D, input: Quotation
     scheme: ["PM Surya Ghar:", "Muft Bijli Yojana"],
     eyebrow: "Rooftop solar · Vejalpur, Ahmedabad",
     title: "2.18 kW system quotation",
-    refs: [
-      { label: "Quote no.", value: quoteNo },
-      { label: "Date", value: quoteDate },
-    ],
+    refs: [...(quoteNo ? [{ label: "Quote no.", value: quoteNo }] : []), { label: "Date", value: quoteDate }],
   });
   gap(doc);
 
   FieldRows(doc, [
     [
-      { label: "Customer name (as per electricity bill)", value: data.customerNameBill, span: 2 },
+      { label: "Name", value: data.name, span: 2 },
       { label: "Mobile", value: data.mobile, span: 1 },
     ],
-    [
-      { label: "Customer name (as per bank account)", value: data.customerNameBank, span: 2 },
-      { label: "Consumer no.", value: data.consumerNo, span: 1 },
-    ],
-    [{ label: "Address", value: data.address }],
+    [{ label: "PIN code", value: data.pincode }],
   ]);
   gap(doc);
 
@@ -160,7 +150,7 @@ export function drawQuotation218(ctx: CanvasRenderingContext2D, input: Quotation
     note: "tick one",
     columns: [
       {
-        name: "Without loan",
+        name: "Cheque / NEFT / IMPS / UPI / RTGS",
         chosen: isCash,
         rows: [
           { label: "Booking amount", value: rupees(BOOKING_AMOUNT) },
@@ -176,39 +166,6 @@ export function drawQuotation218(ctx: CanvasRenderingContext2D, input: Quotation
           hint: "(1)+(2)+(3)",
           prefix: "₹",
           value: isCash ? fmtNum(calc.cash.netAfterSubsidy) : null,
-        },
-      },
-      {
-        name: "Nationalised bank loan",
-        chosen: isBank,
-        rows: [
-          {
-            label: `Down payment 10% (base ${rupees(STANDARD_PRICE * 0.1)})`,
-            hint: "10% of final price",
-            fill: { prefix: "₹", value: isBank ? fmtNum(calc.bank.downPayment) : null },
-          },
-          {
-            label: `Loan amount 90% (base ${rupees(BANK_BASE_LOAN)})`,
-            hint: "90% of final price",
-            fill: { prefix: "₹", value: isBank ? fmtNum(calc.bank.loanAmount) : null },
-          },
-          { label: "Loan tenure", value: "5 years (60 months)" },
-          {
-            label: "Estimated monthly EMI",
-            hint: `${rupees(BANK_BASE_EMI)} + on add-ons`,
-            fill: { prefix: "₹", value: isBank ? fmtNum(calc.bank.emi) : null },
-          },
-          {
-            label: "Total estimated interest in 3 EMIs",
-            hint: `${rupees(BANK_BASE_INTEREST)} + on add-ons`,
-            fill: { prefix: "₹", value: isBank ? fmtNum(calc.bank.interest) : null },
-          },
-        ],
-        net: {
-          label: "Net cost after subsidy",
-          hint: "(1)+(2)+(3)+interest",
-          prefix: "₹",
-          value: isBank ? fmtNum(calc.bank.netAfterSubsidy) : null,
         },
       },
       {

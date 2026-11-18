@@ -82,6 +82,21 @@ export function phone(source: Record<string, unknown>, key: string, out: Out, er
   out[key] = digits;
 }
 
+/** A PIN code: six digits, the first not 0. The quotation form checks the same. */
+export function pincode(source: Record<string, unknown>, key: string, out: Out, errors: Errors, path: string, required: boolean) {
+  const value = source[key];
+  if (isEmpty(value)) {
+    if (required) errors[path] = "Enter all 6 digits of your PIN code";
+    return;
+  }
+  const digits = typeof value === "string" || typeof value === "number" ? String(value).trim() : "";
+  if (!/^[1-9]\d{5}$/.test(digits)) {
+    errors[path] = "Enter all 6 digits of your PIN code";
+    return;
+  }
+  out[key] = digits;
+}
+
 export function oneOf(
   source: Record<string, unknown>,
   key: string,

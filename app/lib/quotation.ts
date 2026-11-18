@@ -1,7 +1,8 @@
 /* The quotation's numbers: pricing constants, option lists and the calculation.
    Moved unchanged from the old quotation card and sheet. The bar, the sheet and the PDF all read them from here. */
 
-export type PaymentMode = "cash" | "bank" | "nbfc";
+/** The two payment modes of the quotation: cheque, NEFT, IMPS, UPI or RTGS (`cash`), or an NBFC loan. */
+export type PaymentMode = "cash" | "nbfc";
 
 /** What the quotation sheet and the PDF show about the visitor and their choices. */
 export interface QuotationFormData {
@@ -9,12 +10,16 @@ export interface QuotationFormData {
   floor: string;
   structureHeight: string;
   discom: string;
-  customerNameBill: string;
-  customerNameBank: string;
-  address: string;
+  name: string;
   mobile: string;
-  consumerNo: string;
+  pincode: string;
 }
+
+/** A PIN code: six digits, the first not 0. The server route checks the same. */
+export const PINCODE_PATTERN = /^[1-9]\d{5}$/;
+
+/** A quote number as the CRM issues it. Anything else from its answer is dropped. The server route checks the same. */
+export const QUOTE_NO_PATTERN = /^[A-Za-z0-9/_-]{1,24}$/;
 
 /* ─── Pricing Constants (exact match to offline sheet) ─── */
 export const SYSTEM_PRICE = 108_100;
@@ -27,10 +32,6 @@ export const GUJARAT_SUBSIDY = 34_050;
 export const TOTAL_SUBSIDY = CENTRAL_SUBSIDY + GUJARAT_SUBSIDY;
 export const EFFECTIVE_COST = Math.max(0, STANDARD_PRICE - TOTAL_SUBSIDY);
 export const BOOKING_AMOUNT = 10_000;
-
-export const BANK_BASE_LOAN = 87_561;
-export const BANK_BASE_EMI = 1_715;
-export const BANK_BASE_INTEREST = 1_310;
 
 export const NBFC_BASE_LOAN = 97_290;
 export const NBFC_BASE_EMI = 2_351;
@@ -65,18 +66,11 @@ export function computeQuotationNumbers(floor: string, structureHeight: string, 
   const addOns = floorCost + heightCost + meterCost;
   const finalPrice = STANDARD_PRICE + addOns;
 
-  // 1. Without loan
+  // 1. Cheque, NEFT, IMPS, UPI or RTGS
   const cashBeforeDispatch = finalPrice - BOOKING_AMOUNT;
   const cashNetAfterSubsidy = addOns;
 
-  // 2. Nationalised bank loan (10% down, 90% loan)
-  const bankDownPayment = Math.round(finalPrice * 0.1);
-  const bankLoanAmount = Math.round(finalPrice * 0.9);
-  const bankEmi = Math.round((BANK_BASE_EMI * bankLoanAmount) / BANK_BASE_LOAN);
-  const bankInterest = Math.round((BANK_BASE_INTEREST * bankLoanAmount) / BANK_BASE_LOAN);
-  const bankNetAfterSubsidy = addOns + bankInterest;
-
-  // 3. NBFC loan (0% down, 100% loan)
+  // 2. NBFC loan (0% down, 100% loan)
   const nbfcLoanAmount = finalPrice;
   const nbfcEmi = Math.round((NBFC_BASE_EMI * nbfcLoanAmount) / NBFC_BASE_LOAN);
   const nbfcInterest = Math.round((NBFC_BASE_INTEREST * nbfcLoanAmount) / NBFC_BASE_LOAN);
@@ -91,13 +85,6 @@ export function computeQuotationNumbers(floor: string, structureHeight: string, 
     cash: {
       beforeDispatch: cashBeforeDispatch,
       netAfterSubsidy: cashNetAfterSubsidy,
-    },
-    bank: {
-      downPayment: bankDownPayment,
-      loanAmount: bankLoanAmount,
-      emi: bankEmi,
-      interest: bankInterest,
-      netAfterSubsidy: bankNetAfterSubsidy,
     },
     nbfc: {
       loanAmount: nbfcLoanAmount,
@@ -131,19 +118,10 @@ export const DISCOM_OPTIONS = [
   { label: "Other", crm: "Other", guLabel: "અન્ય (Other)", sub: "Our team will contact you", guSub: "અમારી ટીમ તમારો સંપર્ક કરશે", extra: 0, custom: true },
 ] as const;
 
-/* The sheet's payment modes in the CRM's values, and the loan figures shown for each loan mode. */
-export const PAYMENT_MODE_VALUES: Record<PaymentMode, string> = { cash: "cash", bank: "bank-loan", nbfc: "nbfc-loan" };
+/* The sheet's payment modes in the CRM's values, and the loan figures shown for the loan. */
+export const PAYMENT_MODE_VALUES: Record<PaymentMode, string> = { cash: "cash", nbfc: "nbfc-loan" };
 
 export function loanFigures(mode: PaymentMode | null, calc: ReturnType<typeof computeQuotationNumbers>) {
-  if (mode === "bank") {
-    return {
-      down_payment: calc.bank.downPayment,
-      loan_amount: calc.bank.loanAmount,
-      emi: calc.bank.emi,
-      interest_first_3_emis: calc.bank.interest,
-      net_cost: calc.bank.netAfterSubsidy,
-    };
-  }
   if (mode === "nbfc") {
     return {
       down_payment: 0,
