@@ -397,7 +397,7 @@ export const TERMS_OF_SERVICE: LegalDocument = {
       "blocks": [
         {
           "type": "paragraph",
-          "text": "The customer system at crm.solariumenergy.org is for Solarium's authorised staff only. Staff sign in with their company Google account and use it under Solarium's internal rules. No one else may try to access it."
+          "text": "The customer system at crm.solariumenergy.org is for Solarium's authorised staff only. Staff sign in with their company account and use it under Solarium's internal rules. No one else may try to access it."
         }
       ]
     },
