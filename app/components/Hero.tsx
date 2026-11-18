@@ -7,11 +7,24 @@ import { CENTRAL_SUBSIDY, EFFECTIVE_COST, GUJARAT_SUBSIDY } from "../lib/quotati
 import QuotationBar from "./quotation/QuotationBar";
 import Button from "./ui/Button";
 
-const HERO_FEATURES = [
-  { line1: "5-year", line2: "insurance", guLine1: "5 વર્ષનો", guLine2: "વીમો" },
-  { line1: "100% subsidy", line2: "in return", guLine1: "100% સબસિડી", guLine2: "(યોજનાના નિયમો મુજબ)" },
-  { line1: "Installed by", line2: "our own team", guLine1: "અમારી પોતાની ટીમ દ્વારા", guLine2: "ઇન્સ્ટોલેશન" },
-] as const;
+type Point = { b: string; s: string; guB: string; guS: string };
+
+/* Beside the sun, from 1200 wide: three points on each side, each one bold line and one small line.
+   The money on the left, the trust on the right. The rating's stars are added in the markup. */
+const LEFT_POINTS: Point[] = [
+  { b: "Save ~₹2,000", s: "every month", guB: "~₹2,000 ની બચત", guS: "દર મહિને" },
+  { b: "~₹6 Lakhs saved", s: "over 25 years", guB: "~₹6 લાખની બચત", guS: "25 વર્ષમાં કુલ" },
+  { b: "100%* subsidy", s: "in return", guB: "100%* સબસિડી", guS: "(યોજનાના નિયમો મુજબ)" },
+];
+const RIGHT_POINTS: Point[] = [
+  { b: "5-year insurance", s: "included free", guB: "5 વર્ષનો વીમો", guS: "મફત સમાવિષ્ટ" },
+  { b: "Directly installed", s: "by panel manufacturer", guB: "સીધું ઇન્સ્ટોલેશન", guS: "પેનલ ઉત્પાદક દ્વારા" },
+];
+/* Under the price on a phone: the rating and these two. */
+const PHONE_POINTS: Point[] = [
+  { b: "5-year", s: "insurance", guB: "5 વર્ષનો", guS: "વીમો" },
+  { b: "100%* subsidy", s: "in return", guB: "100%* સબસિડી", guS: "(યોજનાના નિયમો મુજબ)" },
+];
 
 /* Seven rays, as in the logo, 26 degrees apart. */
 const RAYS = [-78, -52, -26, 0, 26, 52, 78];
@@ -31,10 +44,12 @@ export default function Hero() {
   const { isGu } = useLanguage();
   const footnote = useHeroFootnote();
   const price = inr(EFFECTIVE_COST);
-  const feature = (index: number) => {
-    const item = HERO_FEATURES[index];
-    return isGu ? [item.guLine1, item.guLine2] : [item.line1, item.line2];
-  };
+  const point = (item: Point) => (
+    <div key={item.b}>
+      <b>{isGu ? item.guB : item.b}</b>
+      <span>{isGu ? item.guS : item.s}</span>
+    </div>
+  );
 
   return (
     <section className="hero on-dark" id="top" data-mo-scroll="" data-mo-pointer="" data-mo-loop="">
@@ -53,11 +68,13 @@ export default function Hero() {
       </svg>
 
       <div className="top">
+        {/* Three parts with a dot between them. On a narrow phone the third part takes a line of its own,
+            and the dot before it is not drawn, so no dot starts or ends a line. */}
         <div className="meta">
           <span>2.18 kW</span>
           <b aria-hidden="true" />
-          <span>{isGu ? "PM સૂર્ય ઘર યોજના હેઠળ" : "Under PM Surya Ghar"}</span>
-          <b aria-hidden="true" />
+          <span>{isGu ? "PM સૂર્ય ઘર: મફત વીજળી યોજના હેઠળ" : "Under PM Surya Ghar: Muft Bijli Yojana"}</span>
+          <b aria-hidden="true" className="before-last" />
           <span>{isGu ? "ગુજરાતના ઘરો માટે" : "Gujarat homes"}</span>
         </div>
         {isGu ? (
@@ -87,16 +104,7 @@ export default function Hero() {
         </a>
       </div>
 
-      <div className="flank l">
-        <div>
-          <b>{isGu ? "લગભગ ₹2,000 ની બચત કરો" : "Save ~₹2,000"}</b>
-          <span>{isGu ? "દર મહિને" : "every month"}</span>
-        </div>
-        <div>
-          <b>{isGu ? "₹6 લાખની બચત" : "₹6 Lakhs saved"}</b>
-          <span>{isGu ? "25 વર્ષમાં કુલ" : "over 25 years"}</span>
-        </div>
-      </div>
+      <div className="flank l">{LEFT_POINTS.map(point)}</div>
 
       <div className="flank r">
         <div>
@@ -108,11 +116,7 @@ export default function Hero() {
           </b>
           <span>{isGu ? "ગૂગલ રેટિંગ" : "Google rating"}</span>
         </div>
-        <div>
-          <b>{feature(0).join(" ")}</b>
-          <span>{feature(1).join(" ")}</span>
-          <span>{feature(2).join(" ")}</span>
-        </div>
+        {RIGHT_POINTS.map(point)}
       </div>
 
       <div className="proof">
@@ -120,14 +124,12 @@ export default function Hero() {
           <b>{CUSTOMER_SAVINGS.googleRating} ★</b>
           {isGu ? "ગૂગલ રેટિંગ" : "Google rating"}
         </div>
-        <div>
-          <b>{feature(0)[0]}</b>
-          {feature(0)[1]}
-        </div>
-        <div>
-          <b>{feature(1)[0]}</b>
-          {feature(1)[1]}
-        </div>
+        {PHONE_POINTS.map((item) => (
+          <div key={item.b}>
+            <b>{isGu ? item.guB : item.b}</b>
+            {isGu ? item.guS : item.s}
+          </div>
+        ))}
       </div>
 
       <QuotationBar copy="hero" />

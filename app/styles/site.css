@@ -303,6 +303,51 @@
 .hero .flank div > span {
   display: block;
 }
+/* Three points on each side of the sun from 1200 wide, each one bold line and one small line, never a third.
+   They start higher and their bold line is smaller than in the design (548px and 30px), so that the lowest
+   point keeps at least 16px from the sun at every width from 1200 to 1920, in both languages. */
+.hero .flank {
+  top: 484px;
+  gap: 18px;
+}
+.hero .flank b {
+  font-size: 26px;
+  white-space: nowrap;
+}
+.hero .flank div > span {
+  line-height: 1.35;
+  white-space: nowrap;
+}
+@media (max-width: 767px) {
+  /* The rays of the phone's sun: the drawing is made for a sun of radius 380 with its middle at 720, 718 of
+     1440 by 900. Here it is shown at 215 / 380 of that size, with that point on the middle of the phone's
+     sun (50% and 545px). The hero clips what leaves it. */
+  .hero .rays {
+    display: block;
+    width: calc(1440px * 215 / 380);
+    height: calc(900px * 215 / 380);
+    margin-left: calc(-720px * 215 / 380);
+    top: calc(545px - 718px * 215 / 380);
+  }
+}
+@media (max-width: 419px) {
+  /* The line above the headline does not fit one line here: its third part takes a line of its own, and the
+     dot before it is not drawn. The headline moves down with it. */
+  .hero .meta {
+    flex-wrap: wrap;
+    row-gap: 2px;
+    line-height: 1.4;
+  }
+  .hero .meta span {
+    white-space: nowrap;
+  }
+  .hero .meta .before-last {
+    display: none;
+  }
+  .hero .meta span:last-child {
+    flex-basis: 100%;
+  }
+}
 .hero .incta .lk {
   display: inline-flex;
   align-items: center;
