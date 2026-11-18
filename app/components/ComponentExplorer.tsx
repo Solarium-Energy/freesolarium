@@ -16,6 +16,8 @@ export default function ComponentExplorer() {
   const [at, setAt] = useState(0);
   // How far the arc of the disc has travelled, in tenths of a turn. It always takes the short way round.
   const [turn, setTurn] = useState(0);
+  // Whether the reader has chosen a component yet: only then do the lines of a panel come in one after another.
+  const [moved, setMoved] = useState(false);
   const listRef = useRef<HTMLOListElement>(null);
   const current = INCLUDED[at];
 
@@ -24,6 +26,7 @@ export default function ComponentExplorer() {
     const way = ((next - at + COUNT + COUNT / 2) % COUNT) - COUNT / 2;
     setTurn(turn + way);
     setAt(next);
+    setMoved(true);
     // Below 1120px the list is a row of pills that scrolls sideways: keep the chosen one in view.
     const list = listRef.current;
     const item = list?.children[next] as HTMLElement | undefined;
@@ -119,34 +122,39 @@ export default function ComponentExplorer() {
             </div>
           </div>
 
-          {/* Every panel is in the page, the ones not chosen are hidden. */}
-          {INCLUDED.map((item, index) => (
-            <div className="detail" id={`component-${index + 1}`} key={item.title} hidden={index !== at} data-mo="right">
-              <span className="tag">{isGu ? item.guTag : item.tag}</span>
-              <h3>{isGu ? item.guTitle : item.title}</h3>
-              <div className="it">{isGu ? item.guSubtitle : item.subtitle}</div>
-              <p>{isGu ? item.guBody : item.body}</p>
-              <ul className="specs">
-                {(isGu ? item.guSpecs : item.specs).map((spec) => (
-                  <li key={spec}>
-                    <Check className="ico" aria-hidden="true" />
-                    {spec}
-                  </li>
-                ))}
-              </ul>
-              <div className="pager">
-                <IconButton label="Previous component" size="lg" onClick={() => show(at - 1)}>
-                  <ArrowLeft className="ico" aria-hidden="true" />
-                </IconButton>
-                <IconButton label="Next component" size="lg" solid onClick={() => show(at + 1)}>
-                  <ArrowRight className="ico" aria-hidden="true" />
-                </IconButton>
-                <span>
-                  {two(index + 1)} / {two(COUNT)}
-                </span>
-              </div>
+          <div data-mo="right">
+            {/* Every panel is in the page and they all share one place, as tall as the tallest of them.
+                So the pager under them stays where it is, whichever component is shown. */}
+            <div className="details" data-moved={moved ? "" : undefined}>
+              {INCLUDED.map((item, index) => (
+                <div className={index === at ? "detail is-on" : "detail"} id={`component-${index + 1}`} key={item.title}>
+                  <span className="tag">{isGu ? item.guTag : item.tag}</span>
+                  <h3>{isGu ? item.guTitle : item.title}</h3>
+                  <div className="it">{isGu ? item.guSubtitle : item.subtitle}</div>
+                  <p>{isGu ? item.guBody : item.body}</p>
+                  <ul className="specs">
+                    {(isGu ? item.guSpecs : item.specs).map((spec) => (
+                      <li key={spec}>
+                        <Check className="ico" aria-hidden="true" />
+                        {spec}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
             </div>
-          ))}
+            <div className="pager">
+              <IconButton label="Previous component" size="lg" onClick={() => show(at - 1)}>
+                <ArrowLeft className="ico" aria-hidden="true" />
+              </IconButton>
+              <IconButton label="Next component" size="lg" solid onClick={() => show(at + 1)}>
+                <ArrowRight className="ico" aria-hidden="true" />
+              </IconButton>
+              <span>
+                {two(at + 1)} / {two(COUNT)}
+              </span>
+            </div>
+          </div>
         </div>
       </div>
     </section>

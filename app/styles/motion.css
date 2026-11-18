@@ -1,20 +1,33 @@
 /* Motion for the website.
 
-   The idea is the name of the look, First Light: the page opens like a sunrise, and everything
-   that comes into view rises into place the way the sun does. Three kinds of movement:
+   The idea is the name of the look, First Light: the page opens like a sunrise, the sun's rays
+   keep turning, and everything that comes into view arrives the way light does.
 
-   1. On load: the hero's sunrise. Pure CSS, it runs without JavaScript.
-   2. On scroll: parts rise in as they come into view, and a few pictures follow the scroll
-      (the hero's sun, the rising curve, the closing sun). app/components/Motion.tsx drives these
-      by setting data-in, --mo-p, --mo-x and --mo-y. Nothing here hides content unless that
-      controller can run: every hidden state sits under html.mo, a class a tiny script in the
-      page's head sets only when motion is allowed, and what follows the scroll sits under
-      html.mo-live, which the controller sets once it runs.
-   3. On touch: buttons, cards, the explorer, the sheet and the result screen answer a press.
+   Four kinds of movement:
 
-   Only opacity, translate, scale, rotate, transform, clip-path and stroke-dashoffset move, so
-   nothing shifts the layout. "Reduce motion" stops all of it: the stylesheet's own rule turns
-   every animation and transition off, and the head script never sets html.mo. */
+   1. Entrances. The hero's sunrise plays when the page opens (pure CSS, it runs without
+      JavaScript). Other parts arrive once, when they come into view, or one after another as the
+      page scrolls on: app/components/Motion.tsx marks them with data-in.
+   2. What follows the scroll. The curve of "After you book" draws itself as its block comes into
+      view, and each step arrives when the line reaches it (--mo-p). It never runs backwards.
+      On a desktop the hero's layers also shift a little with the scroll and the pointer.
+   3. What keeps moving: the rays of the two suns turn clockwise without a stop, and their glow
+      breathes. They rest while they are off the screen.
+   4. Answers to a press: buttons, the explorer, the price in the bar, the sheet and the result.
+
+   Rules that keep the page whole:
+
+   - Nothing here hides content unless the controller can run: every hidden state sits under
+     html.mo, a class a tiny script in the page's head sets only when motion is allowed, and what
+     follows the scroll sits under html.mo-live, which the controller sets once it runs.
+   - An entrance ends in the page exactly as it is drawn without motion.
+   - Only opacity, translate, scale, rotate, transform, clip-path and a line's dash offset move, so
+     nothing shifts the layout.
+   - A drawn shape that carries its own position (an SVG part with a transform attribute) is never
+     given a transform-origin, a translate, a scale or a rotate: that moves the shape off its place.
+     Such shapes only fade. What has to turn or grow sits in a group that carries no position.
+   - "Reduce motion" stops all of it: the stylesheet's own rule turns every animation and
+     transition off, and the head script never sets html.mo. */
 
 .sol {
   --mo-ease: cubic-bezier(0.16, 1, 0.3, 1);
@@ -25,6 +38,10 @@
   --mo-p: 0;
   --mo-x: 0;
   --mo-y: 0;
+  --mo-dx: 0px;
+  --mo-dy: 0px;
+  /* How long a sun's rays take to turn by the angle between two rays. The turn never stops. */
+  --mo-turn-time: 3200ms;
 }
 
 /* ---------- The shared movements ---------- */
@@ -86,65 +103,6 @@
     opacity: 1;
   }
 }
-
-/* ---------- Rise into view ---------- */
-/* data-mo on a part, or data-mo-group on its parent to bring the children in one after another. */
-html.mo [data-mo]:not([data-in]),
-html.mo [data-mo-group] > :not([data-in]),
-html.mo [data-mo-at]:not([data-in]) {
-  opacity: 0;
-}
-html.mo [data-mo][data-in],
-html.mo [data-mo-group] > [data-in] {
-  animation: mo-rise var(--dur-rise) var(--mo-ease) backwards;
-  animation-delay: calc(var(--mo-i) * var(--mo-step));
-}
-html.mo [data-mo="fade"][data-in],
-html.mo [data-mo-group="fade"] > [data-in] {
-  animation-name: mo-fade;
-}
-html.mo [data-mo="left"][data-in] {
-  animation-name: mo-from-left;
-}
-html.mo [data-mo="right"][data-in] {
-  animation-name: mo-from-right;
-}
-html.mo [data-mo="pop"][data-in],
-html.mo [data-mo-group="pop"] > [data-in] {
-  animation-name: mo-pop;
-}
-/* If the controller never starts, nothing stays hidden. */
-html.mo:not(.mo-live) [data-mo]:not([data-in]),
-html.mo:not(.mo-live) [data-mo-group] > :not([data-in]),
-html.mo:not(.mo-live) [data-mo-at]:not([data-in]) {
-  animation: mo-show 1ms linear 3s forwards;
-}
-@media print {
-  html.mo [data-mo],
-  html.mo [data-mo-group] > *,
-  html.mo [data-mo-at] {
-    opacity: 1;
-    animation: none;
-  }
-}
-/* The dot of an eyebrow lands a moment after its words. */
-html.mo [data-in] > .eyebrow::before,
-html.mo .eyebrow[data-in]::before {
-  animation: mo-pop var(--dur-rise) var(--mo-spring) backwards;
-  animation-delay: calc(var(--mo-i) * var(--mo-step) + 260ms);
-}
-
-/* ---------- Hero: first light ---------- */
-/* The page opens before dawn. A veil of night lifts while the sun comes up, its glow blooms,
-   the rays reach out from it, and the words and the quotation bar rise into place. */
-@keyframes mo-dawn {
-  from {
-    opacity: 0.62;
-  }
-  to {
-    opacity: 0;
-  }
-}
 @keyframes mo-sunrise {
   from {
     opacity: 0;
@@ -163,21 +121,139 @@ html.mo .eyebrow[data-in]::before {
     opacity: 1;
   }
 }
-@keyframes mo-ray {
+@keyframes mo-gone {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+/* The rays of a sun turn clockwise without a stop. The turn runs at one steady speed through the
+   angle between two rays and starts again from where the rays were drawn: because every ray is the
+   same, it never seems to start again. While it turns, the last ray on the right fades out and a new
+   one comes in on the left, so the rays always point upwards. */
+@keyframes mo-fan {
+  from {
+    rotate: 0deg;
+  }
+  to {
+    rotate: 26deg;
+  }
+}
+@keyframes mo-ray-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes mo-ray-in {
   from {
     opacity: 0;
-    scale: 0.45;
+  }
+  to {
+    opacity: 1;
   }
 }
-@keyframes mo-shimmer {
-  50% {
-    opacity: 0.5;
+/* The same for a sun whose outer rays already point a little below the horizon: the ray that leaves is
+   gone, and the ray that comes in appears, while they are still close to it. */
+@keyframes mo-ray-out-soon {
+  from {
+    opacity: 1;
+  }
+  60%,
+  to {
+    opacity: 0;
   }
 }
+@keyframes mo-ray-in-late {
+  from,
+  40% {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ---------- Arrive ---------- */
+/* data-mo on a part, or data-mo-group on its parent to bring the children in one after another.
+   data-mo-seq brings the children in one at a time as the page scrolls on, and a data-mo-at part
+   arrives when the line of its data-mo-scrub block reaches it.
+   The controller answers with data-in="" (play the entrance) or data-in="now" (show at once). */
+html.mo [data-mo]:not([data-in]),
+html.mo [data-mo-group] > :not([data-in]),
+html.mo [data-mo-seq] > :not([data-in]),
+html.mo [data-mo-at]:not([data-in]) {
+  opacity: 0;
+}
+html.mo [data-mo][data-in=""],
+html.mo [data-mo-group] > [data-in=""] {
+  animation: mo-rise var(--dur-rise) var(--mo-ease) backwards;
+  animation-delay: calc(var(--mo-i) * var(--mo-step));
+}
+html.mo [data-mo="fade"][data-in=""],
+html.mo [data-mo-group="fade"] > [data-in=""] {
+  animation-name: mo-fade;
+}
+html.mo [data-mo="left"][data-in=""] {
+  animation-name: mo-from-left;
+}
+html.mo [data-mo="right"][data-in=""] {
+  animation-name: mo-from-right;
+}
+html.mo [data-mo="pop"][data-in=""],
+html.mo [data-mo-group="pop"] > [data-in=""] {
+  animation-name: mo-pop;
+}
+html.mo [data-mo="sunrise"][data-in=""] {
+  animation-name: mo-sunrise;
+  animation-duration: 1300ms;
+}
+html.mo [data-mo="bloom"][data-in=""] {
+  animation-name: mo-bloom;
+  animation-duration: 1500ms;
+}
+/* If the controller never starts, nothing stays hidden. */
+html.mo:not(.mo-live) [data-mo]:not([data-in]),
+html.mo:not(.mo-live) [data-mo-group] > :not([data-in]),
+html.mo:not(.mo-live) [data-mo-seq] > :not([data-in]),
+html.mo:not(.mo-live) [data-mo-at]:not([data-in]) {
+  animation: mo-show 1ms linear 3s forwards;
+}
+@media print {
+  html.mo [data-mo],
+  html.mo [data-mo-group] > *,
+  html.mo [data-mo-seq] > *,
+  html.mo [data-mo-at] {
+    opacity: 1;
+    animation: none;
+  }
+}
+/* The dot of an eyebrow lands a moment after its words. */
+html.mo [data-in=""] > .eyebrow::before,
+html.mo .eyebrow[data-in=""]::before {
+  animation: mo-pop var(--dur-rise) var(--mo-spring) backwards;
+  animation-delay: calc(var(--mo-i) * var(--mo-step) + 260ms);
+}
+
+/* ---------- Hero: first light ---------- */
+/* The page opens before dawn. A veil of night lifts while the sun comes up, its glow blooms,
+   the rays come up, already turning, and the words and the quotation bar rise into place. */
 @keyframes mo-breathe {
   to {
     scale: 1.04;
     opacity: 0.88;
+  }
+}
+@keyframes mo-dawn {
+  from {
+    opacity: 0.62;
+  }
+  to {
+    opacity: 0;
   }
 }
 .hero::before {
@@ -202,30 +278,6 @@ html.mo .eyebrow[data-in]::before {
 }
 .hero .price {
   animation: mo-sunrise 1200ms var(--mo-ease) 220ms backwards;
-}
-.hero .rays polygon {
-  transform-box: view-box;
-  transform-origin: 720px 718px;
-  animation:
-    mo-ray 1100ms var(--mo-ease) backwards,
-    mo-shimmer 6s ease-in-out infinite;
-  animation-delay: calc(520ms + var(--mo-i) * 90ms), calc(2200ms + var(--mo-i) * 700ms);
-}
-/* The middle ray first, then outwards on both sides. */
-.hero .rays polygon:nth-child(4) {
-  --mo-i: 0;
-}
-.hero .rays polygon:nth-child(3),
-.hero .rays polygon:nth-child(5) {
-  --mo-i: 1;
-}
-.hero .rays polygon:nth-child(2),
-.hero .rays polygon:nth-child(6) {
-  --mo-i: 2;
-}
-.hero .rays polygon:nth-child(1),
-.hero .rays polygon:nth-child(7) {
-  --mo-i: 3;
 }
 .hero .meta {
   animation: mo-rise-sm 800ms var(--mo-ease) 120ms backwards;
@@ -267,47 +319,59 @@ html.mo .eyebrow[data-in]::before {
   animation-delay: 980ms;
 }
 
-/* The hero follows the scroll and, on a desktop, the pointer: the sun sinks behind the bar as the
-   page moves on, the words lift away, and the layers shift by different amounts, which gives depth. */
-html.mo-live .hero .sun {
-  transform: translate3d(calc(var(--mo-x) * 8px), calc(var(--mo-p) * 96px + var(--mo-y) * 6px), 0);
+/* The rays turn clockwise, steadily and without a stop, from the moment the page opens: they come
+   up as one picture that is already turning. The whole picture of the rays turns round the middle
+   of the sun, which the compositor does without redrawing it. Each ray carries its own position
+   and is never moved by itself: the two at the ends only fade. The picture is allowed to draw past
+   its own edges while it turns, or the edges would turn with it and cut the rays. */
+.hero .rays .is-in {
+  opacity: 0;
 }
-html.mo-live .hero .price {
-  transform: translate3d(calc(var(--mo-x) * 10px), calc(var(--mo-p) * 64px + var(--mo-y) * 7px), 0);
-}
-html.mo-live .hero .incta {
-  transform: translate3d(calc(var(--mo-x) * 10px), calc(var(--mo-p) * 40px + var(--mo-y) * 7px), 0);
-}
-html.mo-live .hero .glow {
-  transform: translate3d(calc(var(--mo-x) * 16px), calc(var(--mo-p) * 60px + var(--mo-y) * 10px), 0);
-}
-html.mo-live .hero .halo {
-  transform: translate3d(calc(var(--mo-x) * -8px), calc(var(--mo-p) * 30px + var(--mo-y) * -5px), 0);
-}
-html.mo-live .hero .rays {
-  transform-origin: 50% 80%;
-  transform: translate3d(calc(var(--mo-x) * 10px), calc(var(--mo-p) * 96px), 0) rotate(calc(var(--mo-x) * 1.5deg));
-}
-html.mo-live .hero .top {
-  transform: translate3d(calc(var(--mo-x) * -6px), calc(var(--mo-p) * -70px + var(--mo-y) * -4px), 0);
-  opacity: calc(1 - var(--mo-p) * 1.7);
-}
-html.mo-live .hero .flank {
-  transform: translate3d(calc(var(--mo-x) * -4px), calc(var(--mo-p) * -30px), 0);
-}
-@media (max-width: 767px) {
-  html.mo-live .hero .sun,
-  html.mo-live .hero .price,
-  html.mo-live .hero .incta,
-  html.mo-live .hero .proof {
-    transform: translate3d(0, calc(var(--mo-p) * 44px), 0);
+@media (prefers-reduced-motion: no-preference) {
+  .hero .rays {
+    overflow: visible;
+    transform-origin: 720px 718px;
+    animation:
+      mo-fade 1400ms var(--ease-out) 560ms backwards,
+      mo-fan var(--mo-turn-time) linear infinite;
   }
-  html.mo-live .hero .glow,
+  .hero .rays .is-out {
+    animation: mo-ray-out var(--mo-turn-time) linear infinite;
+  }
+  .hero .rays .is-in {
+    animation: mo-ray-in var(--mo-turn-time) linear infinite;
+  }
+}
+
+/* On a desktop the hero follows the scroll and the pointer: the sun sinks behind the bar as the
+   page moves on, the words lift away, and the layers shift by different amounts, which gives depth.
+   This is the one thing that follows the scroll both ways: the top of the page is whole again
+   when the reader comes back to it. */
+@media (min-width: 1120px) {
+  html.mo-live .hero .sun {
+    transform: translate3d(calc(var(--mo-x) * 8px), calc(var(--mo-p) * 96px + var(--mo-y) * 6px), 0);
+  }
+  html.mo-live .hero .price {
+    transform: translate3d(calc(var(--mo-x) * 10px), calc(var(--mo-p) * 64px + var(--mo-y) * 7px), 0);
+  }
+  html.mo-live .hero .incta {
+    transform: translate3d(calc(var(--mo-x) * 10px), calc(var(--mo-p) * 40px + var(--mo-y) * 7px), 0);
+  }
+  html.mo-live .hero .glow {
+    transform: translate3d(calc(var(--mo-x) * 16px), calc(var(--mo-p) * 60px + var(--mo-y) * 10px), 0);
+  }
   html.mo-live .hero .halo {
-    transform: translate3d(0, calc(var(--mo-p) * 24px), 0);
+    transform: translate3d(calc(var(--mo-x) * -8px), calc(var(--mo-p) * 30px + var(--mo-y) * -5px), 0);
+  }
+  html.mo-live .hero .rays {
+    transform: translate3d(calc(var(--mo-x) * 10px), calc(var(--mo-p) * 96px), 0) rotate(calc(var(--mo-x) * 1.5deg));
   }
   html.mo-live .hero .top {
-    transform: translate3d(0, calc(var(--mo-p) * -30px), 0);
+    transform: translate3d(calc(var(--mo-x) * -6px), calc(var(--mo-p) * -70px + var(--mo-y) * -4px), 0);
+    opacity: calc(1 - var(--mo-p) * 1.7);
+  }
+  html.mo-live .hero .flank {
+    transform: translate3d(calc(var(--mo-x) * -4px), calc(var(--mo-p) * -30px), 0);
   }
 }
 
@@ -339,8 +403,7 @@ html.mo-live .hero .flank {
     background var(--dur-fast),
     transform var(--dur-fast),
     translate var(--dur-base) var(--mo-ease),
-    scale var(--dur-fast) var(--ease-out),
-    box-shadow var(--dur-base) var(--ease-out);
+    scale var(--dur-fast) var(--ease-out);
 }
 .btn .ico {
   transition: translate var(--dur-base) var(--mo-ease);
@@ -379,27 +442,29 @@ html.mo-live .hero .flank {
 
 /* ---------- Stats ---------- */
 /* Each bracket draws itself from its middle while its figure rises under it. */
-html.mo .stats .bracket[data-in]::before {
+html.mo .stats .bracket[data-in=""]::before {
   animation: mo-draw-x 1000ms var(--mo-ease) backwards;
   animation-delay: calc(var(--mo-i) * var(--mo-step) + 120ms);
 }
 
 /* ---------- The component explorer ---------- */
+/* The chosen row of the list steps a little to the right. Only the words move, the row keeps its place. */
 .index-list li {
-  transition:
-    color var(--dur-base) var(--ease-out),
-    padding-left var(--dur-slow) var(--mo-ease);
+  transition: color var(--dur-base) var(--ease-out);
 }
 .index-list li.is-on::after {
   animation: mo-pop var(--dur-slow) var(--mo-spring);
 }
 @media (min-width: 1120px) and (hover: hover) {
+  .index-list li button {
+    transition: translate var(--dur-slow) var(--mo-ease);
+  }
   .index-list li:hover {
     color: var(--foreground);
-    padding-left: 6px;
   }
-  .index-list li.is-on {
-    padding-left: 6px;
+  .index-list li:hover button,
+  .index-list li.is-on button {
+    translate: 6px 0;
   }
 }
 /* The orange arc travels round the ring to the chosen component: one tenth of a turn each. */
@@ -410,31 +475,25 @@ html.mo .stats .bracket[data-in]::before {
 .disc .n {
   animation: mo-pop 500ms var(--mo-spring);
 }
-/* A panel that comes into view (the first time, and every time another component is chosen)
-   slides in, and its lines follow one after another. */
-html.mo .detail[data-in] {
-  animation-duration: 600ms;
-}
-html.mo .detail[data-in] > * {
+/* When another component is chosen, the lines of its panel come in one after another.
+   The pager under the panels is not part of any panel and never moves. */
+.details[data-moved] > .detail.is-on > * {
   animation: mo-rise-sm 600ms var(--mo-ease) backwards;
 }
-html.mo .detail[data-in] > :nth-child(1) {
-  animation-delay: 60ms;
+.details[data-moved] > .detail.is-on > :nth-child(1) {
+  animation-delay: 40ms;
 }
-html.mo .detail[data-in] > :nth-child(2) {
-  animation-delay: 110ms;
+.details[data-moved] > .detail.is-on > :nth-child(2) {
+  animation-delay: 90ms;
 }
-html.mo .detail[data-in] > :nth-child(3) {
-  animation-delay: 160ms;
+.details[data-moved] > .detail.is-on > :nth-child(3) {
+  animation-delay: 140ms;
 }
-html.mo .detail[data-in] > :nth-child(4) {
-  animation-delay: 210ms;
+.details[data-moved] > .detail.is-on > :nth-child(4) {
+  animation-delay: 190ms;
 }
-html.mo .detail[data-in] > :nth-child(5) {
-  animation-delay: 260ms;
-}
-html.mo .detail[data-in] > :nth-child(6) {
-  animation-delay: 310ms;
+.details[data-moved] > .detail.is-on > :nth-child(5) {
+  animation-delay: 240ms;
 }
 
 /* ---------- Logo wall ---------- */
@@ -443,32 +502,91 @@ html.mo .detail[data-in] > :nth-child(6) {
 }
 
 /* ---------- The 6S ---------- */
-/* Each card rises, then its mark lights: the rays reach out from the small sun at its foot. */
+/* The six points arrive one at a time as the page scrolls on (data-mo-seq). The first one rises.
+   For each one after it, the small sun of the point before copies itself and travels to the new
+   point with that point's ray still lit, hands the light over to the new point's own ray as it
+   lands, and the words slide out from behind the edge of the point before. */
 @keyframes mo-drift {
   to {
     translate: -40px 30px;
   }
 }
-@keyframes mo-pulse {
+@keyframes mo-carry {
+  from {
+    translate: var(--mo-dx) var(--mo-dy);
+  }
+}
+@keyframes mo-emerge {
+  from {
+    opacity: 0;
+    translate: calc(-1 * var(--mo-cx)) calc(-1 * var(--mo-cy));
+    clip-path: inset(var(--mo-cy) -12px -12px var(--mo-cx));
+  }
+  45% {
+    opacity: 1;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+    clip-path: inset(0 -12px -12px 0);
+  }
+}
+@keyframes mo-blink {
   50% {
-    scale: 1.14;
+    opacity: 0.45;
   }
 }
 .section.is-night .glass {
   animation: mo-drift 16s ease-in-out infinite alternate;
 }
+/* How far the words travel from behind the point before: from the left, and on a phone from above. */
 .rays-six {
-  --mo-step: 90ms;
+  --mo-cx: 56px;
+  --mo-cy: 0px;
 }
-.rays-six svg polygon,
-.rays-six svg circle {
-  transform-box: view-box;
-  transform-origin: 28px 50px;
+@media (max-width: 767px) {
+  .rays-six {
+    --mo-cx: 0px;
+    --mo-cy: 26px;
+  }
 }
-html.mo .rays-six .c[data-in] svg polygon,
-html.mo .rays-six .c[data-in] svg circle {
-  animation: mo-ray 800ms var(--mo-spring) backwards;
-  animation-delay: calc(var(--mo-i) * var(--mo-step) + 320ms);
+/* The ray of the point before is only seen while the mark travels. */
+.rays-six .was {
+  opacity: 0;
+}
+html.mo .rays-six .c[data-in=""] > svg {
+  position: relative;
+  z-index: 1;
+  animation: mo-carry 780ms var(--mo-spring) backwards;
+}
+html.mo .rays-six .c[data-in=""] .was {
+  animation: mo-gone 320ms linear 520ms backwards;
+}
+html.mo .rays-six .c[data-in=""] .own {
+  animation: mo-fade 320ms linear 520ms backwards;
+}
+html.mo .rays-six .c[data-in=""] > :is(u, h3, p) {
+  animation: mo-emerge 760ms var(--mo-ease) backwards;
+}
+html.mo .rays-six .c[data-in=""] > u {
+  animation-delay: 200ms;
+}
+html.mo .rays-six .c[data-in=""] > h3 {
+  animation-delay: 270ms;
+}
+html.mo .rays-six .c[data-in=""] > p {
+  animation-delay: 340ms;
+}
+/* The first point has nothing before it: it rises, and its ray lights. */
+html.mo .rays-six .c:first-child[data-in=""] > svg {
+  animation: mo-rise var(--dur-rise) var(--mo-ease) backwards;
+}
+html.mo .rays-six .c:first-child[data-in=""] .own {
+  animation: mo-fade 500ms linear 420ms backwards;
+}
+html.mo .rays-six .c:first-child[data-in=""] > :is(u, h3, p) {
+  animation-name: mo-rise-sm;
+  animation-duration: var(--dur-rise);
 }
 .rays-six .c {
   transition: background-color var(--dur-slow) var(--ease-out);
@@ -477,59 +595,107 @@ html.mo .rays-six .c[data-in] svg circle {
   .rays-six .c:hover {
     background: var(--glass-1);
   }
-  .rays-six .c:hover svg .lit {
-    animation: mo-pulse 900ms var(--mo-ease);
+  .rays-six .c:hover svg .own {
+    animation: mo-blink 900ms var(--mo-ease);
   }
 }
 
 /* ---------- From booking to solar power ---------- */
-/* The curve draws itself as the reader scrolls, each step lights when the line reaches it,
-   and the sun at its end arrives last. */
-@keyframes mo-turn {
-  to {
-    rotate: 360deg;
+/* On a desktop the chart draws itself as it scrolls into view (data-mo-scrub): the line runs from
+   booking to the sun, and each step, on the chart and in the words under it, arrives when the
+   line reaches it. It never runs backwards. Then the sun's rays keep turning like the hero's,
+   always pointing upwards, and its glow breathes. */
+@keyframes mo-node {
+  from {
+    opacity: 0;
+    scale: 0.4;
   }
 }
-html.mo-live .rise .curve {
+@keyframes mo-settle {
+  from {
+    opacity: 0;
+    translate: 0 -14px;
+  }
+}
+@keyframes mo-glow {
+  from {
+    opacity: 0.5;
+    scale: 0.9;
+  }
+  to {
+    opacity: 1;
+    scale: 1.08;
+  }
+}
+html.mo-live [data-mo-scrub]:not([data-done]) .rise .curve {
   stroke-dasharray: 1;
   stroke-dashoffset: calc(1 - var(--mo-p));
 }
-html.mo-live .rise .area {
+html.mo-live [data-mo-scrub]:not([data-done]) .rise .area {
   clip-path: inset(-40px calc((1 - var(--mo-p)) * 100%) 0 0);
 }
-.rise .pt,
-.rise .sun-end,
-.rise .sun-rays {
+@media print {
+  html.mo-live [data-mo-scrub] .rise .curve {
+    stroke-dasharray: none;
+  }
+  html.mo-live [data-mo-scrub] .rise .area {
+    clip-path: none;
+  }
+}
+/* The numbered points grow from their own middle. They carry no position of their own, so this is safe. */
+.rise .pt {
   transform-box: fill-box;
   transform-origin: center;
 }
-html.mo .rise .pt[data-in] {
-  animation: mo-pop 520ms var(--mo-spring) backwards;
+html.mo .rise .pt[data-in=""] {
+  animation: mo-node 520ms var(--mo-spring) backwards;
 }
-html.mo .rise .drop[data-in] {
-  animation: mo-fade 700ms var(--ease-out) backwards;
+html.mo .rise .drop[data-in=""] {
+  animation: mo-fade 500ms var(--ease-out) backwards;
 }
-html.mo .rise .sun-end[data-in] {
-  animation: mo-pop 900ms var(--mo-spring) backwards;
+html.mo .rise .sun-end[data-in=""] {
+  animation: mo-node 800ms var(--mo-spring) backwards;
 }
-.rise .sun-rays {
-  animation: mo-turn 48s linear infinite;
+/* The sun at the end of the curve. Its parts sit in a group placed on the sun's middle, so they turn and grow round it. */
+.rise .fan .is-in,
+.rise .sun-glow {
+  opacity: 0;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .rise .fan {
+    animation: mo-fan var(--mo-turn-time) linear infinite;
+  }
+  .rise .fan .is-out {
+    animation: mo-ray-out-soon var(--mo-turn-time) linear infinite;
+  }
+  .rise .fan .is-in {
+    animation: mo-ray-in-late var(--mo-turn-time) linear infinite;
+  }
+  .rise .sun-glow {
+    animation: mo-glow 3200ms ease-in-out infinite alternate;
+  }
 }
 .steps {
   --mo-step: 90ms;
 }
+/* Under the chart, a step settles down from its point on the line. */
+@media (min-width: 1120px) {
+  html.mo .steps .s[data-in=""] {
+    animation: mo-settle 650ms var(--mo-ease) 120ms backwards;
+  }
+}
 @media (max-width: 767px) {
-  html.mo .steps .s[data-in]::before {
+  html.mo .steps .s[data-in=""]::before {
     transform-origin: top;
     animation: mo-draw-y 800ms var(--mo-ease) 260ms backwards;
   }
-  html.mo .steps .s[data-in] .n {
+  html.mo .steps .s[data-in=""] .n {
     animation: mo-pop 520ms var(--mo-spring) 120ms backwards;
   }
 }
 
 /* ---------- Reviews ---------- */
-html.mo .rating[data-in] .st {
+html.mo .rating[data-in=""] .st {
   animation: mo-wipe 1100ms var(--ease-out) backwards;
   animation-delay: calc(var(--mo-i) * var(--mo-step) + 300ms);
 }
@@ -551,17 +717,8 @@ html.mo .rating[data-in] .st {
 }
 
 /* ---------- The closing section ---------- */
-/* The page ends as it began: its sun rises into place as the section scrolls in. */
-html.mo-live .closing .sun {
-  transform: translate3d(0, calc((1 - var(--mo-p)) * 150px), 0);
-}
-html.mo-live .closing .glow {
-  transform: scale(calc(0.78 + var(--mo-p) * 0.22));
-  opacity: calc(0.35 + var(--mo-p) * 0.65);
-}
-html.mo-live .closing .halo {
-  transform: scale(calc(0.9 + var(--mo-p) * 0.1));
-}
+/* The page ends as it began: its sun rises once when it comes into view (data-mo="sunrise"
+   and "bloom" on its parts). */
 .closing .in {
   --mo-step: 90ms;
 }
@@ -670,6 +827,20 @@ html.mo-live .closing .halo {
 }
 .book .book-actions {
   animation-delay: 340ms;
+}
+
+/* ---------- Rest while unseen ---------- */
+/* Whatever keeps moving rests while it is off the screen: the controller sets data-mo-away on the
+   part marked data-mo-loop. Only the endless movements are paused. An entrance never is, or a part
+   that arrives while nobody is looking would wait, hidden, at its first frame. Where a part has an
+   entrance and an endless movement, the two values are for those two, in that order. */
+.hero[data-mo-away] :is(.rays .is-out, .rays .is-in),
+.rise[data-mo-away] :is(.fan, .fan polygon, .sun-glow),
+.section[data-mo-away] > .glass {
+  animation-play-state: paused;
+}
+.hero[data-mo-away] :is(.rays, .glow) {
+  animation-play-state: running, paused;
 }
 
 /* ---------- Reduce motion ---------- */

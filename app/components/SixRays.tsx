@@ -50,19 +50,22 @@ const PILLARS = [
 ] as const;
 
 const ANGLES = [-75, -45, -15, 15, 45, 75];
+const LIT_RAY = "-3.2,-10 3.2,-10 .8,-46 -.8,-46";
+const DIM_RAY = "-2,-10 2,-10 .5,-34 -.5,-34";
 
-/** Six rays around a small sun. The ray that belongs to this column is lit, so the six columns together draw one sun. */
+/** Six rays around a small sun. The ray that belongs to this column is lit, so the six columns together draw one sun.
+    The picture is wide enough for the longest ray at any angle, so every lit ray shows at its full length.
+    The ray of the column before is drawn too and normally hidden: while the mark travels in from that column
+    it is the one that is lit, and it hands over to this column's ray on arrival. */
 function RayMark({ lit }: { lit: number }) {
   return (
-    <svg viewBox="0 0 56 56" aria-hidden="true">
+    <svg viewBox="-18 0 92 56" aria-hidden="true" data-mo-carry="">
       <circle cx="28" cy="50" r="5" className="lit" />
-      {ANGLES.map((angle, index) =>
-        index === lit ? (
-          <polygon key={angle} className="lit" points="-3.2,-10 3.2,-10 .8,-46 -.8,-46" transform={`translate(28 50) rotate(${angle})`} />
-        ) : (
-          <polygon key={angle} className="dim" points="-2,-10 2,-10 .5,-34 -.5,-34" transform={`translate(28 50) rotate(${angle})`} />
-        )
-      )}
+      {ANGLES.map((angle) => (
+        <polygon key={angle} className="dim" points={DIM_RAY} transform={`translate(28 50) rotate(${angle})`} />
+      ))}
+      {lit > 0 && <polygon className="lit was" points={LIT_RAY} transform={`translate(28 50) rotate(${ANGLES[lit - 1]})`} />}
+      <polygon className="lit own" points={LIT_RAY} transform={`translate(28 50) rotate(${ANGLES[lit]})`} />
     </svg>
   );
 }
@@ -70,12 +73,12 @@ function RayMark({ lit }: { lit: number }) {
 export default function SixRays() {
   const { isGu } = useLanguage();
   return (
-    <section className="section is-night on-dark" id="six-s">
+    <section className="section is-night on-dark" id="six-s" data-mo-loop="">
       <div className="glass" aria-hidden="true" />
       <div className="wrap">
         <div className="eyebrow" data-mo="">{isGu ? "6S (સિક્સ-એસ)" : "The 6S"}</div>
         <h2 className="h-sec" data-mo="" data-mo-delay="1">{isGu ? "છ અનિવાર્ય આધારસ્તંભો પર નિર્મિત." : "Built on six non-negotiables."}</h2>
-        <div className="rays-six" data-mo-group="">
+        <div className="rays-six" data-mo-seq="">
           {PILLARS.map((pillar, index) => (
             <div className="c" key={pillar.n}>
               <RayMark lit={index} />

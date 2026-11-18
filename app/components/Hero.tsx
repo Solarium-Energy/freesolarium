@@ -14,6 +14,8 @@ const HERO_FEATURES = [
 
 /* Seven rays, as in the logo, 26 degrees apart. */
 const RAYS = [-78, -52, -26, 0, 26, 52, 78];
+// The angle between two rays: the fan turns by this much, again and again.
+const RAY_STEP = 26;
 
 /** The hero's footnote: the price never stands without it. */
 export function useHeroFootnote() {
@@ -34,12 +36,19 @@ export default function Hero() {
   };
 
   return (
-    <section className="hero on-dark" id="top" data-mo-scroll="exit" data-mo-pointer="">
+    <section className="hero on-dark" id="top" data-mo-scroll="" data-mo-pointer="" data-mo-loop="">
       <div className="halo" aria-hidden="true" />
       <svg className="rays" viewBox="0 0 1440 900" aria-hidden="true">
         {RAYS.map((angle) => (
-          <polygon key={angle} points="-2.6,-430 2.6,-430 .6,-900 -.6,-900" transform={`translate(720 718) rotate(${angle})`} />
+          <polygon
+            key={angle}
+            className={angle === RAYS[RAYS.length - 1] ? "is-out" : undefined}
+            points="-2.6,-430 2.6,-430 .6,-900 -.6,-900"
+            transform={`translate(720 718) rotate(${angle})`}
+          />
         ))}
+        {/* The ray that waits below the horizon: it comes up on the left while the fan turns and the last one sets on the right. */}
+        <polygon className="is-in" points="-2.6,-430 2.6,-430 .6,-900 -.6,-900" transform={`translate(720 718) rotate(${RAYS[0] - RAY_STEP})`} />
       </svg>
 
       <div className="top">

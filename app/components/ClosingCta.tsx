@@ -17,9 +17,9 @@ export default function ClosingCta() {
     : ["Pay & get 100% subsidy in return", "5-year insurance free", "Installed by our own team"];
 
   return (
-    <section className="closing on-dark" data-mo-scroll="enter">
-      <div className="halo" aria-hidden="true" />
-      <div className="glow" aria-hidden="true" />
+    <section className="closing on-dark">
+      <div className="halo" aria-hidden="true" data-mo="bloom" data-mo-late="" />
+      <div className="glow" aria-hidden="true" data-mo="bloom" data-mo-late="" />
       <div className="in" data-mo-group="">
         <div className="eyebrow">{isGu ? "PM સૂર્ય ઘર · ગુજરાતના ઘરો" : "PM Surya Ghar · Gujarat homes"}</div>
         {isGu ? (
@@ -63,7 +63,7 @@ export default function ClosingCta() {
             : `*After ${inr(subsidy)} total subsidy. Pay & get 100% subsidy in return.`}
         </div>
       </div>
-      <div className="sun">
+      <div className="sun" data-mo="sunrise" data-mo-late="">
         <small>{isGu ? "અસરકારક ખર્ચ" : "Effective cost"}</small>
         <b>
           {inr(HERO_PRICE)}

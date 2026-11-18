@@ -14,8 +14,10 @@ const NODES = [
   { x: 1048.3, y: 40.0 },
 ];
 const SUN_RAYS = [-104, -78, -52, -26, 0, 26, 52, 78, 104];
+// The angle between two rays: the fan turns by this much, again and again.
+const SUN_RAY_STEP = 26;
 
-/** How far along the curve a node sits, from 0 to 1: the curve's line reaches it at that point of the scroll. */
+/** How far along the curve a node sits, from 0 to 1. While the curve draws itself, the node and its step appear when the line reaches it. */
 function reached(node: { x: number }) {
   return ((node.x / NODES[NODES.length - 1].x) * 0.94).toFixed(3);
 }
@@ -50,75 +52,86 @@ export default function RisingSteps() {
           </div>
         </div>
 
-        <div className="rise" data-mo-scroll="enter">
-          <svg viewBox="0 0 1240 330" aria-hidden="true">
-            <defs>
-              <radialGradient id="rise-sun" cx="50%" cy="30%" r="70%">
-                <stop offset="0" className="stop-sun-core" />
-                <stop offset=".6" className="stop-sun" />
-                <stop offset="1" className="stop-sun-edge" />
-              </radialGradient>
-              <linearGradient id="rise-fill" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0" className="stop-brand-top" />
-                <stop offset="1" className="stop-brand-bottom" />
-              </linearGradient>
-            </defs>
-            <path className="area" d={`${CURVE} L1063.0 330 L0 330 Z`} fill="url(#rise-fill)" />
-            <line className="base" x1="0" y1="329.5" x2="1240" y2="329.5" />
-            <path className="curve" d={CURVE} pathLength={1} />
-            {NODES.map((node, index) => (
-              <line
-                key={`drop-${index}`}
-                className="drop"
-                x1={node.x}
-                y1={node.y}
-                x2={node.x}
-                y2="330"
-                strokeDasharray="3 5"
-                data-mo-at={reached(node)}
-              />
-            ))}
-            {NODES.slice(0, -1).map((node, index) => (
-              <g key={`node-${index}`} className="pt" data-mo-at={reached(node)}>
-                <circle className="node" cx={node.x} cy={node.y} r="15" />
-                <text x={node.x} y={node.y + 5} textAnchor="middle">
-                  {stepNumber(JOURNEY[index], isGu)}
-                </text>
+        {/* On a desktop the curve draws itself as this block scrolls into view, and each step arrives when the line reaches it. */}
+        <div data-mo-scrub="(min-width: 1120px)">
+          <div className="rise" data-mo-loop="">
+            <svg viewBox="0 0 1240 330" aria-hidden="true">
+              <defs>
+                <radialGradient id="rise-sun" cx="50%" cy="30%" r="70%">
+                  <stop offset="0" className="stop-sun-core" />
+                  <stop offset=".6" className="stop-sun" />
+                  <stop offset="1" className="stop-sun-edge" />
+                </radialGradient>
+                <radialGradient id="rise-glow">
+                  <stop offset=".3" className="stop-glow-core" />
+                  <stop offset="1" className="stop-glow-edge" />
+                </radialGradient>
+                <linearGradient id="rise-fill" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" className="stop-brand-top" />
+                  <stop offset="1" className="stop-brand-bottom" />
+                </linearGradient>
+              </defs>
+              <path className="area" d={`${CURVE} L1063.0 330 L0 330 Z`} fill="url(#rise-fill)" />
+              <line className="base" x1="0" y1="329.5" x2="1240" y2="329.5" />
+              <path className="curve" d={CURVE} pathLength={1} />
+              {NODES.map((node, index) => (
+                <line
+                  key={`drop-${index}`}
+                  className="drop"
+                  x1={node.x}
+                  y1={node.y}
+                  x2={node.x}
+                  y2="330"
+                  strokeDasharray="3 5"
+                  data-mo-at={reached(node)}
+                />
+              ))}
+              {NODES.slice(0, -1).map((node, index) => (
+                <g key={`node-${index}`} className="pt" data-mo-at={reached(node)}>
+                  <circle className="node" cx={node.x} cy={node.y} r="15" />
+                  <text x={node.x} y={node.y + 5} textAnchor="middle">
+                    {stepNumber(JOURNEY[index], isGu)}
+                  </text>
+                </g>
+              ))}
+              {/* The sun arrives when the curve reaches it. Its parts are drawn around its own middle, so they can turn and grow in place. */}
+              <g transform={`translate(${sun.x} ${sun.y})`}>
+                <g className="sun-end" data-mo-at={reached(sun)}>
+                  <circle className="sun-glow" r="84" fill="url(#rise-glow)" />
+                  <g className="fan">
+                    {SUN_RAYS.map((angle) => (
+                      <polygon
+                        key={angle}
+                        className={angle === SUN_RAYS[SUN_RAYS.length - 1] ? "ray is-out" : "ray"}
+                        points="-3,-44 3,-44 .8,-70 -.8,-70"
+                        transform={`rotate(${angle})`}
+                      />
+                    ))}
+                    {/* The ray that waits on the left: it comes in while the fan turns and the last one fades on the right. */}
+                    <polygon className="ray is-in" points="-3,-44 3,-44 .8,-70 -.8,-70" transform={`rotate(${SUN_RAYS[0] - SUN_RAY_STEP})`} />
+                  </g>
+                  <circle r="34" fill="url(#rise-sun)" />
+                  <text className="sun-n" x="0" y="6" textAnchor="middle">
+                    {stepNumber(JOURNEY[JOURNEY.length - 1], isGu)}
+                  </text>
+                </g>
               </g>
-            ))}
-            {/* The sun arrives when the curve reaches it. Its rays turn slowly, as a full ring so that they turn about its centre. */}
-            <g className="sun-end" data-mo-at="0.97">
-              <g className="sun-rays">
-                <circle cx={sun.x} cy={sun.y} r="70" fill="none" />
-                {SUN_RAYS.map((angle) => (
-                  <polygon
-                    key={angle}
-                    className="ray"
-                    points="-3,-44 3,-44 .8,-70 -.8,-70"
-                    transform={`translate(${sun.x} ${sun.y}) rotate(${angle})`}
-                  />
-                ))}
-              </g>
-              <circle cx={sun.x} cy={sun.y} r="34" fill="url(#rise-sun)" />
-              <text className="sun-n" x={sun.x} y={sun.y + 6} textAnchor="middle">
-                {stepNumber(JOURNEY[JOURNEY.length - 1], isGu)}
-              </text>
-            </g>
-          </svg>
-        </div>
+            </svg>
+          </div>
 
-        <ol className="steps" data-mo-group="">
-          {JOURNEY.map((step) => (
-            <li className="s" key={step.n}>
-              <span className="n" aria-hidden="true">
-                {stepNumber(step, isGu)}
-              </span>
-              <span className="when">{isGu ? step.guWhen : step.when}</span>
-              <h3>{isGu ? step.guTitle : step.title}</h3>
-              <p>{isGu ? step.guBody : step.body}</p>
-            </li>
-          ))}
-        </ol>
+          <ol className="steps" data-mo-group="">
+            {JOURNEY.map((step, index) => (
+              <li className="s" key={step.n} data-mo-at={reached(NODES[index])}>
+                <span className="n" aria-hidden="true">
+                  {stepNumber(step, isGu)}
+                </span>
+                <span className="when">{isGu ? step.guWhen : step.when}</span>
+                <h3>{isGu ? step.guTitle : step.title}</h3>
+                <p>{isGu ? step.guBody : step.body}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
       </div>
     </section>
   );

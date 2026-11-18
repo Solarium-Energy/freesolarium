@@ -121,11 +121,39 @@
 .disc img {
   object-position: 50% 50%;
 }
+/* The ten panels share one place, as tall as the tallest of them, so the pager under them never moves. */
+.details {
+  display: grid;
+}
+.details > .detail {
+  grid-area: 1 / 1;
+}
+.details > .detail:not(.is-on) {
+  visibility: hidden;
+}
 
 /* ---------- Logo wall ---------- */
 .logo-wall img {
   width: auto;
   height: auto;
+}
+
+/* ---------- The 6S ---------- */
+/* The mark is as wide as its longest ray at the flattest angle needs, so the lit ray of every point shows
+   at its full length. In a square the outer rays were cut short. */
+.rays-six svg {
+  width: 92px;
+}
+/* On a phone the mark is a little smaller, so the words beside it keep their room. */
+@media (max-width: 767px) {
+  .rays-six svg {
+    width: 74px;
+    height: 45px;
+  }
+  .rays-six .c {
+    grid-template-columns: 74px 1fr;
+    gap: 0 14px;
+  }
 }
 
 /* ---------- Rising steps ---------- */
@@ -144,6 +172,15 @@
 }
 .rise .stop-brand-bottom {
   stop-color: var(--brand);
+  stop-opacity: 0;
+}
+/* The soft light round the sun at the end of the curve. It is only shown while it breathes (motion.css). */
+.rise .stop-glow-core {
+  stop-color: var(--sun);
+  stop-opacity: 0.4;
+}
+.rise .stop-glow-edge {
+  stop-color: var(--sun);
   stop-opacity: 0;
 }
 .rise .sun-n {
