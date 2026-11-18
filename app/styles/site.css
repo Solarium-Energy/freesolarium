@@ -409,6 +409,46 @@
   font: 600 15px/1.3 var(--font-sans);
   letter-spacing: 0;
 }
+/* The price cell: the upfront payment and the subsidy as two small lines, then the effective cost. Every line
+   has a set height, so the cell is 73px in both languages: inside the 96px bar on a desktop, which does not grow,
+   and 6px taller than before on a tablet, where it has a row of its own. */
+.qbar .sum {
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+.qbar .sum .lines {
+  display: grid;
+  margin-bottom: 2px;
+}
+.qbar .sum .lines > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 17px;
+  color: var(--muted-foreground);
+  white-space: nowrap;
+}
+.qbar .sum .lines > div > :last-child {
+  color: var(--foreground);
+  font-variant-numeric: tabular-nums;
+}
+html:lang(gu) .qbar .sum .lines > div {
+  font-size: 13px;
+}
+@media (max-width: 767px) {
+  .qbar .sum {
+    padding-top: 6px;
+    padding-bottom: 6px;
+  }
+}
+/* On a tablet the price cell's row is 7px taller than before: the footnote under the bar keeps its distance. */
+@media (min-width: 768px) and (max-width: 1119px) {
+  .hero .hnote {
+    top: 945px;
+  }
+}
 
 /* ---------- Sheet ---------- */
 @keyframes sol-fade-in {

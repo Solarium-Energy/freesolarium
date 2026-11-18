@@ -6,7 +6,6 @@ import { useLanguage } from "../../lib/language";
 import {
   DISCOM_OPTIONS,
   FLOOR_OPTIONS,
-  STANDARD_PRICE,
   STRUCTURE_HEIGHT_OPTIONS,
   TOTAL_SUBSIDY,
   type DiscomOption,
@@ -109,11 +108,22 @@ export default function QuotationBar({ copy }: { copy: "hero" | "phone" }) {
         onChange={(value) => q.changeDiscom(value)}
       />
       <div className="c sum">
-        <div className="ln">
-          {inr(STANDARD_PRICE)} − {inr(TOTAL_SUBSIDY)} {isGu ? "સબસિડી" : "subsidy"}
-        </div>
+        {/* What is paid first and what comes back, then the effective cost. When the team has to call back
+            there is no price yet: only the note stands. */}
+        {!callbackOption && (
+          <div className="lines">
+            <div>
+              <span>{isGu ? "શરૂઆતની ચુકવણી" : "Upfront payment"}</span>
+              <TweenNumber value={q.calc.finalPrice} format={inr} />
+            </div>
+            <div>
+              <span>{isGu ? "બેંક ખાતામાં સબસિડી" : "Subsidy to your bank"}</span>
+              <span>− {inr(TOTAL_SUBSIDY)}</span>
+            </div>
+          </div>
+        )}
         <div className={cx("pay", callbackOption && "is-note")}>
-          <em>{isGu ? "તમારે ચૂકવવાના:" : "You pay:"}</em>
+          <em>{isGu ? "અસરકારક ખર્ચ:" : "Effective cost:"}</em>
           {callbackOption ? (
             <span className="pay-note">{isGu ? callbackOption.guSub : callbackOption.sub}</span>
           ) : (
