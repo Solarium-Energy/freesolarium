@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, ChevronDown, PhoneCall } from "lucide-react";
+import { ArrowRight, PhoneCall } from "lucide-react";
 import { inr } from "../../lib/content";
 import { useLanguage } from "../../lib/language";
 import {
@@ -17,41 +17,17 @@ import TweenNumber from "../ui/TweenNumber";
 import SegmentedControl from "../ui/SegmentedControl";
 import { cx } from "../ui/cx";
 import { useQuotation } from "./QuotationProvider";
+import QuotationSelect, { type SelectOption } from "./QuotationSelect";
 
 type Option = { label: string; guLabel: string; sub: string; guSub: string };
 
-/** A native select that looks like the drawn value with its caret. The select covers the whole cell. */
-function Pick<T extends string>({
-  id,
-  label,
-  value,
-  options,
-  onChange,
-}: {
-  id: string;
-  label: string;
-  value: T;
-  options: readonly (Option & { label: T })[];
-  onChange: (value: T) => void;
-}) {
-  const { isGu } = useLanguage();
-  const chosen = options.find((option) => option.label === value);
-  return (
-    <div className="c q-pick">
-      <label htmlFor={id}>{label}</label>
-      <div className="v" aria-hidden="true">
-        <span>{chosen ? (isGu ? chosen.guLabel : chosen.label) : ""}</span>
-        <ChevronDown className="ico" />
-      </div>
-      <select id={id} className="q-select" value={value} onChange={(event) => onChange(event.target.value as T)}>
-        {options.map((option) => (
-          <option key={option.label} value={option.label}>
-            {isGu ? option.guLabel : option.label} ({isGu ? option.guSub : option.sub})
-          </option>
-        ))}
-      </select>
-    </div>
-  );
+/** The options of the quotation in the words of the page's language. The value stays the English label. */
+function choices<T extends string>(options: readonly (Option & { label: T })[], isGu: boolean): SelectOption<T>[] {
+  return options.map((option) => ({
+    value: option.label,
+    label: isGu ? option.guLabel : option.label,
+    note: isGu ? option.guSub : option.sub,
+  }));
 }
 
 /**
@@ -86,25 +62,25 @@ export default function QuotationBar({ copy }: { copy: "hero" | "phone" }) {
           ]}
         />
       </div>
-      <Pick<Exclude<FloorOption, "">>
+      <QuotationSelect<Exclude<FloorOption, "">>
         id={`q-${copy}-floor`}
         label={isGu ? "૧ · ફ્લોર" : "1 · Floor"}
         value={q.floor as Exclude<FloorOption, "">}
-        options={FLOOR_OPTIONS}
+        options={choices(FLOOR_OPTIONS, isGu)}
         onChange={(value) => q.changeFloor(value)}
       />
-      <Pick<Exclude<StructureHeight, "">>
+      <QuotationSelect<Exclude<StructureHeight, "">>
         id={`q-${copy}-height`}
         label={isGu ? "૨ · ઊંચાઈ" : "2 · Height"}
         value={q.structureHeight as Exclude<StructureHeight, "">}
-        options={STRUCTURE_HEIGHT_OPTIONS}
+        options={choices(STRUCTURE_HEIGHT_OPTIONS, isGu)}
         onChange={(value) => q.changeHeight(value)}
       />
-      <Pick<Exclude<DiscomOption, "">>
+      <QuotationSelect<Exclude<DiscomOption, "">>
         id={`q-${copy}-discom`}
         label={isGu ? "૩ · DISCOM" : "3 · DISCOM"}
         value={q.discom as Exclude<DiscomOption, "">}
-        options={DISCOM_OPTIONS}
+        options={choices(DISCOM_OPTIONS, isGu)}
         onChange={(value) => q.changeDiscom(value)}
       />
       <div className="c sum">
