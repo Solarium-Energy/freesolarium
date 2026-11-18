@@ -249,6 +249,40 @@
 }
 
 /* ---------- Logo wall ---------- */
+/* The institutions' marks over the full width of the page, under the section head: eight in a row from 1120
+   wide, four below. A mark is up to 76 by 124px, on a phone 44 by 70px. A file too small for that at two times
+   density sets its own smaller limit (--cap-w and --cap-h, from LogoWall). */
+.logo-wall.is-wide {
+  margin-top: 56px;
+  grid-template-columns: repeat(8, 1fr);
+}
+.logo-wall.is-wide div {
+  height: 150px;
+  padding: 0 6px;
+  text-align: center;
+}
+.logo-wall.is-wide img {
+  max-width: min(124px, var(--cap-w, 124px));
+  max-height: min(76px, var(--cap-h, 76px));
+}
+@media (max-width: 1119px) {
+  .logo-wall.is-wide {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+@media (max-width: 767px) {
+  .logo-wall.is-wide {
+    margin-top: 36px;
+  }
+  .logo-wall.is-wide div {
+    height: 104px;
+    padding: 0 4px;
+  }
+  .logo-wall.is-wide img {
+    max-width: min(70px, var(--cap-w, 70px));
+    max-height: min(44px, var(--cap-h, 44px));
+  }
+}
 .logo-wall img {
   width: auto;
   height: auto;
