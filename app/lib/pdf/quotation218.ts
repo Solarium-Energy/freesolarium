@@ -80,7 +80,6 @@ function drawPage1(ctx: CanvasRenderingContext2D, input: Quotation218Input) {
     logo,
     fallbackName: "Solarium",
     scheme: ["PM Surya Ghar:", "Muft Bijli Yojana"],
-    eyebrow: "Rooftop solar · Vejalpur, Ahmedabad",
     title: "2.18 kW system quotation",
     refs: [],
   });
@@ -286,7 +285,7 @@ function drawPage2(ctx: CanvasRenderingContext2D, input: Quotation218Input) {
   Notes(doc, {
     heading: "Notes",
     items: [
-      "Standard system includes 2.18 kW solar panels (545 Wp Solarium brand × 4 panels) and inverter, 0.5 m front-leg structure, ground floor / G+1 cabling, installation and commissioning, subsidy support and 5 years solar insurance.",
+      "Standard system includes 2.18 kW solar panels (545 Wp Solarium brand × 4 panels) and inverter, 0.5 m front-leg structure, G+1 cabling, installation and commissioning, subsidy support and 5 years solar insurance.",
       "Subsidy is subject to eligibility and government approval. Add-ons (1)+(2)+(3) are included in the loan.",
       "Subsidy is estimated to be repaid in the 4th month of installation; estimated interest covers the 3 EMIs before that.",
       "Any change in DISCOM (UGVCL / Torrent) or government charges will apply at actuals.",

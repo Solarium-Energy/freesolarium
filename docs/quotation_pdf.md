@@ -32,7 +32,7 @@ A part draws at the current position of the document and moves it on by its own 
 
 | Part | What it takes |
 | --- | --- |
-| `DocHeader` | A logo (or a name to write when it does not load), the scheme lines beside it, an eyebrow, a title, and reference fields such as the quote number and the date |
+| `DocHeader` | A logo (or a name to write when it does not load), the scheme lines beside it, an optional eyebrow, a title, and reference fields such as the quote number and the date. Without an eyebrow the title stands alone, level with the logo, and the header keeps its height. The quotation has none |
 | `FieldRows` | Rows of fields, each a label and a value, one or more per row, sized by `span`. A value is written on a line that starts after the label's measured width, and is cut with an ellipsis at the end of its line |
 | `OptionBox` | A title, a note for the title bar, a number of columns, and options: label, price, ticked, included |
 | `SideBySide` | Parts placed in one row, with widths in proportion to their weights |
@@ -61,7 +61,7 @@ Two families only: Newsreader for display, Hanken Grotesk for everything else. H
 | `title` | Newsreader 400, 24 | The document title, and the name in place of a missing logo |
 | `figure` | Newsreader 400, 17 | The total price, the net cost figures, the values of the stat band |
 | `heading` | Hanken Grotesk 600, 11 | Titles of blocks and boxes, the names of the payment modes |
-| `eyebrow` | Hanken Grotesk 600, 10 | The eyebrow above the title |
+| `eyebrow` | Hanken Grotesk 600, 10 | The eyebrow above the title, when a document has one |
 | `label` | Hanken Grotesk 500, 10 | Field labels, option names, row labels, captions |
 | `labelStrong` | Hanken Grotesk 600, 10 | A row label that sums up the rows above it |
 | `body` | Hanken Grotesk 400, 10 | Plain rows |
@@ -88,14 +88,14 @@ Every colour is the light value of a token.
 | The row of payment mode names | `subtle` |
 | The chosen payment mode | its name cell on `selected`, with a 3-unit `sun` bar on its left edge |
 | The total row and the net cost row | `muted`, with a 1-unit `foreground` rule above |
-| The eyebrow | text `brand`, with a 5-unit `sun` dot in front |
+| The eyebrow, when a document has one | text `brand`, with a 5-unit `sun` dot in front |
 | The stat band | `sky-top`, values `on-dark`, captions `on-dark-muted`, dividers `glass-line` |
 | What comes back to the bank account | `status-positive-bg`, text `status-positive-fg` |
 | The square behind the payment QR | `card` with a `border` hairline |
 
 ## Rules of the page
 
-- Orange appears twice at most: the dot of the eyebrow and the bar on the chosen payment mode. Orange is never text and never a fill behind text. No gradient.
+- Orange appears twice at most: the bar on the chosen payment mode, and the dot of an eyebrow when a document has one. Orange is never text and never a fill behind text. No gradient.
 - The chosen payment mode is shown by its tick, by the `selected` ground and by the sun bar, never by colour alone.
 - Nothing is smaller than 9 units. A printed page that holds a whole quotation has its own floor. The screen rule of 12 pixels does not fit one page.
 - Sentence case. Names such as DISCOM, UGVCL and BSE keep their capitals. No dash and no exclamation mark.

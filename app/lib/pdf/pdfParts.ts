@@ -249,13 +249,16 @@ export type DocHeaderContent = {
   fallbackName: string;
   /** The scheme beside the logo, one entry per line. */
   scheme: string[];
-  eyebrow: string;
+  /** A small line above the title, with the sun dot in front of it. Without it the title stands alone,
+      in the middle of the header's height, level with the logo and the scheme. */
+  eyebrow?: string;
   title: string;
   /** Reference fields on the right, such as the quote number and the date. */
   refs: { label: string; value: string }[];
 };
 
-/** The head of a document: logo, scheme line, eyebrow and title, reference fields, a hairline under it. */
+/** The head of a document: logo, scheme line, an optional eyebrow and the title, reference fields, a hairline under it.
+    It is the same height with or without the eyebrow, so what follows it stays where it is. */
 export function DocHeader(doc: Doc, content: DocHeaderContent) {
   const { ctx, x, width, y } = doc;
   const logoHeight = 34;
@@ -293,14 +296,19 @@ export function DocHeader(doc: Doc, content: DocHeaderContent) {
     fieldLine(ctx, ref.label, ref.value, refsX, refsWidth, y + 11 + index * 21);
   });
 
-  // The eyebrow, with the sun dot in front of it, and the title.
+  // The eyebrow, with the sun dot in front of it, and the title under it. Without an eyebrow the title's
+  // baseline sits so that the title is centred on the middle of the logo.
   const titleWidth = refsX - 20 - cursor;
-  ctx.beginPath();
-  ctx.arc(cursor + 2.5, y + 7.5, 2.5, 0, Math.PI * 2);
-  ctx.fillStyle = PDF_COLORS.sun;
-  ctx.fill();
-  drawText(ctx, fitText(ctx, content.eyebrow, "eyebrow", titleWidth - 11), cursor + 11, y + 11, "eyebrow", "brand");
-  drawText(ctx, fitText(ctx, content.title, "title", titleWidth), cursor, y + 34, "title", "foreground");
+  if (content.eyebrow) {
+    ctx.beginPath();
+    ctx.arc(cursor + 2.5, y + 7.5, 2.5, 0, Math.PI * 2);
+    ctx.fillStyle = PDF_COLORS.sun;
+    ctx.fill();
+    drawText(ctx, fitText(ctx, content.eyebrow, "eyebrow", titleWidth - 11), cursor + 11, y + 11, "eyebrow", "brand");
+    drawText(ctx, fitText(ctx, content.title, "title", titleWidth), cursor, y + 34, "title", "foreground");
+  } else {
+    drawText(ctx, fitText(ctx, content.title, "title", titleWidth), cursor, middle + 8.5, "title", "foreground");
+  }
 
   const height = 46;
   hline(ctx, x, x + width, y + height, "border");
