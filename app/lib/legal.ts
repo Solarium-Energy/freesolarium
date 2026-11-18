@@ -23,7 +23,7 @@ export type LegalDocument = {
 
 export const PRIVACY_POLICY: LegalDocument = {
   "title": "Privacy policy",
-  "updated": "Last updated: 17 November 2026",
+  "updated": "Last updated: 18 November 2026",
   "intro": [
     {
       "type": "paragraph",
@@ -161,7 +161,7 @@ export const PRIVACY_POLICY: LegalDocument = {
       "blocks": [
         {
           "type": "paragraph",
-          "text": "Your details and documents go from this website straight into Solarium's customer system. The website itself keeps no copy of them. Documents are uploaded over an encrypted connection into private storage. Only Solarium staff who need your file for their work can open it, and they sign in with their company account."
+          "text": "Your details and documents go from this website straight into Solarium's customer system. The website itself keeps no copy of them. Documents are uploaded over an encrypted connection into private storage. Only Solarium staff can open it, and they sign in with their company account."
         },
         {
           "type": "paragraph",
