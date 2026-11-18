@@ -1,12 +1,14 @@
 "use client";
 
 import { ArrowRight, ChevronDown, PhoneCall } from "lucide-react";
-import { PRICING, inr } from "../../lib/content";
+import { inr } from "../../lib/content";
 import { useLanguage } from "../../lib/language";
 import {
   DISCOM_OPTIONS,
   FLOOR_OPTIONS,
+  STANDARD_PRICE,
   STRUCTURE_HEIGHT_OPTIONS,
+  TOTAL_SUBSIDY,
   type DiscomOption,
   type FloorOption,
   type StructureHeight,
@@ -108,7 +110,7 @@ export default function QuotationBar({ copy }: { copy: "hero" | "phone" }) {
       />
       <div className="c sum">
         <div className="ln">
-          {inr(PRICING.systemValue)} − {inr(PRICING.centralSubsidy + PRICING.stateSubsidy)} {isGu ? "સબસિડી" : "subsidy"}
+          {inr(STANDARD_PRICE)} − {inr(TOTAL_SUBSIDY)} {isGu ? "સબસિડી" : "subsidy"}
         </div>
         <div className={cx("pay", callbackOption && "is-note")}>
           <em>{isGu ? "તમારે ચૂકવવાના:" : "You pay:"}</em>

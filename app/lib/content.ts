@@ -1,10 +1,11 @@
 /**
- * Single source of truth for copy, pricing and contact details.
+ * Single source of truth for copy and contact details.
  *
- * Values marked TODO are still awaiting written confirmation from Solarium.
- * They are kept here (rather than buried in components) so they can be
- * updated in one place before launch.
+ * The price of the system and the subsidies live in app/lib/quotation.ts. Text that names one of
+ * them is built from those constants, never typed in.
  */
+
+import { CENTRAL_SUBSIDY, EFFECTIVE_COST, GUJARAT_SUBSIDY, STANDARD_PRICE, TOTAL_SUBSIDY } from "./quotation";
 
 export const site = {
   brand: "SOLARIUM",
@@ -25,22 +26,6 @@ export const site = {
 export function whatsappUrl(message: string) {
   return `https://wa.me/${site.whatsappNumber}?text=${encodeURIComponent(message)}`;
 }
-
-/** TODO: confirm final pricing with Solarium before launch. */
-export const PRICING = {
-  systemValue: 100_000,
-  centralSubsidy: 63_240,
-  stateSubsidy: 36_760,
-  /** 0 means "quoted after the rooftop survey". */
-  multiFloorCost: 0,
-  /** 0 means "quoted after the rooftop survey". */
-  elevatedCost: 0,
-} as const;
-
-export const HERO_PRICE = Math.max(
-  0,
-  PRICING.systemValue - PRICING.centralSubsidy - PRICING.stateSubsidy
-);
 
 export const inr = (value: number) =>
   `₹${Math.round(value).toLocaleString("en-IN")}`;
@@ -488,8 +473,8 @@ export const FAQS = [
   {
     q: "Is it really free?",
     guQ: "શું તે ખરેખર મફત છે?",
-    a: "Effective cost is ₹0 for the standard 2.18 kW system: a ₹1,00,000 system value, less ₹63,240 central assistance under PM Surya Ghar and ₹36,760 Gujarat state assistance. You pay nothing to reserve. Site-specific customisation is quoted after the rooftop survey and confirmed by you before any work begins.",
-    guA: "સ્ટાન્ડર્ડ 2.18 kW સિસ્ટમ માટે વાસ્તવિક ખર્ચ (effective cost) શૂન્ય (₹0) છે: સિસ્ટમની કુલ કિંમત ₹1,00,000 છે, જેમાંથી 'પીએમ સૂર્ય ઘર' (PM Surya Ghar) યોજના હેઠળ ₹63,240 ની કેન્દ્રીય સહાય અને ₹36,760 ની ગુજરાત રાજ્ય સહાય મળે છે. બુકિંગ માટે તમારે કોઈ રકમ ચૂકવવાની રહેતી નથી. રૂફટોપ સર્વે કર્યા પછી, તમારી જરૂરિયાત મુજબના ફેરફારો (customisation) સાથેનો ખર્ચ જણાવવામાં આવશે, અને કામ શરૂ થાય તે પહેલાં તમારી મંજૂરી લેવામાં આવશે.",
+    a: `The effective cost is ${inr(EFFECTIVE_COST)} for the standard 2.18 kW system. You pay ${inr(STANDARD_PRICE)} for the system, yourself or through a loan, and the same ${inr(TOTAL_SUBSIDY)} comes back to your bank account as subsidy: ${inr(CENTRAL_SUBSIDY)} central assistance under PM Surya Ghar: Muft Bijli Yojana and ${inr(GUJARAT_SUBSIDY)} Gujarat state assistance. You pay nothing to reserve. Site-specific customisation is quoted after the rooftop survey and confirmed by you before any work begins.`,
+    guA: `સ્ટાન્ડર્ડ 2.18 kW સિસ્ટમ માટે અસરકારક ખર્ચ (effective cost) ${inr(EFFECTIVE_COST)} છે. સિસ્ટમ માટે તમે ${inr(STANDARD_PRICE)} ચૂકવો છો, જાતે અથવા લોન દ્વારા, અને આ જ ${inr(TOTAL_SUBSIDY)} સબસિડી રૂપે તમારા બેંક ખાતામાં પાછા આવે છે: 'PM સૂર્ય ઘર: મફત વીજળી યોજના' હેઠળ ${inr(CENTRAL_SUBSIDY)} ની કેન્દ્રીય સહાય અને ${inr(GUJARAT_SUBSIDY)} ની ગુજરાત રાજ્ય સહાય. બુકિંગ માટે તમારે કોઈ રકમ ચૂકવવાની રહેતી નથી. રૂફટોપ સર્વે કર્યા પછી, તમારી જરૂરિયાત મુજબના ફેરફારો (customisation) સાથેનો ખર્ચ જણાવવામાં આવશે, અને કામ શરૂ થાય તે પહેલાં તમારી મંજૂરી લેવામાં આવશે.`,
   },
   {
     q: "When is the subsidy credited, and to whom?",

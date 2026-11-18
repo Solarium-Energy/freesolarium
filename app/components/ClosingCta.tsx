@@ -1,17 +1,18 @@
 "use client";
 
 import { ArrowRight, Check, Phone } from "lucide-react";
-import { HERO_PRICE, PRICING, inr, site } from "../lib/content";
+import { inr, site } from "../lib/content";
 import { useLanguage } from "../lib/language";
+import { EFFECTIVE_COST, STANDARD_PRICE, TOTAL_SUBSIDY } from "../lib/quotation";
 import Button from "./ui/Button";
 
 /** The closing screen: the question, the facts, the two actions and the sun with the effective cost. */
 export default function ClosingCta() {
   const { isGu } = useLanguage();
-  const subsidy = PRICING.centralSubsidy + PRICING.stateSubsidy;
+  const subsidy = TOTAL_SUBSIDY;
   const pills = isGu
-    ? ["2.18 kW", `સિસ્ટમનું મૂલ્ય ${inr(PRICING.systemValue)}`, `પાત્ર સબસિડી* ${inr(subsidy)}`, "5 વર્ષનો વીમો"]
-    : ["2.18 kW", `${inr(PRICING.systemValue)} system value`, `${inr(subsidy)} eligible subsidy*`, "5-year insurance"];
+    ? ["2.18 kW", `સિસ્ટમનું મૂલ્ય ${inr(STANDARD_PRICE)}`, `પાત્ર સબસિડી* ${inr(subsidy)}`, "5 વર્ષનો વીમો"]
+    : ["2.18 kW", `${inr(STANDARD_PRICE)} system value`, `${inr(subsidy)} eligible subsidy*`, "5-year insurance"];
   const ticks = isGu
     ? ["ચુકવણી કરો અને બદલામાં 100% સબસિડી મેળવો", "5 વર્ષનો વીમો મફત", "અમારી પોતાની ટીમ દ્વારા ઇન્સ્ટોલેશન"]
     : ["Pay & get 100% subsidy in return", "5-year insurance free", "Installed by our own team"];
@@ -66,7 +67,7 @@ export default function ClosingCta() {
       <div className="sun" data-mo="sunrise" data-mo-late="">
         <small>{isGu ? "અસરકારક ખર્ચ" : "Effective cost"}</small>
         <b>
-          {inr(HERO_PRICE)}
+          {inr(EFFECTIVE_COST)}
           <sup>*</sup>
         </b>
         <small>{isGu ? "ગુજરાતના પાત્ર ઘરો માટે" : "For eligible Gujarat homes"}</small>

@@ -1,8 +1,9 @@
 "use client";
 
 import { ArrowRight } from "lucide-react";
-import { CUSTOMER_SAVINGS, HERO_PRICE, PRICING, inr } from "../lib/content";
+import { CUSTOMER_SAVINGS, inr } from "../lib/content";
 import { useLanguage } from "../lib/language";
+import { CENTRAL_SUBSIDY, EFFECTIVE_COST, GUJARAT_SUBSIDY } from "../lib/quotation";
 import QuotationBar from "./quotation/QuotationBar";
 import Button from "./ui/Button";
 
@@ -21,15 +22,15 @@ const RAY_STEP = 26;
 export function useHeroFootnote() {
   const { isGu } = useLanguage();
   return isGu
-    ? `*કેન્દ્ર સરકાર (${inr(PRICING.centralSubsidy)}) અને ગુજરાત રાજ્ય સરકાર (${inr(PRICING.stateSubsidy)}) ની સબસિડી બાદ. પાત્રતા અને યોજનાની શરતો લાગુ.`
-    : `*After central (${inr(PRICING.centralSubsidy)}) and Gujarat state (${inr(PRICING.stateSubsidy)}) subsidy. Subject to eligibility and scheme terms.`;
+    ? `*કેન્દ્ર સરકાર (${inr(CENTRAL_SUBSIDY)}) અને ગુજરાત રાજ્ય સરકાર (${inr(GUJARAT_SUBSIDY)}) ની સબસિડી બાદ. પાત્રતા અને યોજનાની શરતો લાગુ.`
+    : `*After central (${inr(CENTRAL_SUBSIDY)}) and Gujarat state (${inr(GUJARAT_SUBSIDY)}) subsidy. Subject to eligibility and scheme terms.`;
 }
 
 /** The first screen: the sky, the sun with the price and the main action, and the quotation bar. */
 export default function Hero() {
   const { isGu } = useLanguage();
   const footnote = useHeroFootnote();
-  const price = inr(HERO_PRICE);
+  const price = inr(EFFECTIVE_COST);
   const feature = (index: number) => {
     const item = HERO_FEATURES[index];
     return isGu ? [item.guLine1, item.guLine2] : [item.line1, item.line2];

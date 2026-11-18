@@ -22,6 +22,10 @@ export const SPECIAL_DISCOUNT = 10_810;
 export const STANDARD_PRICE = 97_290;
 export const CENTRAL_SUBSIDY = 63_240;
 export const GUJARAT_SUBSIDY = 34_050;
+/** The two subsidies together, and what the standard system costs after them. Every page that shows one
+    of these figures reads it from here. */
+export const TOTAL_SUBSIDY = CENTRAL_SUBSIDY + GUJARAT_SUBSIDY;
+export const EFFECTIVE_COST = Math.max(0, STANDARD_PRICE - TOTAL_SUBSIDY);
 export const BOOKING_AMOUNT = 10_000;
 
 export const BANK_BASE_LOAN = 87_561;
