@@ -5,7 +5,15 @@
  * them is built from those constants, never typed in.
  */
 
-import { CENTRAL_SUBSIDY, EFFECTIVE_COST, GUJARAT_SUBSIDY, STANDARD_PRICE, TOTAL_SUBSIDY } from "./quotation";
+import {
+  CENTRAL_SUBSIDY,
+  EFFECTIVE_COST,
+  GUJARAT_SUBSIDY,
+  SC_ST_FIGURES,
+  STANDARD_PRICE,
+  TOTAL_SUBSIDY,
+  totalSubsidyOf,
+} from "./quotation";
 
 export const site = {
   brand: "SOLARIUM",
@@ -83,18 +91,13 @@ export const INCLUDED = [
     guSubtitle: "સોલર પ્લાન્ટનું મગજ",
     tag: "Power Conversion",
     guTag: "પાવર કન્વર્ઝન",
-    body: "Generation, protection, and monitoring combined. Robust aluminum die-cast body with LCD display and remote dashboard.",
-    guBody:
-      "વીજ ઉત્પાદન, સુરક્ષા અને મોનિટરિંગનું સંયોજન. LCD ડિસ્પ્લે અને રિમોટ ડેશબોર્ડ સાથે મજબૂત એલ્યુમિનિયમ ડાઈ-કાસ્ટ બોડી.",
+    body: "Generation, protection, and monitoring combined.",
+    guBody: "વીજ ઉત્પાદન, સુરક્ષા અને મોનિટરિંગનું સંયોજન.",
     specs: [
-      "Up to 130% overloading capacity & 20-23A input",
-      "Type-II SPD surge protection (DC & AC)",
       "In-built anti-islanding & optional AFCI protection",
       "Remote plant monitoring & 10 years warranty",
     ],
     guSpecs: [
-      "130% સુધી ઓવરલોડિંગ ક્ષમતા અને 20-23A ઇનપુટ",
-      "Type-II SPD સર્જ પ્રોટેક્શન (DC અને AC)",
       "ઇન-બિલ્ટ એન્ટી-આઇલેન્ડિંગ અને વૈકલ્પિક AFCI સુરક્ષા",
       "રિમોટ પ્લાન્ટ મોનિટરિંગ અને 10 વર્ષની વોરંટી",
     ],
@@ -261,20 +264,20 @@ export const INCLUDED = [
     guBody:
       "ઇન્સ્ટોલેશન પછી, કેબલ્સ દેખાતા નથી, તેથી તેની ગુણવત્તા પહેલા જ તપાસી લેવી જોઈએ. ઉચ્ચ શુદ્ધતા ધરાવતું તાંબું (કોપર) ઉર્જાનો ઓછો વ્યય અને સુરક્ષાની ખાતરી આપે છે.",
     specs: [
-      "DC Solar Cable: 1 Core 4.0 SQ MM Polycab/Johanson Type 1",
-      "AC Cable: 2 Core 4.0 SQ MM copper flexible (Polycab/Johanson)",
-      "Earthing Cable: 1 Core 6 SQ MM Cu & 1 Core 16 SQ MM Al",
+      "DC Solar Cable: 1 Core 4.0 SQ MM Polycab/Johnson Type 1",
+      "AC Cable: 2 Core 4.0 SQ MM copper flexible (Polycab/Johnson)",
+      "Earthing Cable: 1 Core 2.5 SQ MM Cu & 1 Core 16 SQ MM Al",
       "High-purity copper with UV, heat & weather insulation",
     ],
     guSpecs: [
-      "DC સોલર કેબલ: 1 કોર 4.0 SQ MM (Polycab/Johanson Type 1)",
-      "AC કેબલ: 2 કોર 4.0 SQ MM કોપર ફ્લેક્સિબલ (Polycab/Johanson)",
-      "અર્થિંગ કેબલ: 1 કોર 6 SQ MM કોપર (Cu) અને 1 કોર 16 SQ MM એલ્યુમિનિયમ (Al)",
+      "DC સોલર કેબલ: 1 કોર 4.0 SQ MM (Polycab/Johnson Type 1)",
+      "AC કેબલ: 2 કોર 4.0 SQ MM કોપર ફ્લેક્સિબલ (Polycab/Johnson)",
+      "અર્થિંગ કેબલ: 1 કોર 2.5 SQ MM કોપર (Cu) અને 1 કોર 16 SQ MM એલ્યુમિનિયમ (Al)",
       "UV, ગરમી અને હવામાન સામે રક્ષણ આપતું ઇન્સ્યુલેશન ધરાવતું ઉચ્ચ શુદ્ધતાવાળું કોપર (તાંબુ)",
     ],
     image: "/images/products/product-08-cables.png",
-    imageAlt: "Polycab/Johanson solar DC and AC copper cables",
-    guImageAlt: "Polycab/Johanson સોલર DC અને AC કોપર કેબલ્સ",
+    imageAlt: "Polycab/Johnson solar DC and AC copper cables",
+    guImageAlt: "Polycab/Johnson સોલર DC અને AC કોપર કેબલ્સ",
     icon: "cables",
     full: false,
     whole: true,
@@ -319,20 +322,20 @@ export const INCLUDED = [
     guBody:
       "ઔદ્યોગિક ગુણવત્તાના પ્રમાણિત કનેક્ટર્સ, UV-પ્રતિરોધક કેબલ ટાઈ અને લગ્સ (lugs), જે વીજ પ્રવાહના લીકેજને રોકે છે અને લાંબા સમય સુધી ટકાઉપણું સુનિશ્ચિત કરે છે.",
     specs: [
-      "MC4 Connector: Dash PV, 1500 V DC | IP68 | TÜV",
+      "MC4 Connector: DhaSh PV, 1500 V DC | IP68 | TÜV",
       "UV-protected heavy-duty solar cable ties",
       "High-quality certified crimp lugs from top brands",
       "Factory-rated watertight seals for zero power loss",
     ],
     guSpecs: [
-      "MC4 કનેક્ટર: Dash PV, 1500 V DC | IP68 | TÜV પ્રમાણિત",
+      "MC4 કનેક્ટર: DhaSh PV, 1500 V DC | IP68 | TÜV પ્રમાણિત",
       "UV-સુરક્ષિત, મજબૂત (heavy-duty) સોલર કેબલ ટાઈ",
       "અગ્રણી બ્રાન્ડ્સના ઉચ્ચ ગુણવત્તાયુક્ત, પ્રમાણિત ક્રિમ્પ લગ્સ (crimp lugs)",
       "પાવર લોસ (ઉર્જાનો વ્યય) શૂન્ય રહે તે માટે ફેક્ટરી-રેટેડ વોટરટાઈટ સીલ",
     ],
     image: "/images/products/product-10-accessories.png",
-    imageAlt: "Dash PV MC4 connectors and solar accessories",
-    guImageAlt: "Dash PV MC4 કનેક્ટર્સ અને સોલર એસેસરીઝ",
+    imageAlt: "DhaSh PV MC4 connectors and solar accessories",
+    guImageAlt: "DhaSh PV MC4 કનેક્ટર્સ અને સોલર એસેસરીઝ",
     icon: "accessories",
     full: false,
     whole: true,
@@ -494,8 +497,8 @@ export const FAQS = [
   {
     q: "Is it really free?",
     guQ: "શું તે ખરેખર મફત છે?",
-    a: `The effective cost is ${inr(EFFECTIVE_COST)} for the standard 2.18 kW system. You pay ${inr(STANDARD_PRICE)} for the system, yourself or through a loan, and the same ${inr(TOTAL_SUBSIDY)} comes back to your bank account as subsidy: ${inr(CENTRAL_SUBSIDY)} central assistance under PM Surya Ghar: Muft Bijli Yojana and ${inr(GUJARAT_SUBSIDY)} Gujarat state assistance. You pay nothing to reserve. Site-specific customisation is quoted after the rooftop survey and confirmed by you before any work begins.`,
-    guA: `સ્ટાન્ડર્ડ 2.18 kW સિસ્ટમ માટે અસરકારક ખર્ચ (effective cost) ${inr(EFFECTIVE_COST)} છે. સિસ્ટમ માટે તમે ${inr(STANDARD_PRICE)} ચૂકવો છો, જાતે અથવા લોન દ્વારા, અને આ જ ${inr(TOTAL_SUBSIDY)} સબસિડી રૂપે તમારા બેંક ખાતામાં પાછા આવે છે: 'PM સૂર્ય ઘર: મફત વીજળી યોજના' હેઠળ ${inr(CENTRAL_SUBSIDY)} ની કેન્દ્રીય સહાય અને ${inr(GUJARAT_SUBSIDY)} ની ગુજરાત રાજ્ય સહાય. બુકિંગ માટે તમારે કોઈ રકમ ચૂકવવાની રહેતી નથી. રૂફટોપ સર્વે કર્યા પછી, તમારી જરૂરિયાત મુજબના ફેરફારો (customisation) સાથેનો ખર્ચ જણાવવામાં આવશે, અને કામ શરૂ થાય તે પહેલાં તમારી મંજૂરી લેવામાં આવશે.`,
+    a: `The effective cost is ${inr(EFFECTIVE_COST)} for the standard 2.18 kW system. You pay ${inr(STANDARD_PRICE)} for the system, yourself or through a loan, and the same ${inr(TOTAL_SUBSIDY)} comes back to your bank account as subsidy: ${inr(CENTRAL_SUBSIDY)} central assistance under PM Surya Ghar: Muft Bijli Yojana and ${inr(GUJARAT_SUBSIDY)} Gujarat state assistance. For SC / ST households the system costs ${inr(SC_ST_FIGURES.standardPrice)} and the same ${inr(totalSubsidyOf(SC_ST_FIGURES))} comes back, of which ${inr(SC_ST_FIGURES.gujaratSubsidy)} is Gujarat state assistance. You pay nothing to reserve. Site-specific customisation is quoted after the rooftop survey and confirmed by you before any work begins.`,
+    guA: `સ્ટાન્ડર્ડ 2.18 kW સિસ્ટમ માટે અસરકારક ખર્ચ (effective cost) ${inr(EFFECTIVE_COST)} છે. સિસ્ટમ માટે તમે ${inr(STANDARD_PRICE)} ચૂકવો છો, જાતે અથવા લોન દ્વારા, અને આ જ ${inr(TOTAL_SUBSIDY)} સબસિડી રૂપે તમારા બેંક ખાતામાં પાછા આવે છે: 'PM સૂર્ય ઘર: મફત વીજળી યોજના' હેઠળ ${inr(CENTRAL_SUBSIDY)} ની કેન્દ્રીય સહાય અને ${inr(GUJARAT_SUBSIDY)} ની ગુજરાત રાજ્ય સહાય. SC / ST પરિવારો માટે સિસ્ટમની કિંમત ${inr(SC_ST_FIGURES.standardPrice)} છે અને આ જ ${inr(totalSubsidyOf(SC_ST_FIGURES))} પાછા આવે છે, જેમાંથી ${inr(SC_ST_FIGURES.gujaratSubsidy)} ગુજરાત રાજ્યની સહાય છે. બુકિંગ માટે તમારે કોઈ રકમ ચૂકવવાની રહેતી નથી. રૂફટોપ સર્વે કર્યા પછી, તમારી જરૂરિયાત મુજબના ફેરફારો (customisation) સાથેનો ખર્ચ જણાવવામાં આવશે, અને કામ શરૂ થાય તે પહેલાં તમારી મંજૂરી લેવામાં આવશે.`,
   },
   {
     q: "When is the subsidy credited, and to whom?",
