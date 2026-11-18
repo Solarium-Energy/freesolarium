@@ -141,7 +141,7 @@ export const PRIVACY_POLICY: LegalDocument = {
         {
           "type": "list",
           "items": [
-            "your electricity distribution company (DISCOM), and the government bodies and portals that run the PM Surya Ghar scheme and the Gujarat state assistance, such as MNRE and GEDA",
+            "your electricity distribution company (DISCOM), and the government bodies and portals that run the PM Surya Ghar scheme and the Gujarat state assistance, such as MNRE and the Government of Gujarat",
             "the bank or lender, if you choose a loan",
             "the insurer of your system",
             "installation and service partners who work for us",
@@ -274,7 +274,7 @@ export const PRIVACY_POLICY: LegalDocument = {
 
 export const TERMS_OF_SERVICE: LegalDocument = {
   "title": "Terms of service",
-  "updated": "Last updated: 17 November 2026",
+  "updated": "Last updated: 18 November 2026",
   "intro": [
     {
       "type": "paragraph",
@@ -300,7 +300,7 @@ export const TERMS_OF_SERVICE: LegalDocument = {
           "type": "list",
           "items": [
             "The effective cost shown on this website assumes that the central assistance under PM Surya Ghar: Muft Bijli Yojana and the Gujarat state assistance are approved, as notified at the time of commissioning, for the standard 2.18 kW configuration.",
-            "Subsidy amounts, eligibility and the time of payment are set by MNRE, GEDA and the DISCOM, not by Solarium. We help you apply. We cannot promise a decision that is theirs.",
+            "Subsidy amounts, eligibility and the time of payment are set by MNRE, the Government of Gujarat and the DISCOM, not by Solarium. We help you apply. We cannot promise a decision that is theirs.",
             "A quotation on this website is an estimate, worked out from what you enter. The final price is confirmed after the rooftop survey and before your order is confirmed.",
             "Loan figures such as the monthly instalment and the interest are estimates. The bank or lender decides whether to give a loan, and on what terms.",
             "We may change or end the offer. A change does not affect an order that we have already confirmed in writing."
