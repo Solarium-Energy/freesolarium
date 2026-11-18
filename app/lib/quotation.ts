@@ -37,7 +37,7 @@ export const NBFC_BASE_EMI = 2_351;
 export const NBFC_BASE_INTEREST = 3_780;
 
 export const FLOOR_SHEET_OPTIONS = [
-  { label: "Ground / G+1", displayPrice: "Included", isIncluded: true, extra: 0 },
+  { label: "G+1", displayPrice: "Included", isIncluded: true, extra: 0 },
   { label: "G+2", displayPrice: "₹3,600", isIncluded: false, extra: 3_600 },
   { label: "G+3", displayPrice: "₹5,600", isIncluded: false, extra: 5_600 },
   { label: "G+4", displayPrice: "₹7,500", isIncluded: false, extra: 7_500 },
@@ -46,9 +46,7 @@ export const FLOOR_SHEET_OPTIONS = [
 export const HEIGHT_SHEET_OPTIONS = [
   { label: "0.5 m", displayPrice: "Included", isIncluded: true, extra: 0 },
   { label: "1.0 m", displayPrice: "₹2,800", isIncluded: false, extra: 2_800 },
-  { label: "1.5 m", displayPrice: "₹4,200", isIncluded: false, extra: 4_200 },
   { label: "2.0 m", displayPrice: "₹5,600", isIncluded: false, extra: 5_600 },
-  { label: "2.5 m", displayPrice: "₹7,000", isIncluded: false, extra: 7_000 },
   { label: "3.0 m", displayPrice: "₹8,400", isIncluded: false, extra: 8_400 },
 ] as const;
 
@@ -112,7 +110,7 @@ export function computeQuotationNumbers(floor: string, structureHeight: string, 
 
 /* `crm` is the value the CRM expects for each option. */
 export const FLOOR_OPTIONS = [
-  { label: "Ground / G+1", crm: "G+1", guLabel: "ગ્રાઉન્ડ / G+1", sub: "Included", guSub: "સમાવિષ્ટ", extra: 0 },
+  { label: "G+1", crm: "G+1", guLabel: "G+1", sub: "Included", guSub: "સમાવિષ્ટ", extra: 0 },
   { label: "G+2", crm: "G+2", guLabel: "G+2", sub: "+₹3,600", guSub: "+₹3,600", extra: 3600 },
   { label: "G+3", crm: "G+3", guLabel: "G+3", sub: "+₹5,600", guSub: "+₹5,600", extra: 5600 },
   { label: "G+4", crm: "G+4", guLabel: "G+4", sub: "+₹7,500", guSub: "+₹7,500", extra: 7500 },
@@ -122,9 +120,7 @@ export const FLOOR_OPTIONS = [
 export const STRUCTURE_HEIGHT_OPTIONS = [
   { label: "0.5 m", crm: "0.5", guLabel: "0.5 m", sub: "Included", guSub: "સમાવિષ્ટ", extra: 0 },
   { label: "1.0 m", crm: "1", guLabel: "1.0 m", sub: "+₹2,800", guSub: "+₹2,800", extra: 2800 },
-  { label: "1.5 m", crm: "1.5", guLabel: "1.5 m", sub: "+₹4,200", guSub: "+₹4,200", extra: 4200 },
   { label: "2.0 m", crm: "2", guLabel: "2.0 m", sub: "+₹5,600", guSub: "+₹5,600", extra: 5600 },
-  { label: "2.5 m", crm: "2.5", guLabel: "2.5 m", sub: "+₹7,000", guSub: "+₹7,000", extra: 7000 },
   { label: "3.0 m", crm: "3", guLabel: "3.0 m", sub: "+₹8,400", guSub: "+₹8,400", extra: 8400 },
   { label: "3.0 m and above", crm: "3+", guLabel: "3.0 m અને તેથી વધુ", sub: "Our team will contact you", guSub: "અમારી ટીમ તમારો સંપર્ક કરશે", extra: 0, custom: true },
 ] as const;

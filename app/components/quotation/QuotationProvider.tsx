@@ -25,7 +25,7 @@ import QuotationSheet from "./QuotationSheet";
 /* The bar starts with the choices the design shows, so nothing is empty. */
 const START = {
   category: "general" as Category,
-  floor: "Ground / G+1" as FloorOption,
+  floor: "G+1" as FloorOption,
   structureHeight: "0.5 m" as StructureHeight,
   discom: "UGVCL" as DiscomOption,
 };
