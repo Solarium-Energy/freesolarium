@@ -273,8 +273,8 @@ export function drawQuotation218(ctx: CanvasRenderingContext2D, input: Quotation
 
   StatBand(doc, {
     stats: [
-      { value: "22,000+", caption: "families trust us" },
-      { value: "8+ years", caption: "of experience" },
+      { value: "25,000+", caption: "homes solarised" },
+      { value: "Since 2018", caption: "in rooftop solar" },
       { value: "BSE listed", caption: "company" },
       { value: "Free 5-year", caption: "solar insurance" },
     ],
