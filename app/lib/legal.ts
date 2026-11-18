@@ -274,7 +274,7 @@ export const PRIVACY_POLICY: LegalDocument = {
 
 export const TERMS_OF_SERVICE: LegalDocument = {
   "title": "Terms of service",
-  "updated": "Last updated: 18 November 2026",
+  "updated": "Last updated: 19 November 2026",
   "intro": [
     {
       "type": "paragraph",
@@ -317,7 +317,7 @@ export const TERMS_OF_SERVICE: LegalDocument = {
           "items": [
             "Asking for a quotation or sending the booking form is a request. It is not a confirmed order.",
             "An order exists when Solarium confirms it to you in writing, after we have checked your details and documents and surveyed your roof.",
-            "This website takes no payment. The booking amount, the payment schedule, and the terms for cancellation and refund are in the quotation and the order documents that you receive and agree to before you pay.",
+            "This website takes no payment. The payment schedule and the terms for cancellation and refund are in the quotation and the order documents that you receive and agree to before you pay.",
             "The warranty, the insurance and our service obligations for your system are in those order documents and in the papers that come with the system."
           ]
         }
