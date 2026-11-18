@@ -64,7 +64,7 @@ function useQuotationState() {
   const validMobile  = /^\d{10}$/.test(mobile);
 
   const selectionsComplete = Boolean(category && floor && structureHeight && discom);
-  const needsCallback = floor === "G+5 and above" || structureHeight === "3.0 m and above";
+  const needsCallback = floor === "G+5 and above" || structureHeight === "3.0 m and above" || discom === "Other";
   const allReady = selectionsComplete && validName && validPincode && validMobile;
   // The figures follow the category: its standard price and its subsidies.
   const calc = computeQuotationNumbers(floor, structureHeight, discom, category);

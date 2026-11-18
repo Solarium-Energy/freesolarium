@@ -181,6 +181,7 @@ export const DISCOM_OPTIONS = [
   { label: "DGVCL", crm: "DGVCL", guLabel: "DGVCL", sub: "₹0", guSub: "₹0", extra: 0 },
   { label: "PGVCL", crm: "PGVCL", guLabel: "PGVCL", sub: "₹0", guSub: "₹0", extra: 0 },
   { label: "Torrent Power", crm: "Torrent", guLabel: "Torrent Power", sub: "+₹5,409", guSub: "+₹5,409", extra: 5409 },
+  { label: "Other", crm: "Other", guLabel: "અન્ય (Other)", sub: "Our team will contact you", guSub: "અમારી ટીમ તમારો સંપર્ક કરશે", extra: 0, custom: true },
 ] as const;
 
 /* The sheet's payment modes in the CRM's values, and the loan figures shown for the loan. */
