@@ -116,7 +116,7 @@ function drawPage1(ctx: CanvasRenderingContext2D, input: Quotation218Input) {
         OptionBox(part, {
           title: "2 · Front-leg structure height",
           note: "0.5 m incl.",
-          columns: 2,
+          columns: 1,
           options: HEIGHT_SHEET_OPTIONS.map((option) => ({
             label: option.label,
             price: option.displayPrice,
