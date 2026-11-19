@@ -241,11 +241,9 @@
   .details > .detail:not(.is-on) {
     visibility: visible;
   }
-  /* Each card is as tall as its own text: the panels' and the inverter's facts stay on larger screens. The
-     row is as tall as its tallest card, so the pager under it never moves. */
-  .details {
-    align-items: flex-start;
-  }
+  /* All ten cards are as tall as the tallest, with their text at the top, so the edge of the next card shows
+     no difference. The panels' and the inverter's facts stay on larger screens. The pager under the row never
+     moves. */
   .details > .detail .specs {
     display: none;
   }
