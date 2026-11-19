@@ -1,5 +1,5 @@
-/* The quotation for the standard 2.18 kW system: two A4 pages, generated, with nothing to fill in by hand and
-   no signatures. Page 1 is the quotation, page 2 what the customer gets.
+/* The quotation for the standard 2.18 kW system: three A4 pages, generated, with nothing to fill in by hand and
+   no signatures. Page 1 is the quotation, page 2 what the customer gets, page 3 the terms and conditions.
 
    This file only draws on the contexts it is given, so it also runs outside a browser. A different
    quotation (other options, other payment modes, another scheme) is a new file like this one, built from
@@ -7,10 +7,12 @@
    app/lib/payment.ts. */
 
 import { COMPANY_BANK_DETAILS } from "../payment";
+import { QUOTATION_TERMS_TABLE, quotationTermsClauses } from "./quotationTerms";
 import {
   DISCOM_SHEET_OPTIONS,
   FLOOR_SHEET_OPTIONS,
   HEIGHT_SHEET_OPTIONS,
+  QUOTATION_VALIDITY_DAYS,
   computeQuotationNumbers,
   fmtNum,
   optionCharge,
@@ -24,13 +26,14 @@ import {
   DocHeader,
   FieldRows,
   FootLine,
-  Notes,
+  KeyValueTable,
   OptionBox,
   PageHeader,
   PaymentDetails,
   SideBySide,
   StatBand,
   TermsBlock,
+  TermsClauses,
   TotalRow,
   finishPage,
   gap,
@@ -89,7 +92,7 @@ function drawPage1(ctx: CanvasRenderingContext2D, input: Quotation218Input) {
     [
       ...(quoteNo ? [{ label: "Quote no.", value: quoteNo }] : []),
       { label: "Date", value: quoteDate },
-      { label: "Valid for 15 days", value: "", plain: true },
+      { label: `Valid for ${QUOTATION_VALIDITY_DAYS} days`, value: "", plain: true },
     ],
   ]);
   gap(doc);
@@ -277,18 +280,6 @@ function drawPage2(ctx: CanvasRenderingContext2D, input: Quotation218Input) {
   });
   gap(doc, 16);
 
-  Notes(doc, {
-    heading: "Notes",
-    items: [
-      "Standard system includes 2.18 kW solar panels (545 Wp Solarium brand × 4 panels) and inverter, 0.5 m front-leg structure, G+1 cabling, installation and commissioning, subsidy support and 5 years solar insurance.",
-      "Subsidy is subject to eligibility and government approval. Add-ons (1)+(2)+(3) are included in the loan.",
-      "Subsidy is estimated to be repaid in the 4th month of installation; estimated interest covers the 3 EMIs before that.",
-      "Any change in DISCOM or government charges will apply at actuals.",
-      "If the name on the electricity bill and the bank account is different, a name change is required.",
-    ],
-  });
-  gap(doc);
-
   CheckList(doc, {
     title: "Documents required",
     items: ["Electricity bill", "Bank passbook", "Aadhaar card", "PAN card", "House photo", "Rooftop photo"].map((label) => ({
@@ -296,6 +287,32 @@ function drawPage2(ctx: CanvasRenderingContext2D, input: Quotation218Input) {
       ticked: false,
     })),
   });
+
+  finishPage(doc);
+  return doc.y;
+}
+
+/** Page 3: Solarium's terms and conditions, word for word, with the meter charge and the validity of this
+    quotation filled in, then the band of four figures that closes the document. */
+function drawPage3(ctx: CanvasRenderingContext2D, input: Quotation218Input) {
+  const { data, quoteNo, logo } = input;
+  const calc = computeQuotationNumbers(data.floor, data.structureHeight, data.discom, data.category);
+  const doc = newDoc(ctx);
+
+  PageHeader(doc, {
+    logo,
+    fallbackName: "Solarium",
+    title: "Terms and conditions",
+    refs: quoteNo ? [{ label: "Quote no.", value: quoteNo }] : [],
+  });
+  gap(doc, 16);
+
+  TermsClauses(doc, {
+    clauses: quotationTermsClauses({ meterCharges: fmtNum(calc.meterCost), validityDays: String(QUOTATION_VALIDITY_DAYS) }),
+  });
+  gap(doc, 16);
+
+  KeyValueTable(doc, { rows: QUOTATION_TERMS_TABLE });
   gap(doc, 16);
 
   StatBand(doc, {
@@ -313,4 +330,4 @@ function drawPage2(ctx: CanvasRenderingContext2D, input: Quotation218Input) {
 
 /** The pages of the quotation, in order. Each draws on a context already scaled to the page's own units and
     returns where its last part ended. */
-export const QUOTATION_218_PAGES = [drawPage1, drawPage2] as const;
+export const QUOTATION_218_PAGES = [drawPage1, drawPage2, drawPage3] as const;

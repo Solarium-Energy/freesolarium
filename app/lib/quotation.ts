@@ -15,6 +15,9 @@ export interface QuotationFormData {
   pincode: string;
 }
 
+/** How many days a quotation is valid: "Valid for 15 days" on the sheet and the PDF, and clause 4 of its terms. */
+export const QUOTATION_VALIDITY_DAYS = 15;
+
 /** A PIN code: six digits, the first not 0. The server route checks the same. */
 export const PINCODE_PATTERN = /^[1-9]\d{5}$/;
 

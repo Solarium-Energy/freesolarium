@@ -819,3 +819,55 @@ export function FootLine(doc: Doc, text: string) {
   // Nothing may be drawn below the line above it.
   doc.bottom -= 18;
 }
+
+/**
+ * Numbered clauses of legal text: each clause's name in the strong small style, its text in the small style
+ * on the same line, wrapped inside the page under an indent.
+ */
+export function TermsClauses(doc: Doc, content: { clauses: { name: string; text: string }[] }) {
+  const { ctx, x, width } = doc;
+  const indent = 18;
+  const lineHeight = 12.5;
+  const textWidth = width - indent;
+  let y = doc.y + 9;
+  content.clauses.forEach((clause, index) => {
+    drawText(ctx, `${index + 1}.`, x, y, "smallStrong", "foreground");
+    const words = [
+      ...clause.name.split(" ").map((word) => ({ word, style: "smallStrong" as const })),
+      ...clause.text.split(" ").map((word) => ({ word, style: "small" as const })),
+    ];
+    const space = measure(ctx, " ", "small");
+    let cursor = 0;
+    for (const { word, style } of words) {
+      const wordWidth = measure(ctx, word, style);
+      if (cursor > 0 && cursor + space + wordWidth > textWidth) {
+        y += lineHeight;
+        cursor = 0;
+      }
+      const at = cursor === 0 ? 0 : cursor + space;
+      drawText(ctx, word, x + indent + at, y, style, "foreground");
+      cursor = at + wordWidth;
+    }
+    y += lineHeight + 4;
+  });
+  // The baseline of the last line, plus room for its descenders.
+  doc.y = y - lineHeight;
+}
+
+/** A table of a label and a value per row, with a hairline between the two columns. */
+export function KeyValueTable(doc: Doc, content: { rows: readonly { label: string; value: string }[]; labelWidth?: number }) {
+  const { ctx, x, width } = doc;
+  const top = doc.y;
+  const rowHeight = 24;
+  const labelWidth = content.labelWidth ?? 170;
+  content.rows.forEach((row, index) => {
+    const ry = top + index * rowHeight;
+    if (index > 0) hline(ctx, x, x + width, ry, "border");
+    drawText(ctx, row.label, x + 10, ry + 16, "label", "muted-foreground");
+    drawText(ctx, fitText(ctx, row.value, "body", width - labelWidth - 10), x + labelWidth, ry + 16, "body", "foreground");
+  });
+  const height = content.rows.length * rowHeight;
+  vline(ctx, x + labelWidth - 10, top, top + height, "border");
+  roundedBox(ctx, x, top, width, height, { stroke: "border" });
+  doc.y = top + height;
+}

@@ -8,6 +8,7 @@ import {
   DISCOM_SHEET_OPTIONS,
   FLOOR_SHEET_OPTIONS,
   HEIGHT_SHEET_OPTIONS,
+  QUOTATION_VALIDITY_DAYS,
   fmtNum,
   optionCharge,
   type PaymentMode,
@@ -324,7 +325,7 @@ function QuotationStep() {
         <dt>Date</dt>
         <dd>
           {quoteDate()}
-          <span className="kv-note">Valid for 15 days</span>
+          <span className="kv-note">Valid for {QUOTATION_VALIDITY_DAYS} days</span>
         </dd>
       </dl>
 

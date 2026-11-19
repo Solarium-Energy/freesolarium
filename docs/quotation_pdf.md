@@ -1,9 +1,10 @@
 # Quotation PDF
 
-The quotation a customer downloads from the quotation sheet. It is two A4 pages in English, in the Solarium design system, First Light (version 2). It is generated: nothing on it is filled in by hand and it needs no signature.
+The quotation a customer downloads from the quotation sheet. It is three A4 pages in English, in the Solarium design system, First Light (version 2). It is generated: nothing on it is filled in by hand and it needs no signature.
 
 - Page 1, the quotation: the header, the customer's fields (name, mobile, PIN code, category, DISCOM, the quote number when the CRM gave one, the date and "Valid for 15 days"), the three option tables, the price in three blocks (what you pay, what comes back to your bank account, the effective cost), the terms of the chosen payment mode, the payment details (Solarium's payment QR and its bank account), and a line at the foot.
-- Page 2, what you get: a small header, the table of what the system includes, the notes, the documents required and the band of four figures.
+- Page 2, what you get: a small header, the table of what the system includes and the documents required.
+- Page 3, terms and conditions: a small header with the title "Terms and conditions", Solarium's eleven clauses, numbered, each with its name in bold, the table of the regional office and the GSTIN, and the band of four figures that closes the document.
 
 ## How it is made
 
@@ -19,7 +20,8 @@ The entry point is `generateQuotationPdfBlob(data, paymentMode, quoteNo, quoteDa
 | --- | --- |
 | `app/lib/pdf/pdfTheme.ts` | The only file with raw values: the colours under their token names, the two font stacks, the type styles, corners, page size and margins |
 | `app/lib/pdf/pdfParts.ts` | The document parts and the helpers under them |
-| `app/lib/pdf/quotation218.ts` | What the quotation for the 2.18 kW system contains: its two pages, the parts of each in order, with their words and figures |
+| `app/lib/pdf/quotation218.ts` | What the quotation for the 2.18 kW system contains: its three pages, the parts of each in order, with their words and figures |
+| `app/lib/pdf/quotationTerms.ts` | Solarium's terms and conditions for page 3, word for word, and the table under them. Two spots are filled in for each quotation: the meter charge of its DISCOM in clause 2 ("Rs. 0" or "Rs. 5,409") and the days the offer is valid in clause 4, the same constant as "Valid for 15 days" on page 1. No clause is typed anywhere else |
 | `app/lib/payment.ts` | Solarium's payment QR (`public/images/payment-qr.png`) and its bank details. They are kept there only |
 | `app/lib/quotationPdf.ts` | The browser side: fonts, logo and QR, a canvas per page, JPEG, PDF |
 | `scripts/check_pdf_theme.mjs` | Compares the theme's colours with `app/styles/tokens_v2.css` |
@@ -38,7 +40,7 @@ A part draws at the current position of the document and moves it on by its own 
 | `SideBySide` | Parts placed in one row, with widths in proportion to their weights |
 | `PriceBlock` | A title and a note, rows of label and amount (plain, less or strong) on the left, rows with a line to fill in on the right, and the total |
 | `PaymentColumns` | A title and a note, any number of columns (a name, chosen or not, rows of label, hint, fixed value or a line to fill in, and the net cost), and the fields of a closing row |
-| `Notes` | A heading and any number of notes, each wrapped inside the page |
+| `Notes` | A heading and any number of notes, each wrapped inside the page. The quotation no longer uses it: page 3 holds the terms in its place |
 | `CheckList` | A title and tick items, in a row that wraps |
 | `SignatureLines` | Lines to sign on, each with a caption |
 | `StatBand` | A few figures with their captions on a dark band |
@@ -49,6 +51,8 @@ A part draws at the current position of the document and moves it on by its own 
 | `DataTable` | Columns by weight and rows whose cells wrap inside their column |
 | `PageHeader` | A small head for a following page: logo, title, reference values |
 | `FootLine` | A line at the foot of the page |
+| `TermsClauses` | Numbered clauses, each a name in bold followed by its text, wrapped under a hanging number |
+| `KeyValueTable` | Rows of a label and a value in a box, with a line between the two columns |
 
 The parts of the earlier one-page form (`PriceBlock`, `PaymentColumns`, `SignatureLines`) stay in the kit for documents that are filled in by hand.
 
@@ -66,8 +70,8 @@ Two families only: Newsreader for display, Hanken Grotesk for everything else. H
 | `labelStrong` | Hanken Grotesk 600, 10 | A row label that sums up the rows above it |
 | `body` | Hanken Grotesk 400, 10 | Plain rows |
 | `value` | Hanken Grotesk 600, 10.5 | Amounts, and everything filled in for this customer |
-| `small` | Hanken Grotesk 400, 9 | Hints, notes, the note in a title bar |
-| `smallStrong` | Hanken Grotesk 600, 9 | The scheme line beside the logo |
+| `small` | Hanken Grotesk 400, 9 | Hints, notes, the note in a title bar, the text of the terms |
+| `smallStrong` | Hanken Grotesk 600, 9 | The scheme line beside the logo, the numbers and names of the terms |
 
 ## Colour
 
@@ -98,9 +102,9 @@ Every colour is the light value of a token.
 - Orange appears twice at most: the bar on the chosen payment mode, and the dot of an eyebrow when a document has one. Orange is never text and never a fill behind text. No gradient.
 - The chosen payment mode is shown by its tick, by the `selected` ground and by the sun bar, never by colour alone.
 - Nothing is smaller than 9 units. A printed page that holds a whole quotation has its own floor. The screen rule of 12 pixels does not fit one page.
-- Sentence case. Names such as DISCOM, UGVCL and BSE keep their capitals. No dash and no exclamation mark.
+- Sentence case. Names such as DISCOM, UGVCL and BSE keep their capitals. The names of the clauses on page 3 are in capitals, as in Solarium's own terms: legal text is used word for word. No dash and no exclamation mark.
 - Boxes and blocks have corners of `corner-xs` (8) and a hairline in `border`. A tick box has corners of `corner-3xs` (2).
-- Exactly two pages. Nothing is cut short and nothing overlaps.
+- Exactly three pages. Nothing is cut short and nothing overlaps.
 - Margins of 32 on both sides, 12 between blocks, at least 28 free under the stat band and the foot line.
 - The payment QR is drawn at 120 units on a white square with a white margin, in its own proportions. It must still scan from the stored page.
 - The logo is used unchanged, with clear space around it.
@@ -108,6 +112,6 @@ Every colour is the light value of a token.
 ## A new quotation
 
 1. Copy `app/lib/pdf/quotation218.ts` to a new file and give it a new function name.
-2. Change the content: the options, the rows of the price block, the payment columns, the notes, the documents. Take the figures from the quotation's own constants and calculation. Do not write a figure into the drawing.
+2. Change the content: the options, the rows of the price block, the payment columns, the documents, and the terms when they differ. Take the figures from the quotation's own constants and calculation. Do not write a figure into the drawing.
 3. Keep the parts as they are. A part that takes four options, two payment modes or eight notes needs no change. If a new kind of block is needed, add it to `pdfParts.ts` as a new part that takes its content as data.
 4. Point the browser side at the new function, run `npm run build` (it runs the design check and the theme check), and look at the PDF in a browser at full size. Nothing may run past the bottom margin.
