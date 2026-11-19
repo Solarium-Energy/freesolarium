@@ -18,6 +18,11 @@ import { useEffect, useRef } from "react";
    - data-mo-scrub on a block: --mo-p runs from 0 to 1 while the block scrolls into view, and each
      part inside it marked data-mo-at="0.4" gets data-in when --mo-p reaches that figure. Its value
      may be a media query: the block is only driven this way while the query matches.
+   - data-mo-through on such a block (its value may be a media query too): the block is taller than
+     the screen, so its line follows the reader instead. Its steps are its data-mo-at parts that
+     are drawn. --mo-p is how far a line 60% down the screen has come from the top of the first
+     step to the top of the last, each step arrives when the line reaches its top, and each gets
+     --mo-q, from 0 to 1: how far the line has run from its own top to the next step's.
    - data-mo-scroll on a section: --mo-p follows how far the section has left the top of the screen.
      data-mo-pointer: --mo-x and --mo-y follow the pointer inside it, from -1 to 1.
    - data-mo-loop on a part that keeps moving: it gets data-mo-away while it is off the screen, which
@@ -76,7 +81,8 @@ function countUp(el: HTMLElement) {
 }
 
 type Follower = { el: HTMLElement; now: number; goal: number };
-type Scrub = Follower & { on: boolean; moved: number };
+/** `legs`: the steps of a block that is read through (data-mo-through), while it is read that way. */
+type Scrub = Follower & { on: boolean; moved: number; legs?: HTMLElement[] };
 type Sequence = { el: HTMLElement; last: number };
 type Pointer = { el: HTMLElement; x: number; y: number; gx: number; gy: number };
 type Spot = { x: number; y: number };
@@ -237,6 +243,20 @@ export default function Motion() {
     /** Whether a data-mo-scrub block is driven by the scroll: always, or while its media query matches. */
     const scrubIsOn = (el: HTMLElement) => !el.dataset.moScrub || window.matchMedia(el.dataset.moScrub).matches;
     const mark = (at: HTMLElement | null) => Number(at?.dataset.moAt ?? 0);
+    /** Whether a data-mo-scrub block is read through, step by step: always, or while that media query matches. */
+    const throughIsOn = (el: HTMLElement) =>
+      el.dataset.moThrough !== undefined && (!el.dataset.moThrough || window.matchMedia(el.dataset.moThrough).matches);
+    /** The steps of such a block: its data-mo-at parts that are drawn. Parts of a hidden drawing have no height. */
+    const legsOf = (el: HTMLElement) =>
+      Array.from(el.querySelectorAll<HTMLElement>("[data-mo-at]")).filter((leg) => leg.offsetHeight > 0);
+    /** Sets each step's own progress, and lets in the steps the line has reached. */
+    const walk = (scrub: Scrub, legs: HTMLElement[], entrance: "" | "now") => {
+      const span = legs.length - 1;
+      legs.forEach((leg, index) => {
+        leg.style.setProperty("--mo-q", clamp(scrub.now * span - index, 0, 1).toFixed(4));
+        if (scrub.goal > 0 && scrub.now * span >= index && !leg.hasAttribute("data-in")) leg.setAttribute("data-in", entrance);
+      });
+    };
 
     /** A block switches between being driven by the scroll and not (the screen was resized across its media query). */
     const handOver = (scrub: Scrub) => {
@@ -270,9 +290,39 @@ export default function Motion() {
           scrub.on = on;
           handOver(scrub);
         }
-        if (!on || scrub.goal >= 1) continue;
+        if (!on) continue;
+        const through = throughIsOn(scrub.el);
+        if (!through && scrub.legs) {
+          // The screen was resized out of the reading by steps: what the line has passed is shown.
+          scrub.legs = undefined;
+          scrub.el.querySelectorAll<HTMLElement>("[data-mo-at]:not([data-in])").forEach((part) => {
+            if (scrub.now >= mark(part)) part.setAttribute("data-in", "now");
+          });
+        }
+        if (scrub.goal >= 1) continue;
         const rect = scrub.el.getBoundingClientRect();
         if (!displayed(rect)) continue;
+        if (through) {
+          // A block taller than the screen: the line follows the reader down its steps. It only ever grows, and
+          // it does not finish by itself: it waits where the reader is.
+          const legs = legsOf(scrub.el);
+          if (legs.length < 2) continue;
+          if (!scrub.legs) walk(scrub, legs, "now");
+          scrub.legs = legs;
+          const line = vh * 0.6;
+          let passed = 0;
+          legs.forEach((leg, index) => {
+            const box = leg.getBoundingClientRect();
+            if (line < box.top) return;
+            passed = index === legs.length - 1 ? index : index + clamp((line - box.top) / box.height, 0, 1);
+          });
+          const goal = passed / (legs.length - 1);
+          if (goal > scrub.goal) {
+            scrub.goal = goal;
+            scrub.moved = now;
+          }
+          continue;
+        }
         // From most of the block being in view (so the reader sees the line start) to the whole block being on screen.
         // It only ever grows.
         const end = clamp(vh - rect.height - 16, vh * 0.15, vh * 0.45);
@@ -319,11 +369,20 @@ export default function Motion() {
         const gap = scrub.goal - scrub.now;
         scrub.now = gap < 0.0005 ? scrub.goal : scrub.now + Math.min(gap * 0.14, elapsed * 0.0005);
         scrub.el.style.setProperty("--mo-p", scrub.now.toFixed(4));
-        scrub.el.querySelectorAll<HTMLElement>("[data-mo-at]:not([data-in])").forEach((part) => {
-          if (scrub.now >= mark(part)) part.setAttribute("data-in", "");
-        });
-        if (scrub.now >= 1) scrub.el.setAttribute("data-done", "");
-        else moving = true;
+        if (scrub.legs) {
+          walk(scrub, scrub.legs, "");
+        } else {
+          scrub.el.querySelectorAll<HTMLElement>("[data-mo-at]:not([data-in])").forEach((part) => {
+            if (scrub.now >= mark(part)) part.setAttribute("data-in", "");
+          });
+        }
+        if (scrub.now >= 1) {
+          scrub.el.setAttribute("data-done", "");
+          // Parts the reading by steps left out (a drawing that is not shown at this width) wait for nothing.
+          if (scrub.legs) {
+            scrub.el.querySelectorAll<HTMLElement>("[data-mo-at]:not([data-in])").forEach((part) => part.setAttribute("data-in", "now"));
+          }
+        } else moving = true;
       }
       for (const item of pointers) {
         const dx = item.gx - item.x;

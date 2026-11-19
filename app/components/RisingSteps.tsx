@@ -16,6 +16,8 @@ const NODES = [
 const SUN_RAYS = [-104, -78, -52, -26, 0, 26, 52, 78, 104];
 // The angle between two rays: the fan turns by this much, again and again.
 const SUN_RAY_STEP = 26;
+// One ray of the small sun that ends the line of steps on a phone, drawn round the sun's middle.
+const SMALL_RAY = "-1.4,-20 1.4,-20 .5,-28 -.5,-28";
 
 /** How far along the curve a node sits, from 0 to 1. While the curve draws itself, the node and its step appear when the line reaches it. */
 function reached(node: { x: number }) {
@@ -52,8 +54,9 @@ export default function RisingSteps() {
           </div>
         </div>
 
-        {/* On a desktop the curve draws itself as this block scrolls into view, and each step arrives when the line reaches it. */}
-        <div data-mo-scrub="(min-width: 1120px)">
+        {/* On a desktop the curve draws itself as this block scrolls into view, and each step arrives when the line reaches it.
+            On a phone the steps hang on one line, taller than the screen: a light travels down it with the reader. */}
+        <div data-mo-scrub="(min-width: 1120px), (max-width: 767px)" data-mo-through="(max-width: 767px)">
           <div className="rise" data-mo-loop="">
             <svg viewBox="0 0 1240 330" aria-hidden="true">
               <defs>
@@ -122,6 +125,25 @@ export default function RisingSteps() {
           <ol className="steps" data-mo-group="">
             {JOURNEY.map((step, index) => (
               <li className="s" key={step.n} data-mo-at={reached(NODES[index])}>
+                {index === JOURNEY.length - 1 ? (
+                  /* On a phone the last number is the sun: its rays turn like the sun's on the curve. */
+                  <svg className="sun-rays" viewBox="-32 -32 64 64" aria-hidden="true" data-mo-loop="">
+                    <g className="fan">
+                      {SUN_RAYS.map((angle) => (
+                        <polygon
+                          key={angle}
+                          className={angle === SUN_RAYS[SUN_RAYS.length - 1] ? "ray is-out" : "ray"}
+                          points={SMALL_RAY}
+                          transform={`rotate(${angle})`}
+                        />
+                      ))}
+                      <polygon className="ray is-in" points={SMALL_RAY} transform={`rotate(${SUN_RAYS[0] - SUN_RAY_STEP})`} />
+                    </g>
+                  </svg>
+                ) : (
+                  /* On a phone: the small sun that leads the line down to the next number. */
+                  <i className="tip" aria-hidden="true" />
+                )}
                 <span className="n" aria-hidden="true">
                   {stepNumber(step, isGu)}
                 </span>

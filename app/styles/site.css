@@ -353,6 +353,66 @@
   font: 400 22px var(--font-display);
   fill: var(--sun-foreground);
 }
+/* The rays of the last step's sun and the light that leads the line are for a phone only. */
+.steps .sun-rays,
+.steps .tip {
+  display: none;
+}
+@media (max-width: 767px) {
+  /* On a phone the six steps hang on one line. It is the curve of the desktop, straightened: the brand's blue
+     from the first number to the sun, drawn over the pale rail, behind the numbers. */
+  .steps .s::after {
+    content: "";
+    position: absolute;
+    left: 15.2px;
+    top: 16px;
+    bottom: -16px;
+    width: 1.6px;
+    background: var(--brand);
+  }
+  .steps .s:last-child::after {
+    display: none;
+  }
+  .steps .n {
+    position: relative;
+    z-index: 1;
+  }
+  /* The rays stand round the last number, which is the sun. They stay clear of the words beside it. */
+  .steps .sun-rays {
+    display: block;
+    position: absolute;
+    left: -16px;
+    top: -16px;
+    width: 64px;
+    height: 64px;
+    overflow: visible;
+    pointer-events: none;
+  }
+  .steps .sun-rays .ray {
+    fill: var(--sun);
+  }
+  /* The light that leads the line: a small sun on the rail. Its box is the stretch from this number to the
+     next, so it can travel that far (motion.css). Without motion it is not shown. */
+  .steps .tip {
+    position: absolute;
+    left: 16px;
+    top: 16px;
+    bottom: -16px;
+    width: 0;
+    pointer-events: none;
+  }
+  .steps .tip::before {
+    content: "";
+    position: absolute;
+    left: -5px;
+    top: -5px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--gradient-sun);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--sun) 22%, transparent);
+  }
+}
 
 /* ---------- Reviews ---------- */
 .rev-g .rating {

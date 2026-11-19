@@ -685,20 +685,24 @@ html.mo .rise .sun-end[data-in=""] {
 /* The sun at the end of the curve. Its parts sit in a group placed on the sun's middle, so they turn and grow round it.
    Its outer rays already point a little below the horizon, so the ray that leaves is gone, and the ray that
    comes in appears, while they are still close to it. Both follow the value that turns the fan (--mo-a). */
-.rise .fan {
+.rise .fan,
+.steps .sun-rays .fan {
   rotate: calc(var(--mo-a) * 26deg);
 }
-.rise .fan .is-out {
+.rise .fan .is-out,
+.steps .sun-rays .is-out {
   opacity: calc(1 - var(--mo-a) / 0.6);
 }
-.rise .fan .is-in {
+.rise .fan .is-in,
+.steps .sun-rays .is-in {
   opacity: calc((var(--mo-a) - 0.4) / 0.6);
 }
 .rise .sun-glow {
   opacity: 0;
 }
 @media (prefers-reduced-motion: no-preference) {
-  .rise .fan {
+  .rise .fan,
+  .steps .sun-rays .fan {
     animation: mo-sun-turn var(--mo-turn-time) linear infinite;
   }
   .rise .sun-glow {
@@ -714,13 +718,45 @@ html.mo .rise .sun-end[data-in=""] {
     animation: mo-settle 650ms var(--mo-ease) 120ms backwards;
   }
 }
-@media (max-width: 767px) {
-  html.mo .steps .s[data-in=""]::before {
-    transform-origin: top;
-    animation: mo-draw-y 800ms var(--mo-ease) 260ms backwards;
+/* On a phone the steps hang on one line, taller than the screen, and a light travels down it with the reader
+   (data-mo-through). The blue line is drawn behind a small sun that leads it. A step ahead is not hidden: it
+   waits in the half light and is lit when the light reaches its number. At the last number the light is home:
+   that number is the sun, its rays open and then keep turning like the hero's. Nothing runs backwards, and
+   when the line is whole the list is the list as it is drawn. */
+@keyframes mo-lit {
+  from {
+    opacity: 0.36;
   }
-  html.mo .steps .s[data-in=""] .n {
-    animation: mo-pop 520ms var(--mo-spring) 120ms backwards;
+}
+@keyframes mo-beat {
+  40% {
+    scale: 1.22;
+  }
+}
+@media (max-width: 767px) {
+  html.mo-live [data-mo-through]:not([data-done]) .steps .s::after {
+    transform-origin: top;
+    scale: 1 var(--mo-q, 0);
+  }
+  html.mo-live [data-mo-through]:not([data-done]) .steps .tip {
+    display: block;
+    translate: 0 calc(var(--mo-q, 0) * 100%);
+  }
+  html.mo-live [data-mo-through] .steps > .s:not([data-in]) {
+    opacity: 0.36;
+  }
+  html.mo-live [data-mo-through] .steps > .s[data-in=""] {
+    animation: mo-lit 700ms var(--ease-out) backwards;
+    animation-delay: 0ms;
+  }
+  html.mo-live [data-mo-through] .steps .s[data-in=""] .n {
+    animation: mo-beat 620ms var(--mo-spring);
+  }
+  html.mo-live [data-mo-through] .steps .s:not([data-in]) .sun-rays {
+    opacity: 0;
+  }
+  html.mo-live [data-mo-through] .steps .s[data-in=""] .sun-rays {
+    animation: mo-node 900ms var(--mo-spring) 160ms backwards;
   }
 }
 
@@ -865,6 +901,7 @@ html.mo .rating[data-in=""] .st {
    that arrives while nobody is looking would wait, hidden, at its first frame. Where a part has an
    entrance and an endless movement, the two values are for those two, in that order. */
 .rise[data-mo-away] :is(.fan, .sun-glow),
+.steps .sun-rays[data-mo-away] .fan,
 .section[data-mo-away] > .glass {
   animation-play-state: paused;
 }
