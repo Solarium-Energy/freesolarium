@@ -43,8 +43,8 @@ export default function LogoWall() {
           <div data-mo-group="" data-mo-delay="2">
             <p className="lead">
               {isGu
-                ? "સશસ્ત્ર દળો, સંશોધન સંસ્થાઓ, જાહેર ક્ષેત્રના ઉપક્રમો અને ભારતની કેટલીક સૌથી મોટી બેંકો સોલેરિયમ પર ભરોસો રાખે છે, લદ્દાખના ટેલિસ્કોપ સ્ટેશન જેવી મુશ્કેલ સાઇટ્સ પર અને સોલર તથા પવન ઊર્જાના હાઇબ્રિડ પ્લાન્ટ્સમાં પણ."
-                : "The armed forces, research institutions, public sector undertakings and some of India's largest banks rely on Solarium, on sites as hard as a telescope station in Ladakh and solar and wind hybrid plants."}
+                ? "સશસ્ત્ર દળો અને ઇન્ડિયન રેલવેથી લઈને જાહેર ક્ષેત્રની કંપનીઓ સુધી, ભારતની સૌથી વિશ્વસનીય સંસ્થાઓએ પોતાની સાઇટ્સ પર સોલર માટે સોલેરિયમને પસંદ કર્યું છે. અમારા એન્જિનિયર્સ દરેક પ્રદેશ, ભૂપ્રદેશ અને કદના સૌથી મુશ્કેલ પ્રોજેક્ટ્સ હાથ ધરે છે, દરેક પ્રકારની સિસ્ટમમાં: રૂફટોપ અને ગ્રાઉન્ડ-માઉન્ટેડ પ્લાન્ટ્સ, કારપોર્ટ્સ, સોલર ટ્રી, બેટરી સ્ટોરેજ (BESS) અને પવન-સોલર હાઇબ્રિડ."
+                : "India's most trusted institutions, from the armed forces and Indian Railways to public sector companies, chose Solarium for solar at their own sites. Our engineers take on the hardest projects, across regions, terrains and sizes, in every kind of system: rooftop and ground-mounted plants, carports, solar trees, battery storage (BESS) and wind-solar hybrids."}
             </p>
             <div className="dotline">
               {isGu
