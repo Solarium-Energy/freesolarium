@@ -248,7 +248,7 @@ export default function ComponentExplorer() {
         </div>
 
         {/* Solarium's certifications, in words only. A phone shows no facts on the cards, so this row matters there. */}
-        <div className="certs" data-mo-group="">
+        <div className="certs">
           <h3 className="certs-h">
             <svg className="ico" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M12 3l7.5 3v5.5c0 4.6-3.1 8-7.5 9.5-4.4-1.5-7.5-4.9-7.5-9.5V6z" />
@@ -256,7 +256,8 @@ export default function ComponentExplorer() {
             </svg>
             {isGu ? CERTIFICATIONS.guHeading : CERTIFICATIONS.heading}
           </h3>
-          <ul className="certs-g">
+          {/* The six cells arrive one after another, as the cells of the stats band do. */}
+          <ul className="certs-g" data-mo-group="">
             {CERTIFICATIONS.items.map((item) => (
               <li className="bracket" key={item.title}>
                 <b>{isGu ? item.guTitle : item.title}</b>

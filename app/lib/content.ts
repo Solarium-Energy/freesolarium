@@ -365,9 +365,9 @@ export const CERTIFICATIONS = {
     { title: "ISO 45001:2018", guTitle: "ISO 45001:2018", note: "Health and safety", guNote: "આરોગ્ય અને સલામતી" },
     { title: "IEC tested", guTitle: "IEC પરીક્ષિત", note: "555 to 725 Wp TOPCon range", guNote: "555 થી 725 Wp TOPCon રેન્જ" },
   ],
-  fine: "Panels made at Solarium's factory in Miroli, Ahmedabad, under BIS licence R-72015466 (IS 14286, IS/IEC 61730) and listed by MNRE in its ALMM. ISO certificates by ICV Assessments for the design, manufacture, installation and servicing of solar modules and systems. IEC tests by URS Products and Testing on Solarium's 555 to 725 Wp TOPCon range: salt mist (IEC 61701), ammonia (IEC 62716), dust and sand (IEC 60068-2-68), PID (IEC TS 62804-1), mechanical load (IEC TS 62782) and performance (IEC 61853-1).",
+  fine: "BIS licence R-72015466 (IS 14286, IS/IEC 61730). ISO certificates by ICV Assessments. IEC tests by URS Products and Testing on the 555 to 725 Wp TOPCon range.",
   guFine:
-    "પેનલ્સ સોલેરિયમની મીરોલી, અમદાવાદ સ્થિત ફેક્ટરીમાં BIS લાઇસન્સ R-72015466 (IS 14286, IS/IEC 61730) હેઠળ બનાવવામાં આવે છે અને MNREની ALMM યાદીમાં સામેલ છે. સોલર મોડ્યુલ્સ અને સિસ્ટમ્સની ડિઝાઇન, ઉત્પાદન, ઇન્સ્ટોલેશન અને સર્વિસિંગ માટે ICV Assessments દ્વારા ISO પ્રમાણપત્રો. સોલેરિયમની 555 થી 725 Wp TOPCon રેન્જ પર URS Products and Testing દ્વારા IEC પરીક્ષણો: સોલ્ટ મિસ્ટ (IEC 61701), એમોનિયા (IEC 62716), ધૂળ અને રેતી (IEC 60068-2-68), PID (IEC TS 62804-1), મિકેનિકલ લોડ (IEC TS 62782) અને પર્ફોર્મન્સ (IEC 61853-1).",
+    "BIS લાઇસન્સ R-72015466 (IS 14286, IS/IEC 61730). ICV Assessments દ્વારા ISO પ્રમાણપત્રો. 555 થી 725 Wp TOPCon રેન્જ પર URS Products and Testing દ્વારા IEC પરીક્ષણો.",
 } as const;
 
 export const INSTITUTIONS = [
