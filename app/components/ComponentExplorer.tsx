@@ -3,7 +3,7 @@
 import { ArrowLeft, ArrowRight, Check } from "lucide-react";
 import Image from "next/image";
 import { type CSSProperties, Fragment, useEffect, useEffectEvent, useRef, useState } from "react";
-import { INCLUDED } from "../lib/content";
+import { CERTIFICATIONS, INCLUDED } from "../lib/content";
 import { useLanguage } from "../lib/language";
 import IconButton from "./ui/IconButton";
 import { cx } from "./ui/cx";
@@ -245,6 +245,26 @@ export default function ComponentExplorer() {
               </span>
             </div>
           </div>
+        </div>
+
+        {/* Solarium's certifications, in words only. A phone shows no facts on the cards, so this row matters there. */}
+        <div className="certs" data-mo-group="">
+          <h3 className="certs-h">
+            <svg className="ico" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 3l7.5 3v5.5c0 4.6-3.1 8-7.5 9.5-4.4-1.5-7.5-4.9-7.5-9.5V6z" />
+              <path d="M8.5 12l2.5 2.5 4.5-5" />
+            </svg>
+            {isGu ? CERTIFICATIONS.guHeading : CERTIFICATIONS.heading}
+          </h3>
+          <ul className="certs-g">
+            {CERTIFICATIONS.items.map((item) => (
+              <li className="bracket" key={item.title}>
+                <b>{isGu ? item.guTitle : item.title}</b>
+                <span>{isGu ? item.guNote : item.note}</span>
+              </li>
+            ))}
+          </ul>
+          <small className="fine">{isGu ? CERTIFICATIONS.guFine : CERTIFICATIONS.fine}</small>
         </div>
       </div>
     </section>

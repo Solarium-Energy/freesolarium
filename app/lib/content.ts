@@ -70,11 +70,13 @@ export const INCLUDED = [
     specs: [
       "1.2 GW automated manufacturing capacity",
       "30-year performance warranty",
+      "BIS certified and on MNRE's ALMM list",
       "DCR: 720Wp, 600Wp & 545Wp N-Type available",
     ],
     guSpecs: [
       "1.2 GW સ્વચાલિત ઉત્પાદન ક્ષમતા",
       "30 વર્ષની કાર્યક્ષમતા વોરંટી",
+      "BIS પ્રમાણિત અને MNREની ALMM યાદીમાં સામેલ",
       "DCR: 720Wp, 600Wp અને 545Wp N-Type ઉપલબ્ધ",
     ],
     image: "/images/products/product-01-solar-panel.png",
@@ -341,6 +343,32 @@ export const INCLUDED = [
     whole: true,
   },
 ] as const;
+
+/* Solarium's certifications, at the end of "What you get". Words only: no BIS, ISO or other mark is drawn, as
+   those marks have their own rules of use.
+   A cell stands only while its certificate is valid. When one lapses, its cell goes, with what the small print
+   says of it (the BIS licence asks this of any promotional matter):
+   - BIS licence R-72015466: valid from 3 Feb 2026 to 2 Feb 2028.
+   - ALMM: valid from 6 Jul 2026 to 5 Jul 2030, and only while the BIS licence is valid.
+   - ISO 9001:2015, ISO 14001:2015 and ISO 45001:2018: valid to 20 Jul 2028, each subject to a yearly
+     surveillance audit.
+   - The IEC tests cover only the 555 to 725 Wp N-type TOPCon range, not the 545 Wp panels of the home system,
+     so they are named only together with that range. */
+export const CERTIFICATIONS = {
+  heading: "Certified panels, from a certified company",
+  guHeading: "પ્રમાણિત પેનલ્સ, પ્રમાણિત કંપની તરફથી",
+  items: [
+    { title: "BIS certified", guTitle: "BIS પ્રમાણિત", note: "Licence R-72015466", guNote: "લાઇસન્સ R-72015466" },
+    { title: "ALMM listed", guTitle: "ALMM યાદીમાં સામેલ", note: "MNRE's approved list", guNote: "MNREની માન્ય યાદી" },
+    { title: "ISO 9001:2015", guTitle: "ISO 9001:2015", note: "Quality", guNote: "ગુણવત્તા" },
+    { title: "ISO 14001:2015", guTitle: "ISO 14001:2015", note: "Environment", guNote: "પર્યાવરણ" },
+    { title: "ISO 45001:2018", guTitle: "ISO 45001:2018", note: "Health and safety", guNote: "આરોગ્ય અને સલામતી" },
+    { title: "IEC tested", guTitle: "IEC પરીક્ષિત", note: "555 to 725 Wp TOPCon range", guNote: "555 થી 725 Wp TOPCon રેન્જ" },
+  ],
+  fine: "Panels made at Solarium's factory in Miroli, Ahmedabad, under BIS licence R-72015466 (IS 14286, IS/IEC 61730) and listed by MNRE in its ALMM. ISO certificates by ICV Assessments for the design, manufacture, installation and servicing of solar modules and systems. IEC tests by URS Products and Testing on Solarium's 555 to 725 Wp TOPCon range: salt mist (IEC 61701), ammonia (IEC 62716), dust and sand (IEC 60068-2-68), PID (IEC TS 62804-1), mechanical load (IEC TS 62782) and performance (IEC 61853-1).",
+  guFine:
+    "પેનલ્સ સોલેરિયમની મીરોલી, અમદાવાદ સ્થિત ફેક્ટરીમાં BIS લાઇસન્સ R-72015466 (IS 14286, IS/IEC 61730) હેઠળ બનાવવામાં આવે છે અને MNREની ALMM યાદીમાં સામેલ છે. સોલર મોડ્યુલ્સ અને સિસ્ટમ્સની ડિઝાઇન, ઉત્પાદન, ઇન્સ્ટોલેશન અને સર્વિસિંગ માટે ICV Assessments દ્વારા ISO પ્રમાણપત્રો. સોલેરિયમની 555 થી 725 Wp TOPCon રેન્જ પર URS Products and Testing દ્વારા IEC પરીક્ષણો: સોલ્ટ મિસ્ટ (IEC 61701), એમોનિયા (IEC 62716), ધૂળ અને રેતી (IEC 60068-2-68), PID (IEC TS 62804-1), મિકેનિકલ લોડ (IEC TS 62782) અને પર્ફોર્મન્સ (IEC 61853-1).",
+} as const;
 
 export const INSTITUTIONS = [
   "Indian Armed Forces",

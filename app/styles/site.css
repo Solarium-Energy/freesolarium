@@ -262,6 +262,65 @@
   }
 }
 
+/* ---------- Certifications ---------- */
+/* The end of "What you get": a heading with the shield of the note pill, six facts each under a bracket like
+   the stats band, light and small on the section's own ground, and the small print. Six in a row from 1120
+   wide, three below, two on a phone. Every cell is as tall as the tallest, in every row. */
+.certs {
+  margin-top: 84px;
+}
+.certs-h {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font: 600 17px/1.3 var(--font-sans);
+  color: var(--foreground);
+}
+.certs-h .ico {
+  width: 24px;
+  height: 24px;
+  stroke: var(--sun);
+  stroke-width: 1.8;
+}
+.certs-g {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-auto-rows: 1fr;
+  gap: 24px 20px;
+  margin-top: 22px;
+}
+.certs-g .bracket {
+  padding-top: 24px;
+}
+.certs-g .bracket b {
+  font: 600 15px/1.3 var(--font-sans);
+  letter-spacing: 0;
+  white-space: normal;
+}
+.certs-g .bracket span {
+  display: block;
+  margin-top: 4px;
+  font-size: 13px;
+  line-height: 1.4;
+}
+@media (max-width: 1119px) {
+  .certs {
+    margin-top: 64px;
+  }
+  .certs-g {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (max-width: 767px) {
+  .certs {
+    margin-top: 48px;
+  }
+  .certs-g {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px 16px;
+  }
+}
+
 /* ---------- Logo wall ---------- */
 /* The institutions' marks over the full width of the page, under the section head: eight in a row from 1120
    wide, four below. A mark is up to 76 by 124px, on a phone 44 by 70px. A file too small for that at two times
